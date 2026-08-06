@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 import { primaryNav } from '@/content/nav'
 import { company } from '@/content/company'
@@ -12,13 +13,15 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-paper/10 bg-petrol">
       <div className="container-content flex h-20 items-center justify-between">
-        <Link href="/" className="flex flex-col leading-none">
-          <span className="font-display text-lg font-semibold tracking-tight text-paper">
-            KELL ELECTRICALS
-          </span>
-          <span className="eyebrow mt-1 text-yellow">
-            Engineering Trust. Powering Lives.
-          </span>
+        <Link href="/" className="flex items-center" aria-label={`${company.name} — home`}>
+          <Image
+            src="/brand/logo-on-dark.png"
+            alt={company.name}
+            width={220}
+            height={102}
+            priority
+            className="h-9 w-auto md:h-10"
+          />
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">

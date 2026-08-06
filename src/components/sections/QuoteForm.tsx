@@ -4,7 +4,7 @@ import { FormEvent, useState } from 'react'
 import { services } from '@/content/services'
 import { company } from '@/content/company'
 
-type FormStatus = 'idle' | 'submitting' | 'success' | 'error'
+type FormStatus = 'idle' | 'submitting' | 'success' | 'error' | 'not_configured'
 
 type FormState = {
   name: string
@@ -15,6 +15,7 @@ type FormState = {
   urgency: 'standard' | 'urgent' | 'emergency' | ''
   location: string
   details: string
+  website: string // honeypot — kept empty by real users, hidden from view
 }
 
 const initialState: FormState = {
@@ -26,6 +27,7 @@ const initialState: FormState = {
   urgency: '',
   location: '',
   details: '',
+  website: '',
 }
 
 // Field names mirror a Zoho Forms / Zoho Books contact schema
@@ -61,10 +63,18 @@ export function QuoteForm() {
 
     setStatus('submitting')
     try {
-      // NOTE: no backend wired yet — see docs/next-steps.md. This is the
-      // integration point for a Zoho Forms endpoint or an
-      // app/api/quote/route.ts serverless handler.
-      await new Promise((resolve) => setTimeout(resolve, 600))
+      const res = await fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => null)
+        setStatus(body?.reason === 'not_configured' ? 'not_configured' : 'error')
+        return
+      }
+
       setStatus('success')
       setForm(initialState)
     } catch {
@@ -88,8 +98,37 @@ export function QuoteForm() {
     )
   }
 
+  if (status === 'not_configured') {
+    return (
+      <div className="border border-orange/30 bg-orange/5 p-8">
+        <h3 className="text-xl font-semibold text-ink">
+          Online submission isn&rsquo;t connected yet
+        </h3>
+        <p className="mt-3 text-sm leading-relaxed text-ink/70">
+          This form isn&rsquo;t wired to a destination yet — nothing was
+          lost, but please call{' '}
+          <a href={company.phoneHref} className="link-underline font-semibold">
+            {company.phone}
+          </a>{' '}
+          or WhatsApp us directly so we can get your request right away.
+        </p>
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-6">
+      <input
+        type="text"
+        name="website"
+        value={form.website}
+        onChange={(e) => update('website', e.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
+
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <Field label="Full name" error={errors.name}>
           <input

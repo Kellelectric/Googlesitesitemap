@@ -10,12 +10,13 @@
    applicable). The current `/services/solar-inverter-systems` detail page
    can seed this content but the flagship page should go deeper (diagrams,
    sizing calculator or worked example, financing/payback framing).
-3. **`/projects`** + `/projects/modish-formals`** — case studies hub and the
-   flagship Modish Formals / M3 Group factory conversion (~₦33M). **Needs
-   real data before publishing:** scope breakdown, before/after photos,
-   timeline, equipment list — confirm with the client/ops team, do not
-   estimate. Filterable by sector (residential/commercial/industrial) and
-   service type once 3+ case studies exist.
+3. **`/projects`** — case studies hub. Per client direction, contract
+   values/amounts are not to be published on the site — case studies should
+   describe scope, sector, and outcome only. **Needs real data before
+   publishing:** scope breakdown, before/after photos, timeline — confirm
+   with the client/ops team, do not estimate. Filterable by sector
+   (residential/commercial/industrial) and service type once 3+ case
+   studies exist.
 4. **`/industries`** hub + sector pages (residential, commercial, industrial,
    hospitality) — mostly recombination of existing service content by
    audience; low effort once `/services` content is final.
@@ -61,7 +62,8 @@
 ## Content still needed from the client (do not fabricate)
 
 - Total completed-projects count (for the homepage stats bar).
-- Full Modish Formals / M3 Group case study detail.
+- Case study detail for any project to be featured on a future `/projects`
+  page (scope, sector, outcome — no contract amounts).
 - Careers/apprenticeship programme specifics.
 - Any additional named client references cleared for public use as a trust
   bar (logos require written permission per client).

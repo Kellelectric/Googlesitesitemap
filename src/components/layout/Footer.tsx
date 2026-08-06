@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { company } from '@/content/company'
 import { services } from '@/content/services'
 import { footerNav } from '@/content/nav'
@@ -10,9 +11,13 @@ export function Footer() {
     <footer className="border-t border-paper/10 bg-petrol-700 text-paper">
       <div className="container-content grid grid-cols-1 gap-12 py-16 md:grid-cols-4">
         <div>
-          <span className="font-display text-lg font-semibold">
-            KELL ELECTRICALS
-          </span>
+          <Image
+            src="/brand/logo-on-dark.png"
+            alt={company.name}
+            width={220}
+            height={102}
+            className="h-9 w-auto"
+          />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper/60">
             {company.positioning}
           </p>

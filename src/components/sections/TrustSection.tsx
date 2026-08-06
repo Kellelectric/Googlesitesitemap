@@ -1,4 +1,4 @@
-import { company, flagshipProject } from '@/content/company'
+import { company } from '@/content/company'
 
 export function TrustSection() {
   return (
@@ -20,16 +20,20 @@ export function TrustSection() {
         </div>
 
         <div className="border border-ink/10 bg-petrol p-8 text-paper">
-          <span className="eyebrow text-yellow">Flagship project</span>
-          <h3 className="mt-4 text-xl font-semibold">{flagshipProject.client}</h3>
-          <p className="mt-2 text-sm text-paper/70">{flagshipProject.title}</p>
+          <span className="eyebrow text-yellow">Certified & compliant</span>
+          <h3 className="mt-4 text-xl font-semibold">
+            {company.certifications.map((c) => c.name).join(' & ')} certified engineering
+          </h3>
           <p className="mt-5 text-sm leading-relaxed text-paper/70">
-            {flagshipProject.summary}
+            Every installation runs through the same documented process —
+            assess, design, install, test and hand over — to{' '}
+            {company.certifications.map((c) => c.fullName).join(' and ')}{' '}
+            standards.
           </p>
           <div className="mt-6 border-t border-paper/15 pt-5">
-            <span className="eyebrow text-paper/50">Contract scope</span>
+            <span className="eyebrow text-paper/50">Registered company</span>
             <p className="mt-1 font-display text-2xl font-semibold text-yellow">
-              {flagshipProject.contractValue}
+              RC {company.rcNumber}
             </p>
           </div>
         </div>

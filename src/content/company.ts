@@ -43,16 +43,3 @@ export const company = {
   },
   domain: 'https://kellelectricals.com',
 } as const
-
-// Real, named flagship project. Only the confirmed contract-scope figure is
-// used here — timeline, equipment list, and before/after detail are not yet
-// confirmed and are intentionally withheld rather than estimated. See
-// docs/next-steps.md.
-export const flagshipProject = {
-  client: 'Modish Formals / M3 Group',
-  title: 'Factory conversion — full electrical systems overhaul',
-  contractValue: '₦33,000,000',
-  summary:
-    'Full electrical systems engineering for a factory conversion, delivered end-to-end by our team from load assessment through commissioning.',
-  status: 'NEEDS REAL DATA' as const,
-} as const

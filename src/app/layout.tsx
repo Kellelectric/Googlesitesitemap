@@ -43,11 +43,16 @@ export const metadata: Metadata = {
     siteName: company.name,
     title: `${company.name} — ${company.tagline}`,
     description: company.positioning,
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: company.name }],
   },
   twitter: {
     card: 'summary_large_image',
     title: `${company.name} — ${company.tagline}`,
     description: company.positioning,
+    images: ['/og-image.jpg'],
+  },
+  icons: {
+    apple: '/apple-touch-icon.png',
   },
   robots: {
     index: true,

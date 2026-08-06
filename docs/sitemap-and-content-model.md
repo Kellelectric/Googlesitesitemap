@@ -75,12 +75,10 @@ number wasn't supplied, it is either omitted or explicitly marked:
 
 - **Projects completed (total count):** not supplied — omitted from stats
   bar rather than guessed. Add once a real number is confirmed.
-- **Flagship case study (Modish Formals / M3 Group, ~₦33M factory
-  conversion):** referenced only as a named, real project with the one
-  confirmed figure (contract scope value). Full before/after data, timeline,
-  and equipment specifics are marked `[NEEDS REAL DATA]` in
-  `src/content/company.ts` and must be confirmed before the dedicated
-  `/projects/modish-formals` page is built.
+- **Case studies / project financials:** per client direction, project
+  contract values are not to be published on the site. If a `/projects`
+  section is built later, case studies should describe scope and outcome
+  without disclosing contract amounts.
 - **Client logos / trust bar:** not built — no client has been confirmed
   for public logo use. Do not add logos without written permission from
   each client.

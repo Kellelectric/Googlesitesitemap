@@ -1,0 +1,76 @@
+import type { Metadata } from 'next'
+import { Space_Grotesk, Inter } from 'next/font/google'
+import './globals.css'
+import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
+import { company } from '@/content/company'
+import { organizationSchema } from '@/lib/schema'
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-space-grotesk',
+  weight: ['500', '600', '700'],
+  display: 'swap',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  weight: ['400', '500', '600'],
+  display: 'swap',
+})
+
+export const metadata: Metadata = {
+  metadataBase: new URL(company.domain),
+  title: {
+    default: `${company.name} — ${company.tagline}`,
+    template: `%s — ${company.name}`,
+  },
+  description: company.positioning,
+  keywords: [
+    'electrical contractor Abuja',
+    'solar inverter installation Abuja',
+    'NEMSA certified electrician',
+    'COREN certified electrical engineer',
+    'CCTV installation Abuja',
+    'industrial electrical Nigeria',
+  ],
+  authors: [{ name: company.name }],
+  openGraph: {
+    type: 'website',
+    locale: 'en_NG',
+    url: company.domain,
+    siteName: company.name,
+    title: `${company.name} — ${company.tagline}`,
+    description: company.positioning,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${company.name} — ${company.tagline}`,
+    description: company.positioning,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }}
+        />
+        <Header />
+        <main>{children}</main>
+        <Footer />
+      </body>
+    </html>
+  )
+}

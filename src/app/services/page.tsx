@@ -3,6 +3,7 @@ import { ServiceCard } from '@/components/ui/ServiceCard'
 import { CTASection } from '@/components/sections/CTASection'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { services, categoryLabels, ServiceCategory } from '@/content/services'
+import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = {
   title: 'Electrical Engineering Services',
@@ -44,14 +45,18 @@ export default function ServicesPage() {
             if (items.length === 0) return null
             return (
               <div key={category}>
-                <h2 className="eyebrow text-petrol/60">
-                  {categoryLabels[category]}
-                </h2>
-                <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <Reveal>
+                  <h2 className="eyebrow text-petrol/60">
+                    {categoryLabels[category]}
+                  </h2>
+                </Reveal>
+                <StaggerGroup className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {items.map((service) => (
-                    <ServiceCard key={service.slug} service={service} />
+                    <MotionDiv key={service.slug} variants={staggerItem}>
+                      <ServiceCard service={service} />
+                    </MotionDiv>
                   ))}
-                </div>
+                </StaggerGroup>
               </div>
             )
           })}

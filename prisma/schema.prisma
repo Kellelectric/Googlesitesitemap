@@ -1,0 +1,396 @@
+// Kell Electricals — Service Assessment & Booking Platform
+// See docs/assessment-platform-architecture.md section E for the
+// rationale behind table choices and simplifications.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Admin / auth
+// ---------------------------------------------------------------------------
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMINISTRATOR
+  ENGINEER
+  TECHNICIAN
+  CUSTOMER_SERVICE
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         AdminRole @default(ADMINISTRATOR)
+  active       Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  auditLogs        AuditLog[]
+  assignedLeads    Lead[]        @relation("AssignedEngineerAdmin")
+  assignedAppts    Appointment[] @relation("AssignedEngineerAdmin")
+
+  @@map("admin_users")
+}
+
+// ---------------------------------------------------------------------------
+// Services
+// ---------------------------------------------------------------------------
+
+model ServiceCategory {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  name      String
+  sortOrder Int       @default(0)
+  services  Service[]
+
+  @@map("service_categories")
+}
+
+model Service {
+  id                 String          @id @default(cuid())
+  slug               String          @unique
+  name               String
+  categoryId         String
+  category           ServiceCategory @relation(fields: [categoryId], references: [id])
+  description        String
+  recommendationCopy String?
+  included           String[]
+  terms              String?
+  priceFromNgn       Int?
+  inspectionFeeNgn   Int?
+  emergencySurchargeNgn Int?
+  durationMinutes    Int             @default(60)
+  requiresAssessment Boolean         @default(false)
+  bookable           Boolean         @default(true)
+  serviceAreas       String[]
+  active             Boolean         @default(true)
+  sortOrder          Int             @default(0)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  leads        Lead[]
+  appointments Appointment[]
+
+  @@map("services")
+}
+
+// ---------------------------------------------------------------------------
+// Leads & assessments
+// ---------------------------------------------------------------------------
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  SITE_VISIT_BOOKED
+  QUOTATION_SENT
+  NEGOTIATION
+  WON
+  LOST
+  FOLLOW_UP
+}
+
+enum ScoreCategory {
+  HOT
+  WARM
+  STANDARD
+}
+
+enum PreferredContact {
+  PHONE
+  WHATSAPP
+  EMAIL
+}
+
+enum Urgency {
+  EMERGENCY
+  TODAY
+  WITHIN_48H
+  THIS_WEEK
+  WITHIN_2_WEEKS
+  PLANNING_AHEAD
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  reference String   @unique
+
+  // Contact
+  name             String
+  phone            String
+  whatsapp         String?
+  email            String?
+  company          String?
+  jobTitle         String?
+  preferredContact PreferredContact @default(PHONE)
+
+  // Property / project
+  need         String
+  propertyType String
+  issueDetail  String?
+  location     Json
+  urgency      Urgency
+  projectStage String?
+  projectSize  String?
+  documentation String[]
+  primaryGoal  String?
+  additionalInfo String?
+  isEmergency  Boolean @default(false)
+
+  // Recommendation
+  recommendedServiceId String?
+  recommendedService   Service? @relation(fields: [recommendedServiceId], references: [id])
+  recommendationReasons String[]
+
+  // CRM
+  status             LeadStatus    @default(NEW)
+  score              Int           @default(0)
+  scoreCategory      ScoreCategory @default(STANDARD)
+  assignedEngineerId String?
+  assignedEngineer   AdminUser?    @relation("AssignedEngineerAdmin", fields: [assignedEngineerId], references: [id])
+  notes              String?
+
+  source     String  @default("assessment")
+  utmSource  String?
+  utmMedium  String?
+  utmCampaign String?
+  utmTerm    String?
+  utmContent String?
+
+  assessment   Assessment?
+  appointments Appointment[]
+  files        FileUpload[]
+  quotes       Quote[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("leads")
+}
+
+model Assessment {
+  id          String   @id @default(cuid())
+  leadId      String?  @unique
+  lead        Lead?    @relation(fields: [leadId], references: [id])
+  answers     Json     @default("{}")
+  currentStep String?
+  completed   Boolean  @default(false)
+  isEmergency Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  answerLog AssessmentAnswer[]
+  files     FileUpload[]
+
+  @@map("assessments")
+}
+
+model AssessmentAnswer {
+  id           String     @id @default(cuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  questionKey  String
+  answerValue  Json
+  createdAt    DateTime   @default(now())
+
+  @@index([assessmentId])
+  @@map("assessment_answers")
+}
+
+// ---------------------------------------------------------------------------
+// Engineers, availability, appointments
+// ---------------------------------------------------------------------------
+
+model Engineer {
+  id     String  @id @default(cuid())
+  name   String
+  email  String?
+  phone  String?
+  title  String?
+  active Boolean @default(true)
+
+  availability      Availability[]
+  availabilityBlocks AvailabilityBlock[]
+  appointments      Appointment[]
+
+  @@map("engineers")
+}
+
+// Weekly recurring availability, one row per engineer per weekday worked.
+model Availability {
+  id          String   @id @default(cuid())
+  engineerId  String
+  engineer    Engineer @relation(fields: [engineerId], references: [id], onDelete: Cascade)
+  dayOfWeek   Int // 0 = Sunday .. 6 = Saturday
+  startTime   String // "08:00"
+  endTime     String // "17:00"
+  breakStart  String? // "13:00"
+  breakEnd    String? // "14:00"
+
+  @@index([engineerId])
+  @@map("availability")
+}
+
+// One-off blocks: holidays (engineerId null = whole company) or an
+// individual engineer's day off.
+model AvailabilityBlock {
+  id         String    @id @default(cuid())
+  engineerId String?
+  engineer   Engineer? @relation(fields: [engineerId], references: [id], onDelete: Cascade)
+  date       DateTime
+  reason     String?
+
+  @@map("availability_blocks")
+}
+
+enum AppointmentType {
+  PHONE_CONSULTATION
+  WHATSAPP_CONSULTATION
+  SITE_INSPECTION
+  VIDEO_CONSULTATION
+  ON_SITE_ASSESSMENT
+  EMERGENCY_CALLOUT
+}
+
+enum AppointmentStatus {
+  REQUESTED
+  PENDING_CONFIRMATION
+  CONFIRMED
+  RESCHEDULED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+model Appointment {
+  id        String @id @default(cuid())
+  reference String @unique
+
+  leadId String
+  lead   Lead   @relation(fields: [leadId], references: [id])
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  engineerId String?
+  engineer   Engineer? @relation(fields: [engineerId], references: [id])
+
+  assignedAdminId String?
+  assignedAdmin   AdminUser? @relation("AssignedEngineerAdmin", fields: [assignedAdminId], references: [id])
+
+  type      AppointmentType
+  status    AppointmentStatus @default(REQUESTED)
+  startsAt  DateTime
+  endsAt    DateTime
+  notes     String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([startsAt])
+  @@index([engineerId, startsAt])
+  @@map("appointments")
+}
+
+// ---------------------------------------------------------------------------
+// Files, notifications, audit, settings, quotes
+// ---------------------------------------------------------------------------
+
+model FileUpload {
+  id           String      @id @default(cuid())
+  leadId       String?
+  lead         Lead?       @relation(fields: [leadId], references: [id])
+  assessmentId String?
+  assessment   Assessment? @relation(fields: [assessmentId], references: [id])
+  filename     String
+  storedName   String
+  mimeType     String
+  sizeBytes    Int
+  createdAt    DateTime    @default(now())
+
+  @@map("files")
+}
+
+enum NotificationChannel {
+  EMAIL
+  WHATSAPP
+  SMS
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model Notification {
+  id            String              @id @default(cuid())
+  type          String
+  channel       NotificationChannel
+  recipient     String
+  subject       String?
+  body          String
+  status        NotificationStatus  @default(PENDING)
+  relatedLeadId String?
+  createdAt     DateTime            @default(now())
+
+  @@map("notifications")
+}
+
+model AuditLog {
+  id            String    @id @default(cuid())
+  adminUserId   String?
+  adminUser     AdminUser? @relation(fields: [adminUserId], references: [id])
+  action        String
+  entityType    String
+  entityId      String
+  previousValue Json?
+  newValue      Json?
+  createdAt     DateTime  @default(now())
+
+  @@map("audit_logs")
+}
+
+enum SettingType {
+  STRING
+  JSON
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
+
+enum QuoteStatus {
+  PENDING
+  SENT
+  ACCEPTED
+  DECLINED
+}
+
+model Quote {
+  id        String      @id @default(cuid())
+  leadId    String
+  lead      Lead        @relation(fields: [leadId], references: [id])
+  amountNgn Int?
+  status    QuoteStatus @default(PENDING)
+  notes     String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@map("quotes")
+}

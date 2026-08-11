@@ -15,7 +15,10 @@ export function CTASection() {
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <Button href="/contact" variant="primary">
+          <Button href="/assessment" variant="primary">
+            Start Assessment
+          </Button>
+          <Button href="/contact" variant="secondary">
             Request a Quote
           </Button>
           <Button href={company.phoneHref} variant="secondary">

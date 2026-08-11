@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   description: 'Already know what you need? Book a service directly — inspection, fault diagnosis, solar assessment, maintenance, or a consultation.',
 }
 
+// Service pricing/availability is admin-editable at runtime (see
+// /admin/services) — this must never be baked in as static build-time
+// output, and must not fail the build if a database isn't reachable at
+// build time (e.g. a fresh Vercel deploy before DATABASE_URL is set).
+export const dynamic = 'force-dynamic'
+
 export default async function BookPage() {
   const services = await db.service.findMany({
     where: { active: true, bookable: true },

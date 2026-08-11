@@ -4,25 +4,69 @@ Companion to `docs/assessment-platform-architecture.md`. This covers what's
 needed to take the assessment, booking, and admin routes from this
 sandbox to production on `kellelectricals.com`.
 
-## 1. Database
+## 0. This repo is already connected to Vercel
 
-Any managed PostgreSQL works — Neon, Supabase, or Railway are the
-simplest for a Vercel deployment (all have a free tier sufficient for
-this workload).
+The GitHub repo is linked to Vercel project **`googlesitesitemap`**
+(team: Gabby John's projects). It auto-deploys on every push — this
+branch already has a preview deployment; `main` is production.
+**There is no separate "connect to Vercel" step** — only the checklist
+below to make a build actually succeed and go live.
 
-1. Create a database, copy its connection string.
-2. Set `DATABASE_URL` (see `.env.example`).
-3. Run migrations: `npx prisma migrate deploy` (production-safe —
-   applies existing migrations, doesn't generate new ones).
-4. Seed reference data once: `npm run db:seed`. This creates the service
-   catalogue, three engineers with weekly availability, default
-   settings, and one `SUPER_ADMIN` user.
+## Go-live checklist
 
-**Change the seeded admin password immediately** — either set
-`SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD` env vars before seeding
-production, or seed with the default and then update the `AdminUser`
-row's `passwordHash` (bcrypt) directly. There is currently no
-in-app "change password" screen — see roadmap.
+1. **Add a database.** In the Vercel dashboard → `googlesitesitemap`
+   project → **Storage** tab → **Create Database** → **Postgres**
+   (Neon-backed, free Hobby tier). Connect it to the project.
+2. **Confirm/rename the connection env var to exactly `DATABASE_URL`.**
+   Vercel's Postgres integration adds several (`POSTGRES_URL`,
+   `POSTGRES_PRISMA_URL`, `POSTGRES_URL_NON_POOLING`, etc.) — Prisma
+   here only reads `DATABASE_URL`. In Project Settings → Environment
+   Variables, either rename one to `DATABASE_URL` or add a new variable
+   named `DATABASE_URL` with the same value as `POSTGRES_PRISMA_URL`
+   (the pooled connection string — preferred for serverless functions).
+3. **Set `ADMIN_SESSION_SECRET`.** Any random 32+ char string —
+   generate with `openssl rand -hex 32`. Required or admin login throws.
+4. **Set `SEED_TOKEN`.** Any random string — `openssl rand -hex 24`.
+   This is what lets you bootstrap reference data into the new database
+   with no shell access to it (step 6).
+5. **Redeploy.** Either push a new commit, or use Vercel's "Redeploy"
+   button on the latest deployment for this branch. The build now runs
+   `prisma migrate deploy` automatically (see section 3) — it will fail
+   loudly and clearly if `DATABASE_URL` is still missing.
+6. **Bootstrap reference data — once, after the deploy succeeds:**
+   ```
+   curl -X POST https://<your-deployment-url>/api/admin/bootstrap \
+     -H "x-seed-token: <the SEED_TOKEN value>"
+   ```
+   This creates the service catalogue, three engineers with weekly
+   availability, default settings, and the first `SUPER_ADMIN` admin
+   user (`kellelectricals@gmail.com` / `ChangeMe-KellAdmin-2026` unless
+   `SEED_ADMIN_EMAIL`/`SEED_ADMIN_PASSWORD` are also set — set those
+   too before this step if you want a different first login). Safe to
+   call more than once; it will never overwrite admin-edited service
+   pricing on a re-run. **Change the admin password immediately after
+   first login** — there's no in-app "change password" screen yet (see
+   roadmap), so do this by updating the `AdminUser` row's `passwordHash`
+   (bcrypt) via `prisma studio` until one exists.
+7. **Verify:** visit `/assessment`, `/book`, and sign in at `/admin`.
+   Consider unsetting `SEED_TOKEN` again once bootstrapped, since it's
+   only needed for that one call.
+8. **Promote to production**, when ready: merge this branch's PR into
+   `main` — Vercel serves `main` as the production deployment for this
+   project.
+
+Everything below covers the same ground in more detail, plus what's
+optional.
+
+## 1. Database (detail)
+
+Any managed PostgreSQL works — Vercel Postgres (used above), Neon,
+Supabase, or Railway are all fine (all have a free tier sufficient for
+this workload). If you provision one outside Vercel instead, the flow
+is the same: copy its connection string into `DATABASE_URL`, then
+either run `npx prisma migrate deploy && npm run db:seed` from a
+machine that can reach it directly, or use the `/api/admin/bootstrap`
+route from step 6 above once it's deployed and reachable.
 
 ## 2. Environment variables
 
@@ -35,6 +79,8 @@ working fallback:
 |---|---|---|
 | `DATABASE_URL` | Yes | — |
 | `ADMIN_SESSION_SECRET` | Yes | — (admin login throws without it) |
+| `SEED_TOKEN` | Only for the one-time bootstrap call | `/api/admin/bootstrap` returns 503 without it |
+| `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` | No | First admin defaults to `kellelectricals@gmail.com` / `ChangeMe-KellAdmin-2026` |
 | `UPLOADS_DIR` | No | `.uploads` (local disk — see note below) |
 | `RESEND_API_KEY` | No | Emails log to console + `Notification` table |
 | `EMAIL_FROM` | No | Generic sender address |
@@ -59,15 +105,20 @@ each invocation gets a fresh filesystem.
 
 ## 3. Build & deploy (Vercel)
 
-```
-npm install
-npx prisma generate
-npm run build
-```
+`package.json` already wires this up — nothing to add:
 
-Vercel runs this automatically on push once the project is linked.
-Add a `postinstall` script if Prisma Client generation isn't picked up
-automatically: `"postinstall": "prisma generate"`.
+- `"postinstall": "prisma generate"` — regenerates the Prisma Client
+  after every `npm install`.
+- `"build": "prisma migrate deploy && next build"` — applies any
+  pending schema migrations before building, every deploy. This is
+  production-safe (it only applies existing migration files, never
+  generates new ones) and idempotent (a no-op if the schema is already
+  current), so it's fine to run on every single build, including
+  preview deployments that share the same database.
+
+Vercel runs `npm install` then `npm run build` automatically on every
+push once the project is linked — which this one already is (see
+section 0).
 
 Domain/HTTPS: same as the existing marketing site (`docs/next-steps.md`)
 — this platform ships as new routes on the same Next.js app, not a

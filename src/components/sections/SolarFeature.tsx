@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { getServiceBySlug } from '@/content/services'
+import { Reveal } from '@/components/ui/Reveal'
 
 export function SolarFeature() {
   const solar = getServiceBySlug('solar-inverter-systems')
@@ -10,7 +11,7 @@ export function SolarFeature() {
     <section className="relative overflow-hidden bg-petrol text-paper">
       <CircuitLines className="pointer-events-none absolute -left-32 -top-16 h-[140%] w-[70%] text-paper/5" />
       <div className="container-content relative grid grid-cols-1 gap-12 py-24 md:grid-cols-2 md:items-center">
-        <div>
+        <Reveal>
           <span className="eyebrow text-yellow">Featured capability</span>
           <h2 className="mt-3 text-3xl font-semibold md:text-4xl">
             {solar.name}
@@ -26,9 +27,9 @@ export function SolarFeature() {
               Request a sizing consultation
             </Button>
           </div>
-        </div>
+        </Reveal>
 
-        <div className="border border-paper/15 p-8">
+        <Reveal delay={0.12} className="border border-paper/15 p-8">
           <span className="eyebrow text-paper/50">System design covers</span>
           <ul className="mt-5 space-y-4">
             {solar.scope.map((item) => (
@@ -38,7 +39,7 @@ export function SolarFeature() {
               </li>
             ))}
           </ul>
-        </div>
+        </Reveal>
       </div>
     </section>
   )

@@ -1,10 +1,11 @@
 import { company } from '@/content/company'
+import { Reveal } from '@/components/ui/Reveal'
 
 export function TrustSection() {
   return (
     <section className="bg-paper py-24">
       <div className="container-content grid grid-cols-1 gap-12 md:grid-cols-2">
-        <div className="border border-ink/10 p-8">
+        <Reveal className="border border-ink/10 p-8">
           <span className="eyebrow text-petrol/60">Verified track record</span>
           <div className="mt-5 flex items-baseline gap-3">
             <span className="font-display text-5xl font-semibold text-petrol">
@@ -17,9 +18,9 @@ export function TrustSection() {
           <p className="mt-5 text-sm leading-relaxed text-ink/70">
             Our rating reflects work carried out across {company.serviceAreas.join(', ')}, and wider {company.serviceRegion.replace('Abuja and ', '')} — verifiable on our Google Business Profile.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="border border-ink/10 bg-petrol p-8 text-paper">
+        <Reveal delay={0.12} className="border border-ink/10 bg-petrol p-8 text-paper">
           <span className="eyebrow text-yellow">Certified & compliant</span>
           <h3 className="mt-4 text-xl font-semibold">
             {company.certifications.map((c) => c.name).join(' & ')} certified engineering
@@ -36,7 +37,7 @@ export function TrustSection() {
               RC {company.rcNumber}
             </p>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   )

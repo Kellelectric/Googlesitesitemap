@@ -1,10 +1,11 @@
 import { Button } from '@/components/ui/Button'
 import { company } from '@/content/company'
+import { Reveal } from '@/components/ui/Reveal'
 
 export function CTASection() {
   return (
     <section className="bg-petrol-700 text-paper">
-      <div className="container-content flex flex-col items-start gap-8 py-20 md:flex-row md:items-center md:justify-between">
+      <Reveal className="container-content flex flex-col items-start gap-8 py-20 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="max-w-lg text-3xl font-semibold md:text-4xl">
             Scope a job with our team
@@ -22,7 +23,7 @@ export function CTASection() {
             Call {company.phone}
           </Button>
         </div>
-      </div>
+      </Reveal>
     </section>
   )
 }

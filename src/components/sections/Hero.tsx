@@ -1,10 +1,21 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useReducedMotion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { company } from '@/content/company'
 import { motion, staggerItem } from '@/components/ui/Reveal'
+
+// Loaded client-only, no SSR: the 3D hero circuit (see Circuit Map spec,
+// beat 01) is a progressive enhancement over the CircuitLines SVG below —
+// it decides for itself whether to mount based on viewport width and
+// prefers-reduced-motion, and renders nothing while that decision and the
+// WebGL context are still being set up, so the SVG is always the visible
+// frame until the live scene is actually ready to draw.
+const HeroScene = dynamic(() => import('@/components/three/HeroScene').then((m) => m.HeroScene), {
+  ssr: false,
+})
 
 export function Hero() {
   const reduceMotion = useReducedMotion()
@@ -13,6 +24,9 @@ export function Hero() {
     <section className="relative overflow-hidden bg-petrol text-paper">
       <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-40" />
       <CircuitLines className="pointer-events-none absolute -right-24 top-0 h-full w-[60%] text-paper/10 motion-safe:animate-[reveal-up_1.1s_ease-out]" />
+      <div className="absolute -right-10 top-0 hidden h-full w-[65%] md:block">
+        <HeroScene />
+      </div>
 
       <motion.div
         className="container-content relative py-24 md:py-32"

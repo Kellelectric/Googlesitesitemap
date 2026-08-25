@@ -2,16 +2,32 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { primaryNav } from '@/content/nav'
 import { company } from '@/content/company'
 import { Button } from '@/components/ui/Button'
 
 export function Header() {
   const [open, setOpen] = useState(false)
+  // Transparent over the hero scene, solidifying once the page has
+  // scrolled past it — see Circuit Map spec, "Global scaffolding".
+  const [solid, setSolid] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setSolid(window.scrollY > 120)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-paper/10 bg-petrol">
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
+        solid || open
+          ? 'border-paper/10 bg-petrol'
+          : 'border-transparent bg-petrol/0'
+      }`}
+    >
       <div className="container-content flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center" aria-label={`${company.name} — home`}>
           <Image

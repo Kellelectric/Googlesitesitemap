@@ -24,15 +24,26 @@
 
 ## Build status for this session
 
-Built and shipped: `/`, `/services`, `/services/[slug]` (all 16 slugs render
-from real content), `/contact`, plus `sitemap.xml` and `robots.txt`.
+Built and shipped: `/`, `/about`, `/services`, `/services/[slug]` (all 16
+slugs render from real content), `/solar-energy-systems`, `/industries`,
+`/industries/[slug]` (4 sector pages), `/resources`, `/resources/[slug]`
+(3 technical articles), `/contact`, `/legal/terms`, `/legal/privacy`
+(drafted, see caveat below), plus `sitemap.xml` and `robots.txt`.
 
-Not yet built (see `next-steps.md`): `/about`, `/solar-energy-systems`,
-`/projects` + detail pages, `/industries`, `/resources`, `/careers`,
-`/legal/terms`, `/legal/privacy`. Primary navigation intentionally links
-only to pages that exist in this build — no dead links — so the header
-does **not** yet show About/Projects/Industries/Resources/Careers. Add
-those nav items as each page ships.
+Not yet built: `/projects` + detail pages, `/careers`. Both are blocked on
+real client data per the anti-fabrication rule (see "Content still needed
+from the client" below) — do not build these with invented content.
+
+Primary navigation intentionally links only to pages that exist in this
+build — no dead links. It now includes Industries and Resources. `/legal/*`
+pages are linked only from the footer bottom bar, not primary nav, and are
+excluded from `sitemap.xml` (see legal caveat below).
+
+**Legal pages caveat:** `/legal/terms` and `/legal/privacy` are a first
+drafted pass, not reviewed by counsel. They are marked `robots: noindex`
+and excluded from the sitemap for that reason. Do not remove the noindex
+flag or add them to the sitemap until a lawyer has reviewed them,
+particularly the Privacy Policy's NDPA 2023 compliance (see `next-steps.md`).
 
 ## Content model
 

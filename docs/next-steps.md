@@ -2,36 +2,29 @@
 
 ## Remaining pages (in suggested build order)
 
-1. **`/about`** — company story, mission, COREN/NEMSA/RC 1852579 compliance
-   section, role-based team (no named individuals per brand voice), Nigeria/
-   West Africa footprint map. Add "About" to primary nav once live.
-2. **`/solar-energy-systems`** — flagship product-style treatment for solar/
-   hybrid (load analysis, sizing methodology, system tiers, financing note if
-   applicable). The current `/services/solar-inverter-systems` detail page
-   can seed this content but the flagship page should go deeper (diagrams,
-   sizing calculator or worked example, financing/payback framing).
-3. **`/projects`** — case studies hub. Per client direction, contract
+Shipped since the original brief: `/about`, `/solar-energy-systems`,
+`/industries` (+ 4 sector pages), `/resources` (+ 3 articles), and a first
+draft of `/legal/terms` and `/legal/privacy`. Still blocked on real data:
+
+1. **`/projects`** — case studies hub. Per client direction, contract
    values/amounts are not to be published on the site — case studies should
    describe scope, sector, and outcome only. **Needs real data before
    publishing:** scope breakdown, before/after photos, timeline — confirm
    with the client/ops team, do not estimate. Filterable by sector
    (residential/commercial/industrial) and service type once 3+ case
    studies exist.
-4. **`/industries`** hub + sector pages (residential, commercial, industrial,
-   hospitality) — mostly recombination of existing service content by
-   audience; low effort once `/services` content is final.
-5. **`/resources`** — technical articles/energy audit guides for SEO and
-   authority. Suggest starting with 3 articles tied to real search intent:
-   "How to size a hybrid inverter system in Nigeria," "What NEMSA compliance
-   actually requires for a commercial fit-out," "Signs your panel needs
-   upgrading before it fails."
-6. **`/careers`** — apprenticeship programme details. **Needs real data:**
+2. **`/careers`** — apprenticeship programme details. **Needs real data:**
    programme structure, duration, intake schedule, eligibility — currently
    no source material provided.
-7. **`/legal/terms`** and **`/legal/privacy`** — Privacy Policy must be
-   NDPA 2023 compliant (lawful basis, data subject rights, DPO contact if
-   designated, breach notification). Do not publish a generic template;
-   have this reviewed by counsel before launch given NDPA enforcement risk.
+3. **`/legal/terms`** and **`/legal/privacy`** — drafted (see
+   `src/content/legal.ts`), covering standard site terms and an NDPA 2023
+   structure (lawful basis, data subject rights, breach notification). This
+   is a first pass only, not reviewed by counsel, and both pages are
+   currently `robots: noindex` and excluded from `sitemap.xml` for that
+   reason. **Do not remove noindex or publish this as final** until a
+   lawyer has reviewed it, particularly the Privacy Policy given NDPA
+   enforcement risk. No DPO is named (none has been designated); add one
+   once appointed.
 
 ## Functional work
 

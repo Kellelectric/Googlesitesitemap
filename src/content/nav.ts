@@ -10,6 +10,8 @@ export const primaryNav: NavLink[] = [
   { label: 'About', href: '/about' },
   { label: 'Services', href: '/services' },
   { label: 'Solar', href: '/solar-energy-systems' },
+  { label: 'Industries', href: '/industries' },
+  { label: 'Resources', href: '/resources' },
   { label: 'Contact', href: '/contact' },
 ]
 
@@ -18,5 +20,12 @@ export const footerNav: NavLink[] = [
   { label: 'About', href: '/about' },
   { label: 'Services', href: '/services' },
   { label: 'Solar & Energy Systems', href: '/solar-energy-systems' },
+  { label: 'Industries', href: '/industries' },
+  { label: 'Resources', href: '/resources' },
   { label: 'Contact', href: '/contact' },
+]
+
+export const legalNav: NavLink[] = [
+  { label: 'Terms & Conditions', href: '/legal/terms' },
+  { label: 'Privacy Policy', href: '/legal/privacy' },
 ]

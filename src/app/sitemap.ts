@@ -1,5 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { services } from '@/content/services'
+import { industries } from '@/content/industries'
+import { articles } from '@/content/resources'
 import { company } from '@/content/company'
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -10,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/about`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/services`, lastModified: new Date(), priority: 0.9, changeFrequency: 'weekly' },
     { url: `${base}/solar-energy-systems`, lastModified: new Date(), priority: 0.9, changeFrequency: 'monthly' },
+    { url: `${base}/industries`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
+    { url: `${base}/resources`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/contact`, lastModified: new Date(), priority: 0.8, changeFrequency: 'monthly' },
   ]
 
@@ -20,5 +24,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly',
   }))
 
-  return [...staticRoutes, ...serviceRoutes]
+  const industryRoutes: MetadataRoute.Sitemap = industries.map((industry) => ({
+    url: `${base}/industries/${industry.slug}`,
+    lastModified: new Date(),
+    priority: 0.6,
+    changeFrequency: 'monthly',
+  }))
+
+  const articleRoutes: MetadataRoute.Sitemap = articles.map((article) => ({
+    url: `${base}/resources/${article.slug}`,
+    lastModified: new Date(),
+    priority: 0.6,
+    changeFrequency: 'monthly',
+  }))
+
+  return [...staticRoutes, ...serviceRoutes, ...industryRoutes, ...articleRoutes]
 }

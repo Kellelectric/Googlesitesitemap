@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { company } from '@/content/company'
 import { services } from '@/content/services'
-import { footerNav } from '@/content/nav'
+import { footerNav, legalNav } from '@/content/nav'
 
 export function Footer() {
   const year = new Date().getFullYear()
@@ -81,11 +81,16 @@ export function Footer() {
           <p>
             &copy; {year} {company.legalName}. RC {company.rcNumber}.
           </p>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-6">
             <span>{company.address.city}, {company.address.country}</span>
             <span>
               {company.trust.googleRating}★ · {company.trust.googleReviewCount} Google reviews
             </span>
+            {legalNav.map((link) => (
+              <Link key={link.href} href={link.href} className="link-underline">
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

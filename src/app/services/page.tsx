@@ -8,7 +8,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 export const metadata: Metadata = {
   title: 'Electrical Engineering Services',
   description:
-    '16 electrical service lines across power systems, energy & solar, security & automation, industrial, and maintenance — delivered by a COREN and NEMSA certified team in Abuja.',
+    '16 electrical service lines across power systems, energy & solar, security & automation, industrial, and maintenance, delivered by a COREN and NEMSA certified team in Abuja.',
   alternates: { canonical: '/services' },
 }
 
@@ -32,7 +32,7 @@ export default function ServicesPage() {
           </h1>
           <p className="mt-5 max-w-xl text-paper/70">
             Every service below runs through the same process: assess,
-            design, install, test and hand over — documented, not just
+            design, install, test and hand over. Documented, not just
             done.
           </p>
         </div>

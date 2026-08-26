@@ -10,7 +10,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 export const metadata: Metadata = {
   title: 'Solar & Hybrid Energy Systems',
   description:
-    'Load-analyzed solar and hybrid inverter systems sized for Nigeria’s grid reality — methodology, system tiers, and what a proper sizing process actually involves.',
+    'Load-analyzed solar and hybrid inverter systems sized for Nigeria’s grid reality: methodology, system tiers, and what a proper sizing process actually involves.',
   alternates: { canonical: '/solar-energy-systems' },
 }
 
@@ -19,7 +19,7 @@ const methodology = [
     step: '01',
     title: 'Consumption audit',
     description:
-      'We measure actual circuit-level consumption over time — not a guess from your utility bill — to establish a real load profile, including peak demand and what runs during an outage.',
+      'We measure actual circuit-level consumption over time, not a guess from your utility bill, to establish a real load profile, including peak demand and what runs during an outage.',
   },
   {
     step: '02',
@@ -31,7 +31,7 @@ const methodology = [
     step: '03',
     title: 'Component selection',
     description:
-      'Hybrid inverter and battery chemistry selected for your duty cycle — daily cycling for backup-only systems is a different spec than a system designed to reduce generator hours materially.',
+      'Hybrid inverter and battery chemistry selected for your duty cycle. Daily cycling for backup-only systems is a different spec than a system designed to reduce generator hours materially.',
   },
   {
     step: '04',
@@ -43,7 +43,7 @@ const methodology = [
     step: '05',
     title: 'Commissioning & handover',
     description:
-      'Performance testing against the design spec, monitoring setup, and documented handover — so you know the system is delivering what it was sized to deliver.',
+      'Performance testing against the design spec, monitoring setup, and documented handover, so you know the system is delivering what it was sized to deliver.',
   },
 ]
 
@@ -51,7 +51,7 @@ const tiers = [
   {
     name: 'Backup essentials',
     summary:
-      'Keeps critical circuits running through an outage — lighting, networking, security systems, refrigeration.',
+      'Keeps critical circuits running through an outage: lighting, networking, security systems, refrigeration.',
     fit: 'Homes and small offices prioritizing outage continuity over full independence from the grid.',
   },
   {
@@ -159,7 +159,7 @@ export default function SolarEnergySystemsPage() {
             </h2>
             <p className="mt-5 max-w-2xl leading-relaxed text-paper/70">
               These are starting points for the conversation, not fixed
-              packages — your exact panel count, battery capacity, and
+              packages. Your exact panel count, battery capacity, and
               inverter rating come out of the consumption audit above.
             </p>
           </Reveal>
@@ -187,7 +187,7 @@ export default function SolarEnergySystemsPage() {
               What the sizing process looks like in practice
             </h2>
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-ink/70">
-              Worked in general terms to show the logic — your actual
+              Worked in general terms to show the logic. Your actual
               numbers come from your own consumption audit, not this
               example.
             </p>
@@ -196,7 +196,7 @@ export default function SolarEnergySystemsPage() {
                 <p className="eyebrow text-petrol/50">Measure</p>
                 <p className="mt-2 text-sm leading-relaxed text-ink/70">
                   Circuit-level monitoring identifies which loads run
-                  during a typical outage and for how long — this
+                  during a typical outage and for how long. This
                   becomes the backup load profile.
                 </p>
               </div>
@@ -213,7 +213,7 @@ export default function SolarEnergySystemsPage() {
                 <p className="mt-2 text-sm leading-relaxed text-ink/70">
                   Commissioning tests confirm the system actually carries
                   the backup load profile for the duration it was designed
-                  for — not just that it powers on.
+                  for, not just that it powers on.
                 </p>
               </div>
             </div>

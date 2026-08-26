@@ -105,7 +105,7 @@ export function QuoteForm() {
           Online submission isn&rsquo;t connected yet
         </h3>
         <p className="mt-3 text-sm leading-relaxed text-ink/70">
-          This form isn&rsquo;t wired to a destination yet — nothing was
+          This form isn&rsquo;t wired to a destination yet. Nothing was
           lost, but please call{' '}
           <a href={company.phoneHref} className="link-underline font-semibold">
             {company.phone}
@@ -209,9 +209,9 @@ export function QuoteForm() {
             className={inputClass(false)}
           >
             <option value="">Select urgency</option>
-            <option value="standard">Standard — planning ahead</option>
-            <option value="urgent">Urgent — within a few days</option>
-            <option value="emergency">Emergency — needs same-day response</option>
+            <option value="standard">Standard: planning ahead</option>
+            <option value="urgent">Urgent: within a few days</option>
+            <option value="emergency">Emergency: needs same-day response</option>
           </select>
         </Field>
       </div>

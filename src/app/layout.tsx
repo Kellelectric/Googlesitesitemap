@@ -23,8 +23,8 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(company.domain),
   title: {
-    default: `${company.name} — ${company.tagline}`,
-    template: `%s — ${company.name}`,
+    default: `${company.name} - ${company.tagline}`,
+    template: `%s - ${company.name}`,
   },
   description: company.positioning,
   keywords: [
@@ -41,13 +41,13 @@ export const metadata: Metadata = {
     locale: 'en_NG',
     url: company.domain,
     siteName: company.name,
-    title: `${company.name} — ${company.tagline}`,
+    title: `${company.name} - ${company.tagline}`,
     description: company.positioning,
     images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: company.name }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${company.name} — ${company.tagline}`,
+    title: `${company.name} - ${company.tagline}`,
     description: company.positioning,
     images: ['/og-image.jpg'],
   },

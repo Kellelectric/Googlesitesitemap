@@ -17,7 +17,7 @@ const teamRoles = [
   {
     title: 'Engineering & design',
     description:
-      'Load assessments, circuit design, and system sizing — the documented specification every job is built against before any work starts on site.',
+      'Load assessments, circuit design, and system sizing: the documented specification every job is built against before any work starts on site.',
   },
   {
     title: 'Installation & technical crew',
@@ -27,7 +27,7 @@ const teamRoles = [
   {
     title: 'Testing & compliance',
     description:
-      'Commissioning tests and compliance checks against COREN and NEMSA standards, with as-built documentation produced on handover — not just a completed job, a documented one.',
+      'Commissioning tests and compliance checks against COREN and NEMSA standards, with as-built documentation produced on handover. Not just a completed job, a documented one.',
   },
   {
     title: 'Client & project coordination',
@@ -62,7 +62,7 @@ export default function AboutPage() {
               <p className="mt-5 leading-relaxed text-ink/75">
                 Since {foundingYear}, {company.name} has worked on the
                 assumption that electrical infrastructure in Nigeria has to
-                be engineered for the grid conditions that actually exist —
+                be engineered for the grid conditions that actually exist,
                 not the ones on paper. That means load analysis before
                 design, documented specifications before installation, and
                 compliance testing before handover, on every job regardless
@@ -70,7 +70,7 @@ export default function AboutPage() {
               </p>
               <p className="mt-4 leading-relaxed text-ink/75">
                 We don&rsquo;t put a name on the door. The team behind every
-                job — engineers, technicians, and project coordinators —
+                job (engineers, technicians, and project coordinators)
                 works to the same documented process, so the standard of
                 work doesn&rsquo;t depend on which crew shows up.
               </p>

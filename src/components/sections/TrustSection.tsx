@@ -16,7 +16,7 @@ export function TrustSection() {
             </span>
           </div>
           <p className="mt-5 text-sm leading-relaxed text-ink/70">
-            Our rating reflects work carried out across {company.serviceAreas.join(', ')}, and wider {company.serviceRegion.replace('Abuja and ', '')} — verifiable on our Google Business Profile.
+            Our rating reflects work carried out across {company.serviceAreas.join(', ')}, and wider {company.serviceRegion.replace('Abuja and ', '')}, verifiable on our Google Business Profile.
           </p>
         </Reveal>
 
@@ -26,8 +26,8 @@ export function TrustSection() {
             {company.certifications.map((c) => c.name).join(' & ')} certified engineering
           </h3>
           <p className="mt-5 text-sm leading-relaxed text-paper/70">
-            Every installation runs through the same documented process —
-            assess, design, install, test and hand over — to{' '}
+            Every installation runs through the same documented process
+            (assess, design, install, test and hand over) to{' '}
             {company.certifications.map((c) => c.fullName).join(' and ')}{' '}
             standards.
           </p>

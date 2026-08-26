@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-26T00:00:00Z",
+  "title": "Design System: Kell Electricals Ltd",
+  "extensions": {
+    "colorMeta": {
+      "petrol": {
+        "role": "neutral",
+        "displayName": "Petrol",
+        "canonical": "#13322C",
+        "tonalRamp": ["#060F0D", "#0E2621", "#13322C", "#1B4038", "#245349", "#3D6E62", "#6F9A8D", "#B8D2C7"]
+      },
+      "yellow": {
+        "role": "primary",
+        "displayName": "Energy Yellow",
+        "canonical": "#F5B700",
+        "tonalRamp": ["#4A3700", "#7A5A00", "#A87D00", "#D6A100", "#F5B700", "#F7C333", "#FAD670", "#FDEDBF"]
+      },
+      "orange": {
+        "role": "secondary",
+        "displayName": "Burnt Orange",
+        "canonical": "#F06000",
+        "tonalRamp": ["#451B00", "#7A2F00", "#A84200", "#D65400", "#F06000", "#F3813A", "#F7A570", "#FBD2B3"]
+      },
+      "copper": {
+        "role": "secondary",
+        "displayName": "Copper",
+        "canonical": "#B8733A",
+        "tonalRamp": ["#3A2412", "#5C3A1D", "#7E4F27", "#9A612F", "#B8733A", "#C88F60", "#D9AF8D", "#EBD3C0"]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#F7F5F0",
+        "tonalRamp": ["#2B2A26", "#57544C", "#837E72", "#AEA99B", "#D8D3C4", "#EDEAE1", "#F7F5F0", "#FCFBF9"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0E1712",
+        "tonalRamp": ["#000000", "#0E1712", "#1C2E24", "#2A4536", "#385C48", "#57806A", "#84A794", "#C1D6C9"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero H1 only — Space Grotesk 700, balanced, 0.98 line-height." },
+      "body": { "displayName": "Body", "purpose": "Paragraph copy — Inter 400, 65-75ch measure." },
+      "label": { "displayName": "Instrument Label", "purpose": "Data readouts only — JetBrains Mono, tabular-nums for digits. Never a headline or sentence." }
+    },
+    "shadows": [
+      { "name": "panel", "value": "0 10px 30px -16px rgba(0,0,0,0.7)", "purpose": "The instrument-panel bezel (StatsBar) — one shadow per cluster, not per item." },
+      { "name": "plate", "value": "0 8px 20px -12px rgba(0,0,0,0.6)", "purpose": "A standalone recessed plate or card." }
+    ],
+    "motion": [
+      { "name": "meter-settle", "value": "back-out, 850ms, once on first intersection", "purpose": "Instrument value settle — slight mechanical overshoot, then rest. Never loops or re-triggers." },
+      { "name": "circuit-ignite", "value": "stroke-dashoffset ease-out, 1.8s, once on scene mount", "purpose": "Hero circuit trace sweeping from unpowered to lit." },
+      { "name": "nav-solidify", "value": "background-color/border-color transition, 300ms, triggered past 120px scroll", "purpose": "Header transparent-to-solid." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg-3d-gate", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one persuasive action per view — Request a Quote, submit.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Request a Quote</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #F5B700; color: #0E1712; padding: 12px 24px; border-radius: 4px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.875rem; letter-spacing: 0.02em; transition: background-color 0.2s; } .ds-btn-primary:hover { background: rgba(245,183,0,0.9); } .ds-btn-primary:focus-visible { outline: 2px solid #F5B700; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Lower-emphasis action beside a primary button.",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">View Services</a>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; background: transparent; color: #F7F5F0; border: 1px solid rgba(247,245,240,0.4); padding: 12px 24px; border-radius: 4px; font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 0.875rem; transition: background-color 0.2s, color 0.2s; } .ds-btn-secondary:hover { background: #F7F5F0; color: #0E1712; }"
+    },
+    {
+      "name": "Service Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat hairline card for a service listing — no shadow, top rule appears on hover.",
+      "html": "<a class=\"ds-card\" href=\"#\"><span class=\"ds-card-eyebrow\">Power Systems</span><h3 class=\"ds-card-title\">Panel Repair &amp; Upgrades</h3><p class=\"ds-card-body\">Diagnosis and upgrade of distribution boards and switchgear that are undersized, outdated, or failing.</p><span class=\"ds-card-link\">View scope &rarr;</span></a>",
+      "css": ".ds-card { position: relative; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(14,23,18,0.1); background: #F7F5F0; padding: 24px; text-decoration: none; } .ds-card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 2px; width: 0; background: #F5B700; transition: width 0.3s; } .ds-card:hover::before { width: 100%; } .ds-card:hover { border-color: #F5B700; } .ds-card-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(19,50,44,0.6); } .ds-card-title { margin-top: 12px; font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 600; color: #0E1712; } .ds-card-body { margin-top: 12px; font-size: 0.875rem; line-height: 1.6; color: rgba(14,23,18,0.7); }"
+    },
+    {
+      "name": "Meter Plate Panel",
+      "kind": "custom",
+      "refersTo": "meter-plate",
+      "description": "The instrument-panel trust-metric readout — signature component of this build. One bezel, multiple divided gauges, no individually-shadowed stat cards.",
+      "html": "<div class=\"ds-meter-panel\"><div class=\"ds-meter-plate ds-meter-lead\"><div class=\"ds-meter-value\">4.8</div><div class=\"ds-meter-ladder\"><span class=\"lit\"></span><span class=\"lit\"></span><span class=\"lit\"></span><span class=\"lit\"></span><span class=\"lit\"></span></div><div class=\"ds-meter-label\">Google rating &middot; 187 reviews</div></div><div class=\"ds-meter-plate\"><div class=\"ds-meter-value\">15+</div><div class=\"ds-meter-label\">Years of engineering experience</div></div></div>",
+      "css": ".ds-meter-panel { display: flex; border: 1px solid rgba(184,115,58,0.25); background: rgba(14,38,33,0.5); box-shadow: 0 10px 30px -16px rgba(0,0,0,0.7); } .ds-meter-plate { padding: 24px; border-right: 1px solid rgba(247,245,240,0.1); } .ds-meter-plate:last-child { border-right: none; } .ds-meter-lead { padding: 32px 28px; } .ds-meter-value { font-family: 'JetBrains Mono', monospace; font-weight: 500; font-variant-numeric: tabular-nums; color: #F5B700; font-size: 1.75rem; line-height: 1; } .ds-meter-lead .ds-meter-value { font-size: 2.75rem; } .ds-meter-ladder { display: flex; gap: 8px; margin-top: 16px; max-width: 220px; } .ds-meter-ladder span { flex: 1; height: 8px; background: rgba(247,245,240,0.12); } .ds-meter-ladder span.lit { background: #F5B700; box-shadow: 0 0 8px rgba(245,183,0,0.55); } .ds-meter-label { margin-top: 10px; font-family: 'Inter', sans-serif; font-size: 0.8125rem; color: rgba(247,245,240,0.65); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Live Circuit",
+    "overview": "The site is a single-line electrical diagram made dimensional. A visitor doesn't scroll past marketing sections — they trace current from grid intake through distribution to a load, and the load node is the conversion action. Every 3D object that appears is something Kell Electricals' engineers actually draw, install, or test — a panel, a busbar, a breaker — never a decorative abstraction. The 2D pages (services, about, legal) carry the same palette, type, and material logic at a lighter footprint: this is one system operating at two intensities, not two systems.\n\nThe system rejects the \"local electrician\" visual vocabulary on purpose — no caution-tape yellow/black, no stock photography of thumbs-up hard hats, no exclamation points. Restraint is the credibility signal: Petrol is the dominant surface, Energy Yellow is a precise, rationed accent, and copy states scope and method rather than asserting quality.",
+    "keyCharacteristics": [
+      "Dark Petrol as the default canvas, not an occasional dark-mode section",
+      "Energy Yellow reserved for CTAs, live/active states, and instrument readouts — never a large fill",
+      "A dedicated monospace face exists only to carry data, banned from headlines and body copy",
+      "3D budget scales with conversion intent and drops to zero below 1024px width or under prefers-reduced-motion"
+    ],
+    "rules": [
+      { "name": "The Rationed Accent Rule", "body": "Energy Yellow signals \"live\" or \"actionable\" and nothing else.", "section": "colors" },
+      { "name": "The One Hue at a Time Rule", "body": "Burnt Orange and Energy Yellow never co-occur in a single component.", "section": "colors" },
+      { "name": "The Instrument-Only Mono Rule", "body": "JetBrains Mono renders data, never a headline, button label, or sentence of body copy.", "section": "typography" },
+      { "name": "No Kicker Rule", "body": "No small tracked label sits above a page-level heading as an eyebrow. A classification tag inside a repeated card is not this pattern.", "section": "typography" },
+      { "name": "The One Shadow Per Cluster Rule", "body": "Related instruments sit inside one bezeled panel with one shadow and internal dividers, never one shadow per item.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do treat every 3D object as real hardware, never an abstract decorative form.",
+      "Do gate WebGL behind a width check and prefers-reduced-motion, with a static frame as fallback.",
+      "Do settle animated numbers with a back-out ease once per view, never on a loop.",
+      "Do keep the RC number / certification strip in the instrument-mono voice, below the primary CTA."
+    ],
+    "donts": [
+      "Don't put a tracked eyebrow label above a page-level heading.",
+      "Don't render related metrics as separately-shadowed, identically-shaped cards.",
+      "Don't fabricate a proportional gauge for a metric with no real maximum.",
+      "Don't let JetBrains Mono carry a headline, button label, or body sentence.",
+      "Don't mix Burnt Orange and Energy Yellow in the same component."
+    ]
+  }
+}

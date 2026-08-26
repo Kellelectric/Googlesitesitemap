@@ -19,10 +19,14 @@ const config: Config = {
         },
         paper: '#F7F5F0',
         ink: '#0E1712',
+        copper: {
+          DEFAULT: '#B8733A',
+        },
       },
       fontFamily: {
         display: ['var(--font-space-grotesk)', 'sans-serif'],
         body: ['var(--font-inter)', 'sans-serif'],
+        mono: ['var(--font-jetbrains-mono)', 'ui-monospace', 'monospace'],
       },
       maxWidth: {
         content: '1280px',

@@ -27,3 +27,6 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# impeccable — ephemeral inspection screenshots, not build artifacts
+.impeccable/review/

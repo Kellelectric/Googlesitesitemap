@@ -16,13 +16,13 @@ const PETROL_700 = '#0E2621'
 // direction doc. Orthogonal segments only — this is a schematic, not a
 // sculpted object.
 const PATH_POINTS: [number, number, number][] = [
-  [-6.4, -1.6, 0],
-  [-3.2, -1.6, 0],
-  [-2.2, -0.8, 0.3],
-  [-2.2, 0.6, 0.3],
-  [0.4, 0.6, 0.3],
-  [0.4, 1.9, 0.6],
-  [3.2, 1.9, 0.6],
+  [-4.6, -1.9, 0],
+  [-1.8, -1.9, 0],
+  [-0.9, -1.1, 0.3],
+  [-0.9, 0.3, 0.3],
+  [1.2, 0.3, 0.3],
+  [1.2, 1.9, 0.6],
+  [3.6, 1.9, 0.6],
 ]
 
 const NODE_FRACTIONS = [0, 0.42, 1]

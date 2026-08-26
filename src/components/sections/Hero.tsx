@@ -24,7 +24,7 @@ export function Hero() {
     <section className="relative overflow-hidden bg-petrol text-paper">
       <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-40" />
       <CircuitLines className="pointer-events-none absolute -right-24 top-0 h-full w-[60%] text-paper/10 motion-safe:animate-[reveal-up_1.1s_ease-out]" />
-      <div className="absolute -right-10 top-0 hidden h-full w-[65%] md:block">
+      <div className="absolute -right-10 top-0 hidden h-full w-[55%] lg:block">
         <HeroScene />
       </div>
 
@@ -34,16 +34,9 @@ export function Hero() {
         animate={reduceMotion ? undefined : 'visible'}
         variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } } }}
       >
-        <motion.span
-          variants={staggerItem}
-          className="eyebrow inline-block border border-paper/20 px-3 py-1.5 text-yellow"
-        >
-          RC {company.rcNumber} · {company.certifications.map((c) => c.name).join(' & ')} Certified
-        </motion.span>
-
         <motion.h1
           variants={staggerItem}
-          className="mt-8 max-w-3xl font-display text-[clamp(2.5rem,5vw,4.5rem)] font-semibold leading-[1.05] text-paper"
+          className="max-w-3xl font-display text-[clamp(2.75rem,6vw,5.25rem)] font-semibold leading-[0.98] tracking-[-0.01em] text-paper [text-wrap:balance]"
         >
           {company.tagline}
         </motion.h1>
@@ -61,16 +54,21 @@ export function Hero() {
           </Button>
         </motion.div>
 
+        {/* Credential readout — an instrument label, not a marketing kicker:
+            sits below the ask, in the mono face reserved for data, echoing
+            a panel nameplate rather than a badge above the headline. */}
         <motion.div
           variants={staggerItem}
-          className="mt-16 flex flex-wrap gap-x-10 gap-y-4 border-t border-paper/10 pt-8 text-sm text-paper/60"
+          className="mt-16 inline-flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-copper/30 pt-6 font-mono text-[0.8125rem] text-paper/70"
         >
-          <span>{company.yearsExperience}+ years in the field</span>
+          <span className="text-copper">RC {company.rcNumber}</span>
+          <span>{company.certifications.map((c) => c.name).join(' · ')} CERTIFIED</span>
+          <span>{company.yearsExperience}+ YRS</span>
           <span>
-            {company.trust.googleRating}★ rating · {company.trust.googleReviewCount} Google reviews
+            {company.trust.googleRating.toFixed(1)}★ / {company.trust.googleReviewCount} REVIEWS
           </span>
-          <span>{company.serviceAreas.length} service zones across Abuja</span>
-          <span>24/7 emergency response</span>
+          <span>{company.serviceAreas.length} ZONES</span>
+          <span className="text-yellow">24/7 RESPONSE</span>
         </motion.div>
       </motion.div>
     </section>

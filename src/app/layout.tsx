@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Space_Grotesk, Inter } from 'next/font/google'
+import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
@@ -17,6 +17,15 @@ const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
   weight: ['400', '500', '600'],
+  display: 'swap',
+})
+
+// Instrument/data readouts only — voltage, coordinates, HUD eyebrows.
+// Never headlines or body copy (see PRODUCT.md Brand Commitments).
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains-mono',
+  weight: ['400', '500'],
   display: 'swap',
 })
 
@@ -66,8 +75,22 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <body>
+        <div
+          hidden
+          aria-hidden="true"
+          dangerouslySetInnerHTML={{
+            __html: `<!--
+THESIS: The site is a single-line electrical diagram made dimensional — visitors trace current from grid intake to their own building, and the load node is the quote CTA, not a generic hero-then-cards page.
+OWN-WORLD: Petrol/Energy Yellow/Burnt Orange/Copper on Paper+Ink; Space Grotesk display, Inter body, JetBrains Mono for instrument readouts only; every 3D object is real electrical hardware (panel, busbar, breaker), no decorative geometry.
+STORY: A facilities manager or homeowner sees engineering method (assess/design/install/test), not marketing claims, and self-identifies a service type before the ask.
+FIRST VIEWPORT: Live single-line diagram sweeps in behind left-aligned headline/CTA; credential proof sits below the CTA as a data strip, not a kicker above the headline.
+FORM: User-committed direction (The Live Circuit) — pre-approved via two prior artifacts (creative direction + Circuit Map UX spec); no concept-seed round run per new-work.md's "precisely specified request" exception.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
+-->`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }}

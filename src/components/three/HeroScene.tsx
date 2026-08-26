@@ -9,7 +9,7 @@ import { HeroCircuitScene } from './HeroCircuitScene'
 // poster frame. Desktop always gets the live scene; prefers-reduced-motion
 // gets the live scene frozen on its final frame instead of removed, since
 // the geometry itself costs nothing extra to hold static.
-const MIN_WIDTH_FOR_3D = 768
+const MIN_WIDTH_FOR_3D = 1024
 
 export function HeroScene() {
   const [shouldRender3D, setShouldRender3D] = useState(false)

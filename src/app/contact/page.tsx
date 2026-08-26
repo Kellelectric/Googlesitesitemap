@@ -6,7 +6,7 @@ import { company } from '@/content/company'
 export const metadata: Metadata = {
   title: 'Contact & Request a Quote',
   description:
-    'Request a quote from Kell Electricals Ltd — COREN and NEMSA certified electrical engineers serving Wuse 2, Gwarinpa, Maitama, Asokoro, Guzape, Katampe, and wider Nigeria.',
+    'Request a quote from Kell Electricals Ltd, COREN and NEMSA certified electrical engineers serving Wuse 2, Gwarinpa, Maitama, Asokoro, Guzape, Katampe, and wider Nigeria.',
   alternates: { canonical: '/contact' },
 }
 
@@ -73,8 +73,8 @@ export default function ContactPage() {
             <div className="border border-orange/30 bg-orange/5 p-6">
               <span className="eyebrow text-orange">Emergency?</span>
               <p className="mt-3 text-sm leading-relaxed text-ink/75">
-                For active electrical hazards — sparking, burning smell,
-                exposed live wiring — call {company.phone} directly rather
+                For active electrical hazards (sparking, burning smell,
+                exposed live wiring), call {company.phone} directly rather
                 than submitting the form.
               </p>
             </div>

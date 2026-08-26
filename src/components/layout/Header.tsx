@@ -13,7 +13,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-paper/10 bg-petrol">
       <div className="container-content flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center" aria-label={`${company.name} — home`}>
+        <Link href="/" className="flex items-center" aria-label={`${company.name} home`}>
           <Image
             src="/brand/logo-on-dark.png"
             alt={company.name}

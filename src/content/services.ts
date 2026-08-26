@@ -76,7 +76,7 @@ export const services: Service[] = [
     summary:
       'Load-analyzed solar and hybrid inverter systems sized for Nigeria\'s grid reality, not a generic panel count.',
     description:
-      'Reliable power in Nigeria means designing for the grid you actually have, not the one on paper. Our team runs a full load analysis before specifying a single panel — sizing solar arrays, battery banks, and hybrid inverters to match real consumption patterns, backup priorities, and budget, then installs and commissions the system with documented performance testing.',
+      'Reliable power in Nigeria means designing for the grid you actually have, not the one on paper. Our team runs a full load analysis before specifying a single panel, sizing solar arrays, battery banks, and hybrid inverters to match real consumption patterns, backup priorities, and budget, then installs and commissions the system with documented performance testing.',
     scope: [
       'Load analysis and consumption audit',
       'System sizing (panels, battery bank, inverter capacity)',
@@ -96,7 +96,7 @@ export const services: Service[] = [
     name: 'Home Automation',
     category: 'security-automation',
     summary:
-      'Centralized control of lighting, climate, and access — integrated at the electrical layer, not bolted on.',
+      'Centralized control of lighting, climate, and access, integrated at the electrical layer, not bolted on.',
     description:
       'Automation systems installed after the fact tend to fight the existing wiring. We integrate smart lighting, climate, and access control into the electrical design itself, so switches, circuits, and control systems work together rather than as a patchwork of retrofitted devices.',
     scope: [
@@ -140,7 +140,7 @@ export const services: Service[] = [
     summary:
       'Motorized gates, intercoms, and access control wired and commissioned as a single reliable system.',
     description:
-      'From sliding and swing gate motors to intercom and card/biometric access control, we handle the full electrical and control integration — not just the motor installation — so the system works reliably under Abuja\'s power conditions, including backup during outages.',
+      'From sliding and swing gate motors to intercom and card/biometric access control, we handle the full electrical and control integration, not just the motor installation, so the system works reliably under Abuja\'s power conditions, including backup during outages.',
     scope: [
       'Gate motor installation and wiring',
       'Intercom and video entry systems',
@@ -161,7 +161,7 @@ export const services: Service[] = [
     summary:
       'Dedicated EV charging circuits sized correctly against existing panel capacity, not a generic add-on outlet.',
     description:
-      'EV chargers draw sustained, high loads that most existing panels weren\'t designed for. We assess available capacity, upgrade supply where needed, and install a dedicated, correctly protected circuit — with load management where solar or generator integration is in play.',
+      'EV chargers draw sustained, high loads that most existing panels weren\'t designed for. We assess available capacity, upgrade supply where needed, and install a dedicated, correctly protected circuit, with load management where solar or generator integration is in play.',
     scope: [
       'Panel capacity assessment for EV load',
       'Dedicated circuit design and installation',
@@ -222,7 +222,7 @@ export const services: Service[] = [
     summary:
       'Three-phase power distribution, motor control, and factory-floor electrical infrastructure engineered to spec.',
     description:
-      'Industrial and factory electrical work carries different stakes than residential — downtime is measured in production loss. We design and install three-phase distribution, motor control centers, and factory-floor infrastructure to engineering spec, with documentation suited to plant maintenance teams.',
+      'Industrial and factory electrical work carries different stakes than residential: downtime is measured in production loss. We design and install three-phase distribution, motor control centers, and factory-floor infrastructure to engineering spec, with documentation suited to plant maintenance teams.',
     scope: [
       'Three-phase power distribution design and installation',
       'Motor control center (MCC) installation',
@@ -243,7 +243,7 @@ export const services: Service[] = [
     summary:
       'A standing emergency line for faults, outages, and safety hazards that can\'t wait for a scheduled callout.',
     description:
-      'Electrical faults that pose a safety or business-continuity risk get a same-day, any-hour response. This isn\'t a general contact line — it\'s a dedicated emergency response service for genuine electrical hazards and critical outages.',
+      'Electrical faults that pose a safety or business-continuity risk get a same-day, any-hour response. This isn\'t a general contact line. It\'s a dedicated emergency response service for genuine electrical hazards and critical outages.',
     scope: [
       '24/7 emergency dispatch',
       'On-site fault diagnosis',
@@ -261,9 +261,9 @@ export const services: Service[] = [
     name: 'Electrical Fault Finding & Diagnostics',
     category: 'maintenance',
     summary:
-      'Systematic fault tracing using proper test equipment — not a guess-and-replace approach.',
+      'Systematic fault tracing using proper test equipment, not a guess-and-replace approach.',
     description:
-      'Intermittent faults, nuisance tripping, and "it works sometimes" problems get resolved with systematic diagnostics — circuit tracing, insulation resistance testing, and thermal imaging — rather than replacing parts until something works.',
+      'Intermittent faults, nuisance tripping, and "it works sometimes" problems get resolved with systematic diagnostics (circuit tracing, insulation resistance testing, and thermal imaging) rather than replacing parts until something works.',
     scope: [
       'Circuit tracing and continuity testing',
       'Insulation resistance and earth loop impedance testing',
@@ -281,9 +281,9 @@ export const services: Service[] = [
     name: 'Lighting Design & Installation',
     category: 'power',
     summary:
-      'Interior and exterior lighting engineered for the right levels, efficiency, and control — not just fixture placement.',
+      'Interior and exterior lighting engineered for the right levels, efficiency, and control, not just fixture placement.',
     description:
-      'Lighting design starts with the space\'s actual use — task lighting, ambient levels, energy efficiency, and control zoning — and ends with correctly specified, energy-efficient fixtures wired to that plan.',
+      'Lighting design starts with the space\'s actual use (task lighting, ambient levels, energy efficiency, and control zoning) and ends with correctly specified, energy-efficient fixtures wired to that plan.',
     scope: [
       'Lighting layout and lux-level design',
       'LED fixture specification and installation',
@@ -324,7 +324,7 @@ export const services: Service[] = [
     summary:
       'Electrical scope for office and commercial fit-outs, coordinated with the wider build programme.',
     description:
-      'Fit-out electrical work has to coordinate with architects, M&E consultants, and construction timelines. We deliver the full electrical scope — power, data first-fix, lighting, and life-safety coordination — as part of a managed fit-out programme, not an isolated trade.',
+      'Fit-out electrical work has to coordinate with architects, M&E consultants, and construction timelines. We deliver the full electrical scope (power, data first-fix, lighting, and life-safety coordination) as part of a managed fit-out programme, not an isolated trade.',
     scope: [
       'Power and data first- and second-fix',
       'Lighting and switching installation',

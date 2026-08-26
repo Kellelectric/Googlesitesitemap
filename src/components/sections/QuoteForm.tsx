@@ -4,6 +4,14 @@ import { FormEvent, useState } from 'react'
 import { services } from '@/content/services'
 import { company } from '@/content/company'
 
+// Set once on mount and sent back with the submission. The API rejects
+// submissions completed faster than a human plausibly could — see
+// MIN_SUBMIT_SECONDS in app/api/quote/route.ts.
+function useFormRenderedAt() {
+  const [renderedAt] = useState(() => Date.now())
+  return renderedAt
+}
+
 type FormStatus = 'idle' | 'submitting' | 'success' | 'error' | 'not_configured'
 
 type FormState = {
@@ -37,6 +45,7 @@ export function QuoteForm() {
   const [form, setForm] = useState<FormState>(initialState)
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
   const [status, setStatus] = useState<FormStatus>('idle')
+  const renderedAt = useFormRenderedAt()
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -66,7 +75,7 @@ export function QuoteForm() {
       const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, renderedAt }),
       })
 
       if (!res.ok) {

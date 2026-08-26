@@ -52,7 +52,7 @@ export default function IndustryDetailPage({ params }: Props) {
       <section className="relative overflow-hidden bg-petrol text-paper">
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">
-          <nav className="eyebrow flex gap-2 text-paper/50" aria-label="Breadcrumb">
+          <nav className="eyebrow flex gap-2 text-paper/60" aria-label="Breadcrumb">
             <Link href="/industries" className="hover:text-paper">
               Industries
             </Link>
@@ -94,7 +94,7 @@ export default function IndustryDetailPage({ params }: Props) {
 
           <aside>
             <div className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/60">Relevant services</span>
+              <span className="eyebrow text-petrol/70">Relevant services</span>
               <ul className="mt-4 space-y-3">
                 {relatedServices.map((service) => (
                   <li key={service.slug}>

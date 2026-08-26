@@ -54,7 +54,7 @@ export default function AboutPage() {
         <div className="container-content grid grid-cols-1 gap-16 lg:grid-cols-[1fr,380px]">
           <div>
             <Reveal>
-              <span className="eyebrow text-petrol/60">Our mission</span>
+              <span className="eyebrow text-petrol/70">Our mission</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
                 Electrical work that holds up under Nigeria&rsquo;s real
                 operating conditions
@@ -77,7 +77,7 @@ export default function AboutPage() {
             </Reveal>
 
             <Reveal delay={0.1} className="mt-14">
-              <span className="eyebrow text-petrol/60">How the team is organized</span>
+              <span className="eyebrow text-petrol/70">How the team is organized</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
                 Four functions, one process
               </h2>
@@ -97,7 +97,7 @@ export default function AboutPage() {
 
           <aside className="space-y-8">
             <Reveal className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/60">Certified & registered</span>
+              <span className="eyebrow text-petrol/70">Certified & registered</span>
               <ul className="mt-4 space-y-4">
                 {company.certifications.map((cert) => (
                   <li key={cert.name}>
@@ -114,7 +114,7 @@ export default function AboutPage() {
             </Reveal>
 
             <Reveal delay={0.08} className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/60">Where we work</span>
+              <span className="eyebrow text-petrol/70">Where we work</span>
               <ul className="mt-4 space-y-2 text-sm text-ink/75">
                 {company.serviceAreas.map((area) => (
                   <li key={area}>{area}</li>

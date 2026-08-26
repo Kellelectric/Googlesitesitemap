@@ -46,7 +46,7 @@ export default function ServicesPage() {
             return (
               <div key={category}>
                 <Reveal>
-                  <h2 className="eyebrow text-petrol/60">
+                  <h2 className="eyebrow text-petrol/70">
                     {categoryLabels[category]}
                   </h2>
                 </Reveal>

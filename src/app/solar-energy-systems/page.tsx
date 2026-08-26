@@ -127,7 +127,7 @@ export default function SolarEnergySystemsPage() {
       <section className="bg-paper py-20">
         <div className="container-content">
           <Reveal>
-            <span className="eyebrow text-petrol/60">Our sizing methodology</span>
+            <span className="eyebrow text-petrol/70">Our sizing methodology</span>
             <h2 className="mt-3 max-w-xl text-3xl font-semibold text-ink md:text-4xl">
               Measured, not estimated
             </h2>
@@ -169,7 +169,7 @@ export default function SolarEnergySystemsPage() {
               <MotionDiv key={tier.name} variants={staggerItem} className="border border-paper/15 p-6">
                 <h3 className="text-lg font-semibold text-yellow">{tier.name}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-paper/75">{tier.summary}</p>
-                <p className="mt-4 border-t border-paper/15 pt-4 text-xs uppercase tracking-[0.06em] text-paper/50">
+                <p className="mt-4 border-t border-paper/15 pt-4 text-xs uppercase tracking-[0.06em] text-paper/60">
                   Best fit
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-paper/70">{tier.fit}</p>
@@ -182,7 +182,7 @@ export default function SolarEnergySystemsPage() {
       <section className="bg-paper py-20">
         <div className="container-content">
           <Reveal className="border border-ink/10 p-8 md:p-10">
-            <span className="eyebrow text-petrol/60">Illustrative example</span>
+            <span className="eyebrow text-petrol/70">Illustrative example</span>
             <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
               What the sizing process looks like in practice
             </h2>

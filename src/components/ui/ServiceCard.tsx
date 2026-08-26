@@ -9,7 +9,7 @@ export function ServiceCard({ service }: { service: Service }) {
     >
       <div className="absolute inset-x-0 top-0 h-[2px] w-0 bg-yellow transition-[width] duration-300 group-hover:w-full" />
       <div>
-        <span className="eyebrow text-petrol/60">
+        <span className="eyebrow text-petrol/70">
           {categoryLabels[service.category]}
         </span>
         <h3 className="mt-3 text-xl font-semibold text-ink">

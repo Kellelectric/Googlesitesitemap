@@ -40,7 +40,7 @@ export default function ResourcesPage() {
                 >
                   <div className="absolute inset-x-0 top-0 h-[2px] w-0 bg-yellow transition-[width] duration-300 group-hover:w-full" />
                   <div>
-                    <span className="eyebrow text-petrol/60">{article.category}</span>
+                    <span className="eyebrow text-petrol/70">{article.category}</span>
                     <h2 className="mt-3 text-xl font-semibold text-ink">
                       {article.title}
                     </h2>

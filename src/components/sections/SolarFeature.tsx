@@ -30,7 +30,7 @@ export function SolarFeature() {
         </Reveal>
 
         <Reveal delay={0.12} className="border border-paper/15 p-8">
-          <span className="eyebrow text-paper/50">System design covers</span>
+          <span className="eyebrow text-paper/60">System design covers</span>
           <ul className="mt-5 space-y-4">
             {solar.scope.map((item) => (
               <li key={item} className="flex gap-3 text-sm text-paper/80">

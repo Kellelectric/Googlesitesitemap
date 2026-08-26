@@ -28,12 +28,17 @@ draft of `/legal/terms` and `/legal/privacy`. Still blocked on real data:
 
 ## Functional work
 
-- **Wire the contact/quote form to a backend.** Form schema
-  (`src/content` + form component) is already service-type-branched and
-  structured to map cleanly onto Zoho Forms/Books fields. Needs: a Zoho
-  Forms endpoint or a serverless route (`app/api/quote/route.ts`) that
-  forwards to Zoho, plus spam protection (hCaptcha or similar) before
-  going live.
+- **Wire the contact/quote form to a backend.** `app/api/quote/route.ts`
+  already forwards validated submissions to any URL set as
+  `QUOTE_WEBHOOK_URL` (Zoho Flow, Zapier, Make, etc.) — no destination is
+  hardcoded. Set that env var in the deployment to go live. Spam
+  protection now includes a honeypot field, a time-trap (rejects
+  submissions completed faster than 3 seconds after the form renders),
+  and a best-effort in-memory per-IP rate limit (5 requests / 10 minutes;
+  resets on cold start, so it will not stop a distributed attack). Add
+  hCaptcha or similar on top of this if abuse becomes a real problem after
+  launch — none is wired in since that needs a real site/secret key pair
+  we don't have.
 - **WhatsApp click-to-chat.** Phone number is present; add a WhatsApp deep
   link (`wa.me/2348140205895`) alongside the phone CTA in header/footer/
   contact page once confirmed that number is WhatsApp-enabled.
@@ -43,9 +48,12 @@ draft of `/legal/terms` and `/legal/privacy`. Still blocked on real data:
   (control panels, technicians, solar installs, thermal imaging) as it
   becomes available; keep the blueprint/circuit-trace overlay treatment for
   consistency.
-- **Analytics + Search Console.** Add GA4 (or privacy-friendlier
-  alternative) and verify Google Search Console once the domain is live;
-  submit `sitemap.xml`.
+- **Analytics + Search Console.** `src/components/analytics/GoogleAnalytics.tsx`
+  renders the GA4 script only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set
+  in the deployment env — nothing renders without it, no ID is hardcoded.
+  Set that env var once a real GA4 property exists. Search Console
+  verification and `sitemap.xml` submission still need to happen once the
+  domain is live.
 - **Domain/hosting decision.** Confirm `kellelectricals.com` DNS points at
   the new Vercel deployment and whether the existing Google Sites/other
   Vercel/Netlify properties are retired or redirected (301s from old
@@ -74,8 +82,27 @@ upgrade.
 
 ## Testing before launch
 
-- Run Lighthouse (mobile + desktop) on all shipped pages; target 90+ across
-  Performance/Accessibility/Best Practices/SEO.
-- Manually verify color contrast on any new component combining Petrol/
-  Yellow/Orange against the ratios documented in `design-system.md`.
-- Validate structured data with Google's Rich Results Test once deployed.
+- **Lighthouse run completed this session** (desktop, production build,
+  headless Chromium) across home, about, solar, a service detail page, a
+  resource article, contact, an industry page, and legal/privacy.
+  Performance 93-99, Accessibility 96-100, Best Practices 96, SEO 100
+  (69 on `/legal/privacy`, expected: that's the intentional `noindex`).
+  All comfortably clear the 90+ target. Re-run once deployed to a real
+  domain, since mobile and real-network conditions weren't tested here.
+- **Color contrast bug found and fixed this session.** The `eyebrow`
+  label's `text-petrol/60` (3.83:1 on Paper) and the inactive breadcrumb
+  segment's `text-paper/50` (4.31:1 on Petrol) both failed WCAG AA's
+  4.5:1 minimum for small text, sitewide (every page using either
+  pattern). Bumped to `text-petrol/70` (5.09:1) and `text-paper/60`
+  (5.57:1) respectively across all files; verified via Lighthouse
+  afterward that zero contrast findings remain anywhere tested.
+- **Known minor finding, not fixed:** the desktop header nav links score
+  a "target size" (WCAG 2.2, 2.5.8) ding — the clickable area is ~17px
+  tall against the 24px recommendation. Fixing it means adding vertical
+  padding to header nav links, which nudges the tightly-set nav height;
+  left as-is since it's a newer/stricter criterion and every page still
+  clears 90+ overall. Revisit if a stricter accessibility bar is set later.
+- Validate structured data with Google's Rich Results Test once deployed
+  (this session validated that every page's JSON-LD parses as valid JSON
+  with the expected schema.org `@type`s, but Rich Results Test itself
+  needs a public URL).

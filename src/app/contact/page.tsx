@@ -33,7 +33,7 @@ export default function ContactPage() {
 
           <aside className="space-y-8">
             <div className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/60">Direct contact</span>
+              <span className="eyebrow text-petrol/70">Direct contact</span>
               <div className="mt-4 space-y-4 text-sm">
                 <div>
                   <p className="font-semibold text-ink">Phone</p>
@@ -57,7 +57,7 @@ export default function ContactPage() {
             </div>
 
             <div className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/60">Office</span>
+              <span className="eyebrow text-petrol/70">Office</span>
               <address className="mt-4 text-sm not-italic leading-relaxed text-ink/70">
                 {company.address.street}
                 <br />

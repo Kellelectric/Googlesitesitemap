@@ -6,7 +6,7 @@ export function TrustSection() {
     <section className="bg-paper py-24">
       <div className="container-content grid grid-cols-1 gap-12 md:grid-cols-2">
         <Reveal className="border border-ink/10 p-8">
-          <span className="eyebrow text-petrol/60">Verified track record</span>
+          <span className="eyebrow text-petrol/70">Verified track record</span>
           <div className="mt-5 flex items-baseline gap-3">
             <span className="font-display text-5xl font-semibold text-petrol">
               {company.trust.googleRating}★
@@ -32,7 +32,7 @@ export function TrustSection() {
             standards.
           </p>
           <div className="mt-6 border-t border-paper/15 pt-5">
-            <span className="eyebrow text-paper/50">Registered company</span>
+            <span className="eyebrow text-paper/60">Registered company</span>
             <p className="mt-1 font-display text-2xl font-semibold text-yellow">
               RC {company.rcNumber}
             </p>

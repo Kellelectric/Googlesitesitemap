@@ -63,7 +63,7 @@ export default function ServiceDetailPage({ params }: Props) {
       <section className="relative overflow-hidden bg-petrol text-paper">
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">
-          <nav className="eyebrow flex gap-2 text-paper/50" aria-label="Breadcrumb">
+          <nav className="eyebrow flex gap-2 text-paper/60" aria-label="Breadcrumb">
             <Link href="/services" className="hover:text-paper">
               Services
             </Link>
@@ -119,7 +119,7 @@ export default function ServiceDetailPage({ params }: Props) {
 
           <aside>
             <div className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/60">Typical use cases</span>
+              <span className="eyebrow text-petrol/70">Typical use cases</span>
               <ul className="mt-4 space-y-4">
                 {service.useCases.map((useCase) => (
                   <li key={useCase} className="text-sm leading-relaxed text-ink/75">
@@ -131,7 +131,7 @@ export default function ServiceDetailPage({ params }: Props) {
 
             {related.length > 0 && (
               <div className="mt-8 border border-ink/10 p-6">
-                <span className="eyebrow text-petrol/60">Related services</span>
+                <span className="eyebrow text-petrol/70">Related services</span>
                 <ul className="mt-4 space-y-3">
                   {related.map((r) => (
                     <li key={r.slug}>

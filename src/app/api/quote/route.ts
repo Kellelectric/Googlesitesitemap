@@ -12,6 +12,7 @@ type QuotePayload = {
   location: string
   details: string
   website?: string // honeypot — real users never fill this in
+  renderedAt?: number // client timestamp when the form mounted
 }
 
 function isValidPayload(body: unknown): body is QuotePayload {
@@ -33,10 +34,36 @@ function isValidPayload(body: unknown): body is QuotePayload {
   )
 }
 
+// Minimum plausible time (seconds) between the form rendering and a real
+// person submitting it. Scripted submissions that build and POST the
+// payload immediately after loading the page get rejected here.
+const MIN_SUBMIT_SECONDS = 3
+
+// Best-effort in-memory rate limit: max requests per IP per window. This
+// resets on cold start and does not share state across serverless
+// instances, so it will not stop a distributed attack, but it does stop
+// a single script hammering the endpoint from one warm instance.
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000
+const RATE_LIMIT_MAX_REQUESTS = 5
+const requestLog = new Map<string, number[]>()
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const recent = (requestLog.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS)
+  recent.push(now)
+  requestLog.set(ip, recent)
+  return recent.length > RATE_LIMIT_MAX_REQUESTS
+}
+
 // Forwards validated quote requests to a configurable webhook (Zoho Flow,
 // Zapier, Make, etc.) set via QUOTE_WEBHOOK_URL. No destination is
 // hardcoded — see docs/next-steps.md for setup.
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  if (isRateLimited(ip)) {
+    return NextResponse.json({ ok: false, reason: 'rate_limited' }, { status: 429 })
+  }
+
   let body: unknown
   try {
     body = await request.json()
@@ -51,6 +78,16 @@ export async function POST(request: NextRequest) {
   // Honeypot: bots tend to fill every field, real users never see this one.
   if (body.website && body.website.trim().length > 0) {
     return NextResponse.json({ ok: true })
+  }
+
+  // Time-trap: reject submissions completed faster than a human plausibly
+  // could. Missing/invalid renderedAt is treated as suspicious, not fatal,
+  // since older cached clients won't send it.
+  if (typeof body.renderedAt === 'number') {
+    const elapsedSeconds = (Date.now() - body.renderedAt) / 1000
+    if (elapsedSeconds < MIN_SUBMIT_SECONDS) {
+      return NextResponse.json({ ok: true })
+    }
   }
 
   const webhookUrl = process.env.QUOTE_WEBHOOK_URL

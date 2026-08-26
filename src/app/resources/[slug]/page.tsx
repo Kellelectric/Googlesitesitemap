@@ -49,7 +49,7 @@ export default function ArticleDetailPage({ params }: Props) {
       <section className="relative overflow-hidden bg-petrol text-paper">
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">
-          <nav className="eyebrow flex gap-2 text-paper/50" aria-label="Breadcrumb">
+          <nav className="eyebrow flex gap-2 text-paper/60" aria-label="Breadcrumb">
             <Link href="/resources" className="hover:text-paper">
               Resources
             </Link>
@@ -84,7 +84,7 @@ export default function ArticleDetailPage({ params }: Props) {
 
           <aside>
             <div className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/60">Have a job like this?</span>
+              <span className="eyebrow text-petrol/70">Have a job like this?</span>
               <p className="mt-3 text-sm leading-relaxed text-ink/70">
                 We run the same assessment process on site before quoting.
               </p>
@@ -105,7 +105,7 @@ export default function ArticleDetailPage({ params }: Props) {
 
             {related.length > 0 && (
               <div className="mt-8 border border-ink/10 p-6">
-                <span className="eyebrow text-petrol/60">More guides</span>
+                <span className="eyebrow text-petrol/70">More guides</span>
                 <ul className="mt-4 space-y-3">
                   {related.map((a) => (
                     <li key={a.slug}>

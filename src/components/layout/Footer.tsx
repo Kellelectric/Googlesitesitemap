@@ -21,13 +21,13 @@ export function Footer() {
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper/60">
             {company.positioning}
           </p>
-          <div className="mt-6 flex gap-2 text-xs text-paper/50">
+          <div className="mt-6 flex gap-2 text-xs text-paper/60">
             <span>{company.certifications.map((c) => c.name).join(' · ')} certified</span>
           </div>
         </div>
 
         <div>
-          <span className="eyebrow text-paper/50">Site</span>
+          <span className="eyebrow text-paper/60">Site</span>
           <ul className="mt-4 space-y-3">
             {footerNav.map((link) => (
               <li key={link.href}>
@@ -43,7 +43,7 @@ export function Footer() {
         </div>
 
         <div>
-          <span className="eyebrow text-paper/50">Services</span>
+          <span className="eyebrow text-paper/60">Services</span>
           <ul className="mt-4 space-y-3">
             {services.slice(0, 6).map((service) => (
               <li key={service.slug}>
@@ -59,7 +59,7 @@ export function Footer() {
         </div>
 
         <div>
-          <span className="eyebrow text-paper/50">Contact</span>
+          <span className="eyebrow text-paper/60">Contact</span>
           <address className="mt-4 space-y-3 text-sm not-italic text-paper/80">
             <p>{company.address.full}</p>
             <p>
@@ -77,7 +77,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-paper/10">
-        <div className="container-content flex flex-col gap-2 py-6 text-xs text-paper/50 md:flex-row md:items-center md:justify-between">
+        <div className="container-content flex flex-col gap-2 py-6 text-xs text-paper/60 md:flex-row md:items-center md:justify-between">
           <p>
             &copy; {year} {company.legalName}. RC {company.rcNumber}.
           </p>

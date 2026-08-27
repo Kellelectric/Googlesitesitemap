@@ -13,7 +13,7 @@ export function ServicesPreview() {
       <div className="container-content">
         <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div>
-            <span className="eyebrow text-petrol/60">What we do</span>
+            <span className="eyebrow text-petrol/70">What we do</span>
             <h2 className="mt-3 max-w-xl text-3xl font-semibold text-ink md:text-4xl">
               16 service lines, one engineering process
             </h2>

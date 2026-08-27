@@ -6,7 +6,7 @@ export function ProcessSection() {
     <section className="bg-paper py-24">
       <div className="container-content">
         <Reveal>
-          <span className="eyebrow text-petrol/60">How we work</span>
+          <span className="eyebrow text-petrol/70">How we work</span>
           <h2 className="mt-3 max-w-xl text-3xl font-semibold text-ink md:text-4xl">
             The same engineering process, every job
           </h2>

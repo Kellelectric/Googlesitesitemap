@@ -70,12 +70,33 @@ export default function ContactPage() {
               </p>
             </div>
 
+            <div className="border border-ink/10 p-6">
+              <span className="eyebrow text-petrol/70">Business hours</span>
+              <ul className="mt-4 space-y-2 text-sm text-ink/70">
+                {company.businessHours.map((entry) => (
+                  <li key={entry.days} className="flex justify-between gap-4">
+                    <span>{entry.days}</span>
+                    <span className="text-ink/65">{entry.hours}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             <div className="border border-orange/30 bg-orange/5 p-6">
               <span className="eyebrow text-ink">Emergency?</span>
               <p className="mt-3 text-sm leading-relaxed text-ink/75">
                 For active electrical hazards (sparking, burning smell,
                 exposed live wiring), call {company.phone} directly rather
                 than submitting the form.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-ink/75">
+                Email:{' '}
+                <a href={`mailto:${company.emergencyEmail}`} className="link-underline text-ink">
+                  {company.emergencyEmail}
+                </a>
+                <br />
+                We aim to respond {company.emergencyResponseTarget} for
+                emergency cases.
               </p>
             </div>
           </aside>

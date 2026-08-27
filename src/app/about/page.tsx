@@ -11,7 +11,17 @@ export const metadata: Metadata = {
   alternates: { canonical: '/about' },
 }
 
-const foundingYear = new Date().getFullYear() - company.yearsExperience
+const foundingYear = company.foundedYear
+
+const milestones = [
+  { year: '2010', description: 'Company founded to provide reliable electrical services in Abuja.' },
+  { year: '2012', description: 'First major residential project: electrical installations for a 50-unit housing estate.' },
+  { year: '2015', description: 'Expansion into commercial services, with contracts for office and retail projects.' },
+  { year: '2018', description: 'Industry recognition and certification for quality and safety standards.' },
+  { year: '2020', description: 'Solar and smart home solutions launched.' },
+  { year: '2023', description: 'Expansion of project work beyond Abuja.' },
+  { year: '2024', description: 'Largest project to date completed: electrical work for a 200-home estate.' },
+]
 
 const teamRoles = [
   {
@@ -77,6 +87,26 @@ export default function AboutPage() {
             </Reveal>
 
             <Reveal delay={0.1} className="mt-14">
+              <span className="eyebrow text-petrol/70">Milestones</span>
+              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+                From startup to Abuja&rsquo;s go-to electrical experts
+              </h2>
+            </Reveal>
+
+            <StaggerGroup className="mt-8 space-y-6 border-l-2 border-petrol/20 pl-6">
+              {milestones.map((milestone) => (
+                <MotionDiv key={milestone.year} variants={staggerItem}>
+                  <span className="font-display text-sm font-semibold text-petrol">
+                    {milestone.year}
+                  </span>
+                  <p className="mt-1 text-sm leading-relaxed text-ink/70">
+                    {milestone.description}
+                  </p>
+                </MotionDiv>
+              ))}
+            </StaggerGroup>
+
+            <Reveal delay={0.1} className="mt-14">
               <span className="eyebrow text-petrol/70">How the team is organized</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
                 Four functions, one process
@@ -129,7 +159,8 @@ export default function AboutPage() {
               <span className="eyebrow text-ink">{company.yearsExperience}+ years</span>
               <p className="mt-3 text-sm leading-relaxed text-ink/75">
                 in electrical engineering across residential, commercial,
-                and industrial sites.
+                and industrial sites, with {company.trust.projectsCompleted}+
+                projects completed.
               </p>
             </Reveal>
           </aside>

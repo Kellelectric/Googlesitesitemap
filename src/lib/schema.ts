@@ -26,8 +26,9 @@ export function organizationSchema() {
       '@type': 'City',
       name: area,
     })),
-    foundingDate: `${new Date().getFullYear() - company.yearsExperience}`,
+    foundingDate: `${company.foundedYear}`,
     slogan: company.tagline,
+    sameAs: [company.social.facebook, company.social.instagram, company.social.linkedin],
   }
 }
 
@@ -50,6 +51,21 @@ export function serviceSchema(params: {
     },
     areaServed: company.serviceAreas,
     url: `${company.domain}/services/${params.slug}`,
+  }
+}
+
+export function faqSchema(items: { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
   }
 }
 

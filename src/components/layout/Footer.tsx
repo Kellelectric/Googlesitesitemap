@@ -79,6 +79,27 @@ export function Footer() {
               </a>
             </p>
           </address>
+
+          <div className="mt-6 flex gap-4 text-sm text-paper/80">
+            <a
+              href={company.social.facebook}
+              className="link-underline inline-flex -my-2 items-center py-2"
+            >
+              Facebook
+            </a>
+            <a
+              href={company.social.instagram}
+              className="link-underline inline-flex -my-2 items-center py-2"
+            >
+              Instagram
+            </a>
+            <a
+              href={company.social.linkedin}
+              className="link-underline inline-flex -my-2 items-center py-2"
+            >
+              LinkedIn
+            </a>
+          </div>
         </div>
       </div>
 

@@ -3,8 +3,9 @@
 ## Remaining pages (in suggested build order)
 
 Shipped since the original brief: `/about`, `/solar-energy-systems`,
-`/industries` (+ 4 sector pages), `/resources` (+ 3 articles), and a first
-draft of `/legal/terms` and `/legal/privacy`. Still blocked on real data:
+`/industries` (+ 7 sector pages), `/resources` (+ 7 articles), `/faq`
+(categorized, real/sourced content only), and a first draft of
+`/legal/terms` and `/legal/privacy`. Still blocked on real data:
 
 1. **`/projects`** — case studies hub. Per client direction, contract
    values/amounts are not to be published on the site — case studies should

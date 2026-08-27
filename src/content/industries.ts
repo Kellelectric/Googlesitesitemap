@@ -104,6 +104,78 @@ export const industries: Industry[] = [
       'panel-repair-upgrades',
     ],
   },
+  {
+    slug: 'education',
+    name: 'Education',
+    summary:
+      'Schools and training facilities where electrical downtime interrupts instruction, not just inconvenience.',
+    description:
+      'School buildings mix classroom lighting and general power with higher-demand spaces (labs, workshops, kitchens) and, increasingly, IT and security infrastructure that can\'t tolerate an unplanned outage during the school day. We size and maintain electrical systems for that mix, not a single generic classroom load.',
+    challenges: [
+      'Mixed loads across classrooms, labs, workshops, and kitchens on one campus',
+      'Backup power that has to keep security, IT, and safety systems running through an outage',
+      'Aging campus wiring in older school buildings needing phased upgrades without disrupting terms',
+      'CCTV and access control across multi-building campuses',
+    ],
+    serviceSlugs: [
+      'electrical-wiring-installation',
+      'panel-repair-upgrades',
+      'generator-installation-maintenance',
+      'cctv-surveillance',
+      'automated-gates-access-control',
+      'lighting-design-installation',
+      'preventive-maintenance-contracts',
+      'earthing-lightning-protection',
+    ],
+  },
+  {
+    slug: 'healthcare',
+    name: 'Healthcare',
+    summary:
+      'Clinics and healthcare facilities where backup power isn\'t a convenience, it\'s a patient-safety requirement.',
+    description:
+      'Refrigerated medication, diagnostic equipment, and life-safety systems in a clinic or healthcare facility can\'t simply wait out a grid outage. We size backup power and critical circuits around what actually has to stay running, and document earthing and compliance to the standard healthcare equipment demands.',
+    challenges: [
+      'Zero-tolerance backup for refrigeration, diagnostic, and life-safety equipment',
+      'Earthing and bonding standards suited to sensitive medical equipment',
+      'Generator and solar/hybrid sizing against continuous, not intermittent, critical load',
+      'Documented compliance and testing records for regulatory inspection',
+    ],
+    serviceSlugs: [
+      'generator-installation-maintenance',
+      'solar-inverter-systems',
+      'earthing-lightning-protection',
+      'panel-repair-upgrades',
+      'emergency-electrical-response',
+      'preventive-maintenance-contracts',
+      'energy-audits',
+      'fault-finding-diagnostics',
+    ],
+  },
+  {
+    slug: 'retail',
+    name: 'Retail',
+    summary:
+      'Shops and showrooms where lighting quality and uptime directly affect the customer walking through the door.',
+    description:
+      'Retail electrical work sits at the intersection of appearance and reliability: lighting has to sell the product, and a power fault mid-trading-day costs sales on the spot. We handle fit-out electrical, display and facade lighting, and backup power sized to keep tills, refrigeration, and security running through an outage.',
+    challenges: [
+      'Display and facade lighting that has to look right, not just switch on',
+      'Point-of-sale, refrigeration, and security systems that can\'t go dark mid-trade',
+      'Fit-out electrical scope coordinated against tight retail opening timelines',
+      'Multi-unit or mall-based sites needing consistent electrical standards across locations',
+    ],
+    serviceSlugs: [
+      'lighting-design-installation',
+      'commercial-office-fitout',
+      'panel-repair-upgrades',
+      'generator-installation-maintenance',
+      'cctv-surveillance',
+      'energy-audits',
+      'preventive-maintenance-contracts',
+      'emergency-electrical-response',
+    ],
+  },
 ]
 
 export function getIndustryBySlug(slug: string): Industry | undefined {

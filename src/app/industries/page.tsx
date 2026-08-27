@@ -8,7 +8,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 export const metadata: Metadata = {
   title: 'Industries We Serve',
   description:
-    'Electrical engineering for residential, commercial, industrial, and hospitality properties across Abuja, engineered for the demands specific to each.',
+    'Electrical engineering for residential, commercial, industrial, hospitality, education, healthcare, and retail properties across Abuja, engineered for the demands specific to each.',
   alternates: { canonical: '/industries' },
 }
 

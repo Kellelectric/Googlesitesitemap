@@ -7,7 +7,7 @@ export type Article = {
   slug: string
   title: string
   summary: string
-  category: 'Solar & Energy' | 'Compliance' | 'Maintenance'
+  category: 'Solar & Energy' | 'Compliance' | 'Maintenance' | 'Security & Automation' | 'Industrial'
   sections: ArticleSection[]
 }
 
@@ -119,6 +119,138 @@ export const articles: Article[] = [
         heading: 'What a proper assessment looks like',
         body: [
           'A panel assessment should include thermal imaging to catch heat-related issues invisible to the eye, a capacity check against current and planned loads, and an inspection of breaker and busbar condition. The outcome should be a clear repair, re-rate, or replace recommendation, not a guess.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'generator-vs-solar-vs-hybrid',
+    title: 'Generator vs. Solar vs. Hybrid: Choosing Backup Power',
+    summary:
+      'The right backup system depends on your outage pattern and budget, not which option sounds most modern.',
+    category: 'Solar & Energy',
+    sections: [
+      {
+        heading: 'Generators solve for depth, not cost per kWh',
+        body: [
+          'A correctly sized generator can carry a full building load indefinitely, limited only by fuel supply. That makes it the right call where outages are long but infrequent, or where a facility genuinely cannot afford any capacity shortfall. The tradeoff is running cost: fuel and maintenance add up fast under daily use.',
+        ],
+      },
+      {
+        heading: 'Solar-only solves for frequent, shorter outages',
+        body: [
+          'A solar-plus-battery system with no generator works well where outages are frequent but the backup load is modest, and where daylight hours reliably recharge the battery bank between events. It struggles with sustained high loads or extended cloudy-day outages unless significantly oversized.',
+        ],
+      },
+      {
+        heading: 'Hybrid systems trade complexity for coverage',
+        body: [
+          'A hybrid setup, solar and battery as the default source with generator or grid as automatic backup, covers the gap between the two: day-to-day outages run on solar, while a generator handles the rare extended event or high-load period. It costs more to install and commission than either option alone, and the payoff depends on how often that hybrid handoff actually gets used.',
+        ],
+      },
+      {
+        heading: 'The decision starts with your outage pattern, not the technology',
+        body: [
+          'Before comparing systems, we measure how often outages happen, how long they typically last, and what has to keep running during them. That data, not a preference for solar or skepticism about generators, is what actually determines the right answer for a given property.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'cctv-camera-placement-and-cabling-basics',
+    title: 'CCTV System Planning: Camera Placement and Cabling Basics',
+    summary:
+      'Camera count is the least important decision in a CCTV system. Placement and cabling are what actually determine whether it works.',
+    category: 'Security & Automation',
+    sections: [
+      {
+        heading: 'Coverage, not camera count, is the actual goal',
+        body: [
+          'A property with more cameras than it needs, aimed at the wrong angles, still has blind spots. Camera placement should start from a walk-through of actual entry points, sightlines, and choke points, not a default count based on property size.',
+        ],
+      },
+      {
+        heading: 'Power and network cabling decide reliability',
+        body: [
+          'Most CCTV failures trace back to cabling, not the camera itself: undersized PoE runs, cable routed without protection from weather or physical damage, or network infrastructure that wasn\'t designed to carry continuous video traffic. Getting this right at install avoids most of the "camera stopped working" callouts later.',
+        ],
+      },
+      {
+        heading: 'Recording and remote access need to match how you\'ll actually use it',
+        body: [
+          'A system with weeks of local recording but no remote viewing setup is a very different tool than one built for real-time monitoring from a phone. Deciding how the system will actually be used, reviewing footage after an incident vs. active monitoring, changes the NVR/DVR spec and network configuration needed.',
+        ],
+      },
+      {
+        heading: 'Integration multiplies the value of the same cabling work',
+        body: [
+          'Once structured cabling and power are in place for CCTV, integrating gate access control or intercom systems onto the same infrastructure is a much smaller step than running it as a separate project later. Planning for that integration during the initial cabling design avoids redoing work.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'three-phase-power-basics-for-facility-managers',
+    title: 'Three-Phase Power Basics for Facility Managers',
+    summary:
+      'A working knowledge of three-phase power helps a facility manager ask the right questions before a fault becomes downtime.',
+    category: 'Industrial',
+    sections: [
+      {
+        heading: 'Why industrial sites run three-phase, not single-phase',
+        body: [
+          'Three-phase power delivers a steadier supply and carries heavier loads more efficiently than single-phase, which is why motors, industrial machinery, and large HVAC equipment are built to run on it. Understanding this is the baseline for understanding why industrial electrical faults behave differently than a household one.',
+        ],
+      },
+      {
+        heading: 'Phase imbalance is a common, often invisible, cause of equipment stress',
+        body: [
+          'When load isn\'t distributed evenly across the three phases, motors and equipment run hotter and wear faster, often without an obvious symptom until something fails. Regular load measurement across all three phases, not just total consumption, is what catches this before it causes damage.',
+        ],
+      },
+      {
+        heading: 'Power factor correction affects your actual electricity cost',
+        body: [
+          'Inductive loads, common in motors and industrial equipment, can pull power inefficiently in a way that shows up as a poor power factor. Correcting it (typically with capacitor banks) reduces wasted capacity and, on tariffs that penalize poor power factor, can directly reduce cost.',
+        ],
+      },
+      {
+        heading: 'What documentation a facilities team should actually have',
+        body: [
+          'Single-line diagrams, load schedules, and motor control center documentation aren\'t paperwork for its own sake, they\'re what lets a facilities team or an electrician diagnose a fault quickly instead of tracing an undocumented system from scratch during a production stoppage.',
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'earthing-and-lightning-protection-what-to-know',
+    title: 'Earthing and Lightning Protection: What Every Property Owner Should Know',
+    summary:
+      'Earthing is invisible when it works, which is exactly why it gets overlooked until equipment starts failing.',
+    category: 'Compliance',
+    sections: [
+      {
+        heading: 'Earthing protects people first, equipment second',
+        body: [
+          'A correctly earthed system gives fault current a safe path to ground instead of through a person who touches a faulty appliance or exposed conductive part. This is the primary reason earthing is a safety requirement, not an optional upgrade, on any property.',
+        ],
+      },
+      {
+        heading: 'Poor earthing shows up as equipment damage, not obvious faults',
+        body: [
+          'Recurring, unexplained damage to electronics or appliances, especially after storms, is a common symptom of inadequate earthing or missing surge protection, not always a sign of a bad appliance. This is easy to misdiagnose without testing the earthing system itself.',
+        ],
+      },
+      {
+        heading: 'Lightning protection is a separate system, not a byproduct of earthing',
+        body: [
+          'A building\'s earthing system and a dedicated lightning protection system (air terminals, down conductors, and a proper strike-current path to ground) work together but aren\'t the same thing. Exposed or elevated structures, or buildings with a history of storm-related damage, need the dedicated system specifically assessed, not assumed to be covered by standard earthing.',
+        ],
+      },
+      {
+        heading: 'Testing is what turns "installed" into "working"',
+        body: [
+          'An earth electrode that was correctly installed years ago can still fail an earth loop impedance test today, soil conditions and connections change over time. Periodic testing, not a one-time installation, is what confirms the system still does its job.',
         ],
       },
     ],

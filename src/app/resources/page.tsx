@@ -8,7 +8,7 @@ import { StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 export const metadata: Metadata = {
   title: 'Resources & Technical Guides',
   description:
-    'Technical guides on solar sizing, NEMSA compliance, and electrical maintenance from a COREN and NEMSA certified engineering team in Abuja.',
+    'Technical guides on solar sizing, NEMSA compliance, electrical maintenance, security systems, and industrial power from a COREN and NEMSA certified engineering team in Abuja.',
   alternates: { canonical: '/resources' },
 }
 

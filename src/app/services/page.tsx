@@ -65,7 +65,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <FAQSection items={servicesFAQs} />
+      <FAQSection items={servicesFAQs} viewAllHref="/faq" />
       <CTASection />
     </>
   )

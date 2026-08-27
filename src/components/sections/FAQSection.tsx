@@ -1,8 +1,9 @@
+import Link from 'next/link'
 import { FAQ } from '@/content/faqs'
 import { faqSchema } from '@/lib/schema'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-export function FAQSection({ items }: { items: FAQ[] }) {
+export function FAQSection({ items, viewAllHref }: { items: FAQ[]; viewAllHref?: string }) {
   return (
     <section className="bg-paper py-20">
       <script
@@ -14,11 +15,18 @@ export function FAQSection({ items }: { items: FAQ[] }) {
         }}
       />
       <div className="container-content max-w-3xl">
-        <Reveal>
-          <span className="eyebrow text-petrol/70">FAQ</span>
-          <h2 className="mt-3 text-3xl font-semibold text-ink md:text-4xl">
-            Common questions
-          </h2>
+        <Reveal className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <span className="eyebrow text-petrol/70">FAQ</span>
+            <h2 className="mt-3 text-3xl font-semibold text-ink md:text-4xl">
+              Common questions
+            </h2>
+          </div>
+          {viewAllHref && (
+            <Link href={viewAllHref} className="link-underline text-sm font-semibold text-petrol">
+              View all FAQs &rarr;
+            </Link>
+          )}
         </Reveal>
 
         <StaggerGroup className="mt-10 divide-y divide-ink/10 border-t border-ink/10">

@@ -12,6 +12,7 @@ export const primaryNav: NavLink[] = [
   { label: 'Solar', href: '/solar-energy-systems' },
   { label: 'Industries', href: '/industries' },
   { label: 'Resources', href: '/resources' },
+  { label: 'FAQ', href: '/faq' },
   { label: 'Contact', href: '/contact' },
 ]
 
@@ -22,6 +23,7 @@ export const footerNav: NavLink[] = [
   { label: 'Solar & Energy Systems', href: '/solar-energy-systems' },
   { label: 'Industries', href: '/industries' },
   { label: 'Resources', href: '/resources' },
+  { label: 'FAQ', href: '/faq' },
   { label: 'Contact', href: '/contact' },
 ]
 

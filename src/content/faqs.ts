@@ -1,6 +1,13 @@
+import { company } from '@/content/company'
+
 export type FAQ = {
   question: string
   answer: string
+}
+
+export type FAQCategory = {
+  category: string
+  items: FAQ[]
 }
 
 export const servicesFAQs: FAQ[] = [
@@ -23,5 +30,72 @@ export const servicesFAQs: FAQ[] = [
     question: 'Do you take on commercial or residential projects?',
     answer:
       'Yes, both commercial and selective residential projects, based on scope.',
+  },
+]
+
+export const faqCategories: FAQCategory[] = [
+  {
+    category: 'General',
+    items: [
+      {
+        question: 'What areas do you serve?',
+        answer: `We're based in ${company.address.district}, ${company.address.city}, and serve ${company.serviceAreas.slice(0, -1).join(', ')}, and ${company.serviceAreas[company.serviceAreas.length - 1]} directly, with project work extending across ${company.serviceRegion.replace('Abuja and ', '')} depending on scope.`,
+      },
+      {
+        question: 'Are you licensed and certified?',
+        answer: `Yes. ${company.legalName} (RC ${company.rcNumber}) is certified by ${company.certifications.map((c) => `${c.name} (${c.fullName})`).join(' and ')}.`,
+      },
+      {
+        question: 'What are your business hours?',
+        answer: `${company.businessHours.map((b) => `${b.days}: ${b.hours}`).join('. ')}. For genuine electrical emergencies outside these hours, call ${company.phone} directly.`,
+      },
+      {
+        question: 'How do I get a quote?',
+        answer: `Submit the form on our Contact page, call ${company.phone}, or message us on WhatsApp. We respond with a scoped assessment rather than a rough estimate over the phone.`,
+      },
+    ],
+  },
+  {
+    category: 'Services & scheduling',
+    items: [
+      {
+        question: 'What services does Kell Electricals provide?',
+        answer:
+          'A full range of electrical engineering services: wiring and installation, panel repair and upgrades, solar and hybrid inverter systems, home automation, CCTV and security, generator installation and maintenance, industrial electrical systems, and scheduled preventive maintenance. The full list is on our Services page.',
+      },
+      {
+        question: 'Do you offer ongoing maintenance, or only one-off jobs?',
+        answer:
+          'Both. We handle one-off installation and repair work, and also offer scheduled preventive maintenance contracts (panel inspection, thermal imaging, generator and solar system checks) for clients who want faults caught before they become outages.',
+      },
+      {
+        question: 'Do you work on both residential and commercial projects?',
+        answer:
+          'Yes, and industrial too. Scope, documentation, and compliance requirements differ by property type, which is why we treat residential, commercial, and industrial work as distinct engineering problems rather than the same job at different sizes.',
+      },
+      {
+        question: 'Can you work alongside my architect or contractor on a fit-out?',
+        answer:
+          'Yes. Commercial and office fit-out electrical work is a regular part of our scope, coordinated with architects, M&E consultants, and the wider construction timeline rather than run as an isolated trade.',
+      },
+    ],
+  },
+  {
+    category: 'Emergency & safety',
+    items: [
+      {
+        question: 'How fast do you respond to emergencies?',
+        answer: `We aim to respond to emergency call-outs ${company.emergencyResponseTarget}. Call ${company.phone} directly for active hazards (sparking, burning smell, exposed live wiring) rather than submitting the contact form.`,
+      },
+      {
+        question: 'What counts as an electrical emergency?',
+        answer:
+          'Active hazards: sparking, a burning smell, exposed live wiring, or total power loss affecting safety-critical equipment. Recurring tripped breakers or a warm panel cover are worth calling about too, even if not urgent the same hour.',
+      },
+      {
+        question: 'Is there an emergency contact outside business hours?',
+        answer: `Yes. Call ${company.phone} or email ${company.emergencyEmail} for urgent issues outside our normal business hours.`,
+      },
+    ],
   },
 ]

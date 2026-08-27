@@ -83,6 +83,19 @@ Maintenance, Security & Automation, Industrial) — general electrical-
 engineering explainers, not company-specific claims, so none of it is
 blocked on client data.
 
+### Generated illustration assets
+`public/images/industries/*.png` (one per industry slug) and
+`public/images/services/*.png` (power, energy, security-automation,
+maintenance — not industrial, not generated this round) are AI-generated
+monoline icons in the site's own petrol/yellow palette, matching the
+existing `CircuitLines` engineering-drawing motif. These are deliberately
+abstract, not photorealistic — see the "Real photography" note in
+`next-steps.md` for why photorealistic AI images were not generated.
+Note: these live under `public/images/...`, not `public/industries/...`
+or `public/services/...` directly — those paths collide with the
+`/industries/[slug]` and `/services/[slug]` app routes, which Next.js's
+router matches before falling through to the public folder.
+
 ### `src/content/faqs.ts`
 `servicesFAQs` (4 items, shown on `/services`) plus `faqCategories` (the
 full categorized set shown on `/faq`: General, Services & scheduling,

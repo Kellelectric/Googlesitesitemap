@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
@@ -60,10 +61,23 @@ export default function IndustryDetailPage({ params }: Props) {
             <span className="text-paper/80">{industry.name}</span>
           </nav>
 
-          <h1 className="mt-6 max-w-2xl text-4xl font-semibold md:text-5xl">
-            {industry.name}
-          </h1>
-          <p className="mt-5 max-w-xl text-paper/70">{industry.description}</p>
+          <div className="mt-6 flex items-start gap-6">
+            <div className="hidden shrink-0 rounded bg-paper p-3 sm:block">
+              <Image
+                src={`/images/industries/${industry.slug}.png`}
+                alt=""
+                width={64}
+                height={64}
+                className="h-16 w-16"
+              />
+            </div>
+            <div>
+              <h1 className="max-w-2xl text-4xl font-semibold md:text-5xl">
+                {industry.name}
+              </h1>
+              <p className="mt-5 max-w-xl text-paper/70">{industry.description}</p>
+            </div>
+          </div>
 
           <div className="mt-10 flex flex-wrap gap-4">
             <Button href="/contact" variant="primary">

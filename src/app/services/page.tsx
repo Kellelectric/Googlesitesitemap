@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import { ServiceCard } from '@/components/ui/ServiceCard'
 import { CTASection } from '@/components/sections/CTASection'
+import { FAQSection } from '@/components/sections/FAQSection'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { services, categoryLabels, ServiceCategory } from '@/content/services'
+import { servicesFAQs } from '@/content/faqs'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = {
@@ -63,6 +65,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      <FAQSection items={servicesFAQs} />
       <CTASection />
     </>
   )

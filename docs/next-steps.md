@@ -39,9 +39,9 @@ draft of `/legal/terms` and `/legal/privacy`. Still blocked on real data:
   hCaptcha or similar on top of this if abuse becomes a real problem after
   launch — none is wired in since that needs a real site/secret key pair
   we don't have.
-- **WhatsApp click-to-chat.** Phone number is present; add a WhatsApp deep
-  link (`wa.me/2348140205895`) alongside the phone CTA in header/footer/
-  contact page once confirmed that number is WhatsApp-enabled.
+- **WhatsApp click-to-chat.** Confirmed WhatsApp-enabled — `company.whatsappHref`
+  now points at the real business short-link (`wa.me/message/74H7FYXECPMXH1`)
+  pulled from the live site.
 - **Real photography.** Every image slot in the current build is a
   composited/illustrative placeholder using the brand's linework system —
   no stock photography was used. Replace with real jobsite photography
@@ -60,15 +60,46 @@ draft of `/legal/terms` and `/legal/privacy`. Still blocked on real data:
   Google Sites URLs in the legacy `sitemap9.xml` to their new equivalents
   would preserve any existing SEO equity).
 
+## Content imported from the live site (this session)
+
+A verbatim content extract from the current live `kellelectricals.com`
+(Google Sites build) was provided directly by the client. Real, verified
+facts from it are now wired into the codebase:
+
+- `src/content/company.ts`: emergency email, business hours, social links
+  (Facebook/Instagram/LinkedIn), the real WhatsApp business link, founding
+  year (2010, used to compute `yearsExperience` dynamically instead of a
+  hardcoded number), Google rating (4.9), and a completed-projects count
+  (100+).
+- `/about`: real dated milestones (2010–2024) added as a timeline.
+- `/services`: real FAQ content added (with schema.org `FAQPage` markup).
+- `/contact`: business hours and emergency email added to the contact cards.
+
+**Deliberately not imported:**
+- **Team bios** (names/roles from the live site) — the client's own extract
+  flagged these as possibly outdated versus the current staff roster.
+  Do not add without confirmation these are current.
+- **Testimonials** — the live site has a Testimonials nav item, but the
+  extract provided contains no actual testimonial text/quotes/names, only
+  the fact that the page exists. Do not fabricate testimonial content;
+  wait for verbatim quotes with attribution.
+- **`/projects`, `/careers`** — per prior client direction, still blocked on
+  real case-study/programme data (see below). The live site's extract
+  additionally reveals `/careers` has four subpages (Internship, Industrial
+  Training, Apprenticeship, Job Openings) and the site links out to a
+  Paystack-hosted online store and a Blogspot "Solution Hub" — noted here
+  for future scope, not built.
+
 ## Content still needed from the client (do not fabricate)
 
-- Total completed-projects count (for the homepage stats bar).
 - Case study detail for any project to be featured on a future `/projects`
   page (scope, sector, outcome — no contract amounts).
-- Careers/apprenticeship programme specifics.
+- Careers/apprenticeship programme specifics for the four subpages above.
+- Real, attributed testimonial quotes for a `/testimonials` page.
+- Current team roster (names/roles/photos) if a team section is wanted —
+  the old site's list should be treated as unverified.
 - Any additional named client references cleared for public use as a trust
   bar (logos require written permission per client).
-- Confirmation that +234 814 020 5895 is WhatsApp-enabled.
 
 ## Dependency note
 
@@ -96,12 +127,11 @@ upgrade.
   pattern). Bumped to `text-petrol/70` (5.09:1) and `text-paper/60`
   (5.57:1) respectively across all files; verified via Lighthouse
   afterward that zero contrast findings remain anywhere tested.
-- **Known minor finding, not fixed:** the desktop header nav links score
-  a "target size" (WCAG 2.2, 2.5.8) ding — the clickable area is ~17px
-  tall against the 24px recommendation. Fixing it means adding vertical
-  padding to header nav links, which nudges the tightly-set nav height;
-  left as-is since it's a newer/stricter criterion and every page still
-  clears 90+ overall. Revisit if a stricter accessibility bar is set later.
+- **Touch-target (WCAG 2.2, 2.5.8) finding fixed.** Header/footer nav links,
+  the phone/email links, and legal-nav links were all inline elements where
+  vertical padding didn't affect the hit-test box; converted to
+  `inline-flex`/`flex` so padding actually expands touch-target size.
+  Verified via Lighthouse: 100/100 accessibility across all 32 routes.
 - Validate structured data with Google's Rich Results Test once deployed
   (this session validated that every page's JSON-LD parses as valid JSON
   with the expected schema.org `@type`s, but Rich Results Test itself

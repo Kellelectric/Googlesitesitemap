@@ -141,7 +141,7 @@ export default function SolarEnergySystemsPage() {
           <StaggerGroup className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
             {methodology.map((step) => (
               <MotionDiv key={step.step} variants={staggerItem} className="border-t-2 border-petrol pt-5">
-                <span className="font-display text-sm text-petrol/50">{step.step}</span>
+                <span className="font-display text-sm text-petrol/70">{step.step}</span>
                 <h3 className="mt-2 text-base font-semibold text-ink">{step.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-ink/65">{step.description}</p>
               </MotionDiv>
@@ -193,7 +193,7 @@ export default function SolarEnergySystemsPage() {
             </p>
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
               <div>
-                <p className="eyebrow text-petrol/50">Measure</p>
+                <p className="eyebrow text-petrol/70">Measure</p>
                 <p className="mt-2 text-sm leading-relaxed text-ink/70">
                   Circuit-level monitoring identifies which loads run
                   during a typical outage and for how long. This
@@ -201,7 +201,7 @@ export default function SolarEnergySystemsPage() {
                 </p>
               </div>
               <div>
-                <p className="eyebrow text-petrol/50">Size</p>
+                <p className="eyebrow text-petrol/70">Size</p>
                 <p className="mt-2 text-sm leading-relaxed text-ink/70">
                   Battery capacity is sized to that backup load profile
                   plus a safety margin; panel array is sized to recharge
@@ -209,7 +209,7 @@ export default function SolarEnergySystemsPage() {
                 </p>
               </div>
               <div>
-                <p className="eyebrow text-petrol/50">Verify</p>
+                <p className="eyebrow text-petrol/70">Verify</p>
                 <p className="mt-2 text-sm leading-relaxed text-ink/70">
                   Commissioning tests confirm the system actually carries
                   the backup load profile for the duration it was designed

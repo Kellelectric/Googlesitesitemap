@@ -107,7 +107,7 @@ export default function ServiceDetailPage({ params }: Props) {
             <div className="mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2">
               {process.map((step) => (
                 <div key={step.step} className="border-t-2 border-petrol pt-4">
-                  <span className="font-display text-xs text-petrol/50">{step.step}</span>
+                  <span className="font-display text-xs text-petrol/70">{step.step}</span>
                   <h3 className="mt-1 font-semibold text-ink">{step.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-ink/65">
                     {step.description}

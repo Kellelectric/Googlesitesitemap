@@ -65,13 +65,13 @@ export default function ContactPage() {
                 <br />
                 {company.address.country}
               </address>
-              <p className="mt-4 text-xs text-ink/50">
+              <p className="mt-4 text-xs text-ink/65">
                 RC {company.rcNumber} · {company.certifications.map((c) => c.name).join(' & ')} certified
               </p>
             </div>
 
             <div className="border border-orange/30 bg-orange/5 p-6">
-              <span className="eyebrow text-orange">Emergency?</span>
+              <span className="eyebrow text-ink">Emergency?</span>
               <p className="mt-3 text-sm leading-relaxed text-ink/75">
                 For active electrical hazards (sparking, burning smell,
                 exposed live wiring), call {company.phone} directly rather

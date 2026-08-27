@@ -108,7 +108,7 @@ export default function AboutPage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-5 border-t border-ink/10 pt-4 text-xs text-ink/50">
+              <p className="mt-5 border-t border-ink/10 pt-4 text-xs text-ink/65">
                 RC {company.rcNumber} · {company.legalName}
               </p>
             </Reveal>
@@ -120,13 +120,13 @@ export default function AboutPage() {
                   <li key={area}>{area}</li>
                 ))}
               </ul>
-              <p className="mt-4 border-t border-ink/10 pt-4 text-xs text-ink/50">
+              <p className="mt-4 border-t border-ink/10 pt-4 text-xs text-ink/65">
                 Plus project work across {company.serviceRegion.replace('Abuja and ', '')}.
               </p>
             </Reveal>
 
             <Reveal delay={0.16} className="border border-orange/30 bg-orange/5 p-6">
-              <span className="eyebrow text-orange">{company.yearsExperience}+ years</span>
+              <span className="eyebrow text-ink">{company.yearsExperience}+ years</span>
               <p className="mt-3 text-sm leading-relaxed text-ink/75">
                 in electrical engineering across residential, commercial,
                 and industrial sites.

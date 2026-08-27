@@ -236,7 +236,7 @@ export function QuoteForm() {
       </Field>
 
       {form.urgency === 'emergency' && (
-        <p className="border-l-2 border-orange bg-orange/5 px-4 py-3 text-sm text-orange">
+        <p className="border-l-2 border-orange bg-orange/5 px-4 py-3 text-sm text-ink">
           For active electrical hazards (sparking, burning smell, exposed
           live wiring), call {company.phone} directly rather than waiting
           for a form response.
@@ -252,7 +252,7 @@ export function QuoteForm() {
       </button>
 
       {status === 'error' && (
-        <p className="text-sm text-orange">
+        <p className="text-sm text-ink">
           Something went wrong. Please call {company.phone} instead.
         </p>
       )}
@@ -279,7 +279,7 @@ function Field({
     <label className="block">
       <span className="eyebrow text-ink/60">{label}</span>
       <span className="mt-2 block">{children}</span>
-      {error && <span className="mt-1.5 block text-xs text-orange">{error}</span>}
+      {error && <span className="mt-1.5 block text-xs font-semibold text-ink">{error}</span>}
     </label>
   )
 }

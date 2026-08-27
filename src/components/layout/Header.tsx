@@ -29,7 +29,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="link-underline eyebrow text-paper/80 hover:text-paper"
+              className="link-underline eyebrow inline-flex items-center px-1 py-2 text-paper/80 hover:text-paper"
             >
               {link.label}
             </Link>
@@ -39,7 +39,7 @@ export function Header() {
         <div className="hidden items-center gap-4 md:flex">
           <a
             href={company.phoneHref}
-            className="eyebrow text-paper/80 hover:text-paper"
+            className="eyebrow inline-flex items-center px-1 py-2 text-paper/80 hover:text-paper"
           >
             {company.phone}
           </a>
@@ -75,12 +75,12 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="eyebrow py-3 text-paper/80"
+                className="eyebrow flex items-center py-3 text-paper/80"
               >
                 {link.label}
               </Link>
             ))}
-            <a href={company.phoneHref} className="eyebrow py-3 text-paper/80">
+            <a href={company.phoneHref} className="eyebrow flex items-center py-3 text-paper/80">
               {company.phone}
             </a>
             <Button href="/contact" variant="primary" className="mt-2 w-fit">

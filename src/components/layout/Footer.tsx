@@ -33,7 +33,7 @@ export function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="link-underline text-sm text-paper/80"
+                  className="link-underline inline-flex -my-2 items-center py-2 text-sm text-paper/80"
                 >
                   {link.label}
                 </Link>
@@ -63,12 +63,18 @@ export function Footer() {
           <address className="mt-4 space-y-3 text-sm not-italic text-paper/80">
             <p>{company.address.full}</p>
             <p>
-              <a href={company.phoneHref} className="link-underline">
+              <a
+                href={company.phoneHref}
+                className="link-underline inline-flex -my-2 items-center py-2"
+              >
                 {company.phone}
               </a>
             </p>
             <p>
-              <a href={`mailto:${company.email}`} className="link-underline">
+              <a
+                href={`mailto:${company.email}`}
+                className="link-underline inline-flex -my-2 items-center py-2"
+              >
                 {company.email}
               </a>
             </p>
@@ -87,7 +93,11 @@ export function Footer() {
               {company.trust.googleRating}★ · {company.trust.googleReviewCount} Google reviews
             </span>
             {legalNav.map((link) => (
-              <Link key={link.href} href={link.href} className="link-underline">
+              <Link
+                key={link.href}
+                href={link.href}
+                className="link-underline inline-flex -my-2 items-center py-2"
+              >
                 {link.label}
               </Link>
             ))}

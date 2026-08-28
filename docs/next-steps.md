@@ -43,12 +43,18 @@ Shipped since the original brief: `/about`, `/solar-energy-systems`,
 - **WhatsApp click-to-chat.** Confirmed WhatsApp-enabled — `company.whatsappHref`
   now points at the real business short-link (`wa.me/message/74H7FYXECPMXH1`)
   pulled from the live site.
-- **Real photography.** Every image slot in the current build is a
-  composited/illustrative placeholder using the brand's linework system —
-  no stock photography was used. Replace with real jobsite photography
-  (control panels, technicians, solar installs, thermal imaging) as it
-  becomes available; keep the blueprint/circuit-trace overlay treatment for
-  consistency.
+- **Real photography.** Every image on the site is still an abstract
+  illustration, not a photo — this round added a set of on-brand generated
+  icons (`/images/industries/*.png`, `/images/services/*.png`: a monoline
+  petrol-and-yellow icon per industry sector and per service category,
+  shown on the `/industries` and `/services` hubs and industry detail
+  pages), but these are explicitly abstract/illustrative, not stand-ins for
+  real jobsite photos. Replace with real jobsite photography (control
+  panels, technicians, solar installs, thermal imaging) as it becomes
+  available; keep the blueprint/circuit-trace overlay treatment for
+  consistency. No photorealistic AI images were generated for this site,
+  deliberately, since those would look like real jobsite photos of work
+  that didn't happen.
 - **Analytics + Search Console.** `src/components/analytics/GoogleAnalytics.tsx`
   renders the GA4 script only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set
   in the deployment env — nothing renders without it, no ID is hardcoded.

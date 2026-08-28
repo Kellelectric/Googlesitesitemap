@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { ServiceCard } from '@/components/ui/ServiceCard'
 import { CTASection } from '@/components/sections/CTASection'
 import { FAQSection } from '@/components/sections/FAQSection'
@@ -6,6 +7,13 @@ import { CircuitLines } from '@/components/ui/CircuitLines'
 import { services, categoryLabels, ServiceCategory } from '@/content/services'
 import { servicesFAQs } from '@/content/faqs'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
+
+const categoryImages: Partial<Record<ServiceCategory, string>> = {
+  power: '/images/services/power.png',
+  energy: '/images/services/energy.png',
+  'security-automation': '/images/services/security-automation.png',
+  maintenance: '/images/services/maintenance.png',
+}
 
 export const metadata: Metadata = {
   title: 'Electrical Engineering Services',
@@ -47,7 +55,16 @@ export default function ServicesPage() {
             if (items.length === 0) return null
             return (
               <div key={category}>
-                <Reveal>
+                <Reveal className="flex items-center gap-4">
+                  {categoryImages[category] && (
+                    <Image
+                      src={categoryImages[category]!}
+                      alt=""
+                      width={40}
+                      height={40}
+                      className="h-10 w-10"
+                    />
+                  )}
                   <h2 className="eyebrow text-petrol/70">
                     {categoryLabels[category]}
                   </h2>

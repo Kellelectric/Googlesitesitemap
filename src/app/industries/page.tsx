@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
@@ -41,7 +42,14 @@ export default function IndustriesPage() {
                 >
                   <div className="absolute inset-x-0 top-0 h-[2px] w-0 bg-yellow transition-[width] duration-300 group-hover:w-full" />
                   <div>
-                    <h2 className="text-2xl font-semibold text-ink">
+                    <Image
+                      src={`/images/industries/${industry.slug}.png`}
+                      alt=""
+                      width={72}
+                      height={72}
+                      className="h-16 w-16"
+                    />
+                    <h2 className="mt-4 text-2xl font-semibold text-ink">
                       {industry.name}
                     </h2>
                     <p className="mt-3 text-sm leading-relaxed text-ink/70">

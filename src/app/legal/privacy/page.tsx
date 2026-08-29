@@ -1,14 +1,15 @@
 import type { Metadata } from 'next'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { privacySections, privacyLastUpdated } from '@/content/legal'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Privacy Policy',
   description: 'How Kell Electricals Ltd collects, uses, and protects personal data, in line with the Nigeria Data Protection Act 2023.',
-  alternates: { canonical: '/legal/privacy' },
-  robots: { index: false, follow: true },
-}
+  path: '/legal/privacy',
+  noIndex: true,
+})
 
 export default function PrivacyPage() {
   return (

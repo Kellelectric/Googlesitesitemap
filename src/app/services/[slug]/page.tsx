@@ -8,6 +8,7 @@ import { getServiceBySlug, services, categoryLabels } from '@/content/services'
 import { process } from '@/content/process'
 import { company } from '@/content/company'
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema'
+import { pageMetadata } from '@/lib/metadata'
 
 type Props = { params: { slug: string } }
 
@@ -18,11 +19,11 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const service = getServiceBySlug(params.slug)
   if (!service) return {}
-  return {
+  return pageMetadata({
     title: service.name,
     description: service.summary,
-    alternates: { canonical: `/services/${service.slug}` },
-  }
+    path: `/services/${service.slug}`,
+  })
 }
 
 export default function ServiceDetailPage({ params }: Props) {

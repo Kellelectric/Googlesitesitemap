@@ -2,14 +2,15 @@ import type { Metadata } from 'next'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { company } from '@/content/company'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'About Us',
   description:
     'Kell Electricals Ltd is a COREN and NEMSA certified electrical engineering company based in Wuse 2, Abuja, serving homes, businesses, and industrial sites across Abuja and wider Nigeria.',
-  alternates: { canonical: '/about' },
-}
+  path: '/about',
+})
 
 const foundingYear = company.foundedYear
 

@@ -5,14 +5,15 @@ import { CTASection } from '@/components/sections/CTASection'
 import { company } from '@/content/company'
 import { getServiceBySlug } from '@/content/services'
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Solar & Hybrid Energy Systems',
   description:
     'Load-analyzed solar and hybrid inverter systems sized for Nigeria’s grid reality: methodology, system tiers, and what a proper sizing process actually involves.',
-  alternates: { canonical: '/solar-energy-systems' },
-}
+  path: '/solar-energy-systems',
+})
 
 const methodology = [
   {

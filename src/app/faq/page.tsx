@@ -4,14 +4,15 @@ import { CTASection } from '@/components/sections/CTASection'
 import { company } from '@/content/company'
 import { faqCategories } from '@/content/faqs'
 import { faqSchema, breadcrumbSchema } from '@/lib/schema'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Frequently Asked Questions',
   description:
     'Answers on service areas, business hours, licensing, emergency response, and how we scope a job, from a COREN and NEMSA certified electrical engineering team in Abuja.',
-  alternates: { canonical: '/faq' },
-}
+  path: '/faq',
+})
 
 export default function FAQPage() {
   const allItems = faqCategories.flatMap((c) => c.items)

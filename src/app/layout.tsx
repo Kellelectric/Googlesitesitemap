@@ -3,6 +3,7 @@ import { Space_Grotesk, Inter } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { MobileCallBar } from '@/components/layout/MobileCallBar'
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 import { company } from '@/content/company'
 import { organizationSchema } from '@/lib/schema'
@@ -68,7 +69,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
-      <body>
+      <body className="pb-16 md:pb-0">
         <GoogleAnalytics />
         <script
           type="application/ld+json"
@@ -77,6 +78,7 @@ export default function RootLayout({
         <Header />
         <main>{children}</main>
         <Footer />
+        <MobileCallBar />
       </body>
     </html>
   )

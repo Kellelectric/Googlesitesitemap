@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { primaryNav } from '@/content/nav'
 import { company } from '@/content/company'
 import { Button } from '@/components/ui/Button'
+import { trackEvent } from '@/lib/analytics'
 
 export function Header() {
   const [open, setOpen] = useState(false)
@@ -39,6 +40,7 @@ export function Header() {
         <div className="hidden items-center gap-4 md:flex">
           <a
             href={company.phoneHref}
+            onClick={() => trackEvent('contact', { channel: 'phone' })}
             className="eyebrow inline-flex items-center px-1 py-2 text-paper/80 hover:text-paper"
           >
             {company.phone}
@@ -80,7 +82,11 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
-            <a href={company.phoneHref} className="eyebrow flex items-center py-3 text-paper/80">
+            <a
+              href={company.phoneHref}
+              onClick={() => trackEvent('contact', { channel: 'phone' })}
+              className="eyebrow flex items-center py-3 text-paper/80"
+            >
               {company.phone}
             </a>
             <Button href="/contact" variant="primary" className="mt-2 w-fit">

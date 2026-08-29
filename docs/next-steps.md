@@ -61,11 +61,57 @@ Shipped since the original brief: `/about`, `/solar-energy-systems`,
   Set that env var once a real GA4 property exists. Search Console
   verification and `sitemap.xml` submission still need to happen once the
   domain is live.
-- **Domain/hosting decision.** Confirm `kellelectricals.com` DNS points at
-  the new Vercel deployment and whether the existing Google Sites/other
-  Vercel/Netlify properties are retired or redirected (301s from old
-  Google Sites URLs in the legacy `sitemap9.xml` to their new equivalents
-  would preserve any existing SEO equity).
+- **Domain/hosting decision.** Vercel project `googlesitesitemap`
+  (`prj_ZtOKha3gjKpkU7k1KPOV7mh5GdF8`) is the one to attach
+  `kellelectricals.com` to — confirmed correctly detected as Next.js, and
+  its Vercel Authentication is already scoped to exclude custom domains
+  (`ssoProtection.deploymentType: all_except_custom_domains`), so the real
+  domain won't hit a login wall once attached. Steps: add the domain in
+  the Vercel dashboard (Settings → Domains), add the DNS records it shows
+  at the registrar, wait for propagation/SSL. The other Vercel project
+  linked to this same repo (`kellelectricalsst`) has framework detection
+  showing `null` — do not point the domain there without fixing that
+  first. Decide separately whether the old Google Sites version is
+  retired or left as-is once the real domain is live.
+- **Conversion funnel wiring — done.** The site previously only measured
+  page views; every actual conversion action is now a trackable event
+  (`src/lib/analytics.ts`, a no-op until `NEXT_PUBLIC_GA_MEASUREMENT_ID` is
+  set, so nothing breaks pre-launch):
+  - `contact` event on every phone/WhatsApp/email link sitewide (`Button`,
+    `TrackedLink`, `Header`, new `MobileCallBar`), tagged with `channel` and,
+    for the new mobile bar, `placement`.
+  - `generate_lead` event on a successful quote submission, tagged with
+    `service` and `urgency`.
+  - Quote submission now redirects to a real `/contact/thank-you` page
+    (`noindex`, still linked from the site so it's crawlable-but-not-ranked)
+    instead of swapping in a message that disappears on refresh — this is
+    the URL to mark as the conversion goal in GA4/Google Ads once live, and
+    it branches into an emergency-specific message when `?urgency=emergency`.
+  - "Request a Quote" buttons on service detail pages now link to
+    `/contact?service={slug}`, which pre-selects that service in the quote
+    form dropdown (`QuoteForm` takes `initialServiceSlug`) — one less step
+    between a visitor reading about a specific service and submitting a
+    lead for it. The bottom CTA on service pages also uses the
+    service-specific heading/copy via `CTASection`'s new optional props.
+  - Added a mobile-only sticky call/WhatsApp bar (`MobileCallBar`, fixed to
+    viewport bottom, hidden `md:` and up where the header's own CTA is
+    always visible) so a visitor scrolled deep into a service/industry page
+    on a phone doesn't have to scroll back up to act.
+  - **Still needed for this to actually function as a funnel:** set
+    `NEXT_PUBLIC_GA_MEASUREMENT_ID` and `QUOTE_WEBHOOK_URL` (see above), then
+    in GA4 mark `generate_lead` as a key event and `/contact/thank-you` as a
+    conversion-linked page; import that conversion into Google Ads once ads
+    run. None of this fires anywhere without those two env vars set.
+- **Legacy-path redirects — done.** `next.config.js` now 301s the two
+  paths from the old site's `sitemap9.xml` that don't match 1:1 on the
+  new site: `/home` → `/`, `/testimonials` → `/` (temporary target — no
+  real `/testimonials` page exists yet; point this at `/testimonials`
+  once real quotes are provided, see the content-still-needed list
+  above). `/about`, `/services`, and `/contact` already matched the old
+  paths exactly, so no redirect was needed for those. Verified live:
+  `curl` against a freshly built+served instance confirmed both redirects
+  fire (308) and the unredirected paths still serve directly (200, no
+  loop).
 
 ## Content imported from the live site (this session)
 

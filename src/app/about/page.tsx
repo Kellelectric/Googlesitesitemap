@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { company } from '@/content/company'
@@ -85,6 +86,16 @@ export default function AboutPage() {
                 works to the same documented process, so the standard of
                 work doesn&rsquo;t depend on which crew shows up.
               </p>
+            </Reveal>
+
+            <Reveal delay={0.06} className="relative mt-10 h-64 overflow-hidden sm:h-80">
+              <Image
+                src="/images/photos/about-blueprint-review.jpg"
+                alt="Engineers reviewing project blueprints on site"
+                fill
+                sizes="(min-width: 1024px) 700px, 100vw"
+                className="object-cover"
+              />
             </Reveal>
 
             <Reveal delay={0.1} className="mt-14">

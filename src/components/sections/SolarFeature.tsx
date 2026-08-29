@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { getServiceBySlug } from '@/content/services'
@@ -29,16 +30,27 @@ export function SolarFeature() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.12} className="border border-paper/15 p-8">
-          <span className="eyebrow text-paper/60">System design covers</span>
-          <ul className="mt-5 space-y-4">
-            {solar.scope.map((item) => (
-              <li key={item} className="flex gap-3 text-sm text-paper/80">
-                <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-yellow" />
-                {item}
-              </li>
-            ))}
-          </ul>
+        <Reveal delay={0.12}>
+          <div className="relative h-56 overflow-hidden border border-paper/15">
+            <Image
+              src="/images/photos/solar-roof-install.jpg"
+              alt="Technicians installing a solar panel array on a rooftop"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="border border-t-0 border-paper/15 p-8">
+            <span className="eyebrow text-paper/60">System design covers</span>
+            <ul className="mt-5 space-y-4">
+              {solar.scope.map((item) => (
+                <li key={item} className="flex gap-3 text-sm text-paper/80">
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-yellow" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         </Reveal>
       </div>
     </section>

@@ -3,14 +3,15 @@ import Link from 'next/link'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { articles } from '@/content/resources'
+import { pageMetadata } from '@/lib/metadata'
 import { StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Resources & Technical Guides',
   description:
     'Technical guides on solar sizing, NEMSA compliance, electrical maintenance, security systems, and industrial power from a COREN and NEMSA certified engineering team in Abuja.',
-  alternates: { canonical: '/resources' },
-}
+  path: '/resources',
+})
 
 export default function ResourcesPage() {
   return (

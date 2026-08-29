@@ -9,6 +9,7 @@ import { getIndustryBySlug, industries } from '@/content/industries'
 import { getServiceBySlug } from '@/content/services'
 import { company } from '@/content/company'
 import { breadcrumbSchema } from '@/lib/schema'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 type Props = { params: { slug: string } }
@@ -20,11 +21,11 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const industry = getIndustryBySlug(params.slug)
   if (!industry) return {}
-  return {
+  return pageMetadata({
     title: `${industry.name} Electrical Services`,
     description: industry.summary,
-    alternates: { canonical: `/industries/${industry.slug}` },
-  }
+    path: `/industries/${industry.slug}`,
+  })
 }
 
 export default function IndustryDetailPage({ params }: Props) {

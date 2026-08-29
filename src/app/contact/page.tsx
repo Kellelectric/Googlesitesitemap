@@ -2,13 +2,14 @@ import type { Metadata } from 'next'
 import { QuoteForm } from '@/components/sections/QuoteForm'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { company } from '@/content/company'
+import { pageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Contact & Request a Quote',
   description:
     'Request a quote from Kell Electricals Ltd, COREN and NEMSA certified electrical engineers serving Wuse 2, Gwarinpa, Maitama, Asokoro, Guzape, Katampe, and wider Nigeria.',
-  alternates: { canonical: '/contact' },
-}
+  path: '/contact',
+})
 
 export default function ContactPage() {
   return (

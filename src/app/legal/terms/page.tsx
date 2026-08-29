@@ -1,14 +1,15 @@
 import type { Metadata } from 'next'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { termsSections, termsLastUpdated } from '@/content/legal'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Terms & Conditions',
   description: 'Terms and conditions for use of the Kell Electricals Ltd website.',
-  alternates: { canonical: '/legal/terms' },
-  robots: { index: false, follow: true },
-}
+  path: '/legal/terms',
+  noIndex: true,
+})
 
 export default function TermsPage() {
   return (

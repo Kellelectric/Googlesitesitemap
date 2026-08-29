@@ -6,6 +6,7 @@ import { FAQSection } from '@/components/sections/FAQSection'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { services, categoryLabels, ServiceCategory } from '@/content/services'
 import { servicesFAQs } from '@/content/faqs'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 const categoryImages: Partial<Record<ServiceCategory, string>> = {
@@ -15,12 +16,12 @@ const categoryImages: Partial<Record<ServiceCategory, string>> = {
   maintenance: '/images/services/maintenance.png',
 }
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Electrical Engineering Services',
   description:
     '16 electrical service lines across power systems, energy & solar, security & automation, industrial, and maintenance, delivered by a COREN and NEMSA certified team in Abuja.',
-  alternates: { canonical: '/services' },
-}
+  path: '/services',
+})
 
 const categoryOrder: ServiceCategory[] = [
   'power',

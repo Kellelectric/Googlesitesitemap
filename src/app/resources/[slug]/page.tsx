@@ -7,6 +7,7 @@ import { CTASection } from '@/components/sections/CTASection'
 import { getArticleBySlug, articles } from '@/content/resources'
 import { company } from '@/content/company'
 import { breadcrumbSchema } from '@/lib/schema'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
 
 type Props = { params: { slug: string } }
@@ -18,11 +19,11 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const article = getArticleBySlug(params.slug)
   if (!article) return {}
-  return {
+  return pageMetadata({
     title: article.title,
     description: article.summary,
-    alternates: { canonical: `/resources/${article.slug}` },
-  }
+    path: `/resources/${article.slug}`,
+  })
 }
 
 export default function ArticleDetailPage({ params }: Props) {

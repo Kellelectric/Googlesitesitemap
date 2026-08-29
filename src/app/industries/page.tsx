@@ -4,14 +4,15 @@ import Link from 'next/link'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { industries } from '@/content/industries'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Industries We Serve',
   description:
     'Electrical engineering for residential, commercial, industrial, hospitality, education, healthcare, and retail properties across Abuja, engineered for the demands specific to each.',
-  alternates: { canonical: '/industries' },
-}
+  path: '/industries',
+})
 
 export default function IndustriesPage() {
   return (

@@ -61,11 +61,28 @@ Shipped since the original brief: `/about`, `/solar-energy-systems`,
   Set that env var once a real GA4 property exists. Search Console
   verification and `sitemap.xml` submission still need to happen once the
   domain is live.
-- **Domain/hosting decision.** Confirm `kellelectricals.com` DNS points at
-  the new Vercel deployment and whether the existing Google Sites/other
-  Vercel/Netlify properties are retired or redirected (301s from old
-  Google Sites URLs in the legacy `sitemap9.xml` to their new equivalents
-  would preserve any existing SEO equity).
+- **Domain/hosting decision.** Vercel project `googlesitesitemap`
+  (`prj_ZtOKha3gjKpkU7k1KPOV7mh5GdF8`) is the one to attach
+  `kellelectricals.com` to — confirmed correctly detected as Next.js, and
+  its Vercel Authentication is already scoped to exclude custom domains
+  (`ssoProtection.deploymentType: all_except_custom_domains`), so the real
+  domain won't hit a login wall once attached. Steps: add the domain in
+  the Vercel dashboard (Settings → Domains), add the DNS records it shows
+  at the registrar, wait for propagation/SSL. The other Vercel project
+  linked to this same repo (`kellelectricalsst`) has framework detection
+  showing `null` — do not point the domain there without fixing that
+  first. Decide separately whether the old Google Sites version is
+  retired or left as-is once the real domain is live.
+- **Legacy-path redirects — done.** `next.config.js` now 301s the two
+  paths from the old site's `sitemap9.xml` that don't match 1:1 on the
+  new site: `/home` → `/`, `/testimonials` → `/` (temporary target — no
+  real `/testimonials` page exists yet; point this at `/testimonials`
+  once real quotes are provided, see the content-still-needed list
+  above). `/about`, `/services`, and `/contact` already matched the old
+  paths exactly, so no redirect was needed for those. Verified live:
+  `curl` against a freshly built+served instance confirmed both redirects
+  fire (308) and the unredirected paths still serve directly (200, no
+  loop).
 
 ## Content imported from the live site (this session)
 

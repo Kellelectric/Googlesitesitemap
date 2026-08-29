@@ -73,6 +73,35 @@ Shipped since the original brief: `/about`, `/solar-energy-systems`,
   showing `null` — do not point the domain there without fixing that
   first. Decide separately whether the old Google Sites version is
   retired or left as-is once the real domain is live.
+- **Conversion funnel wiring — done.** The site previously only measured
+  page views; every actual conversion action is now a trackable event
+  (`src/lib/analytics.ts`, a no-op until `NEXT_PUBLIC_GA_MEASUREMENT_ID` is
+  set, so nothing breaks pre-launch):
+  - `contact` event on every phone/WhatsApp/email link sitewide (`Button`,
+    `TrackedLink`, `Header`, new `MobileCallBar`), tagged with `channel` and,
+    for the new mobile bar, `placement`.
+  - `generate_lead` event on a successful quote submission, tagged with
+    `service` and `urgency`.
+  - Quote submission now redirects to a real `/contact/thank-you` page
+    (`noindex`, still linked from the site so it's crawlable-but-not-ranked)
+    instead of swapping in a message that disappears on refresh — this is
+    the URL to mark as the conversion goal in GA4/Google Ads once live, and
+    it branches into an emergency-specific message when `?urgency=emergency`.
+  - "Request a Quote" buttons on service detail pages now link to
+    `/contact?service={slug}`, which pre-selects that service in the quote
+    form dropdown (`QuoteForm` takes `initialServiceSlug`) — one less step
+    between a visitor reading about a specific service and submitting a
+    lead for it. The bottom CTA on service pages also uses the
+    service-specific heading/copy via `CTASection`'s new optional props.
+  - Added a mobile-only sticky call/WhatsApp bar (`MobileCallBar`, fixed to
+    viewport bottom, hidden `md:` and up where the header's own CTA is
+    always visible) so a visitor scrolled deep into a service/industry page
+    on a phone doesn't have to scroll back up to act.
+  - **Still needed for this to actually function as a funnel:** set
+    `NEXT_PUBLIC_GA_MEASUREMENT_ID` and `QUOTE_WEBHOOK_URL` (see above), then
+    in GA4 mark `generate_lead` as a key event and `/contact/thank-you` as a
+    conversion-linked page; import that conversion into Google Ads once ads
+    run. None of this fires anywhere without those two env vars set.
 - **Legacy-path redirects — done.** `next.config.js` now 301s the two
   paths from the old site's `sitemap9.xml` that don't match 1:1 on the
   new site: `/home` → `/`, `/testimonials` → `/` (temporary target — no

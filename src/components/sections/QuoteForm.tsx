@@ -1,8 +1,10 @@
 'use client'
 
 import { FormEvent, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { services } from '@/content/services'
 import { company } from '@/content/company'
+import { trackEvent } from '@/lib/analytics'
 
 // Set once on mount and sent back with the submission. The API rejects
 // submissions completed faster than a human plausibly could — see
@@ -12,7 +14,7 @@ function useFormRenderedAt() {
   return renderedAt
 }
 
-type FormStatus = 'idle' | 'submitting' | 'success' | 'error' | 'not_configured'
+type FormStatus = 'idle' | 'submitting' | 'error' | 'not_configured'
 
 type FormState = {
   name: string
@@ -26,23 +28,26 @@ type FormState = {
   website: string // honeypot — kept empty by real users, hidden from view
 }
 
-const initialState: FormState = {
-  name: '',
-  phone: '',
-  email: '',
-  serviceSlug: '',
-  propertyType: '',
-  urgency: '',
-  location: '',
-  details: '',
-  website: '',
+function makeInitialState(serviceSlug = ''): FormState {
+  return {
+    name: '',
+    phone: '',
+    email: '',
+    serviceSlug,
+    propertyType: '',
+    urgency: '',
+    location: '',
+    details: '',
+    website: '',
+  }
 }
 
 // Field names mirror a Zoho Forms / Zoho Books contact schema
 // (Name, Phone, Email, Service, Property_Type, Urgency, Location, Details)
 // so this payload can be forwarded to a Zoho endpoint without remapping.
-export function QuoteForm() {
-  const [form, setForm] = useState<FormState>(initialState)
+export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: string }) {
+  const router = useRouter()
+  const [form, setForm] = useState<FormState>(() => makeInitialState(initialServiceSlug))
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
   const [status, setStatus] = useState<FormStatus>('idle')
   const renderedAt = useFormRenderedAt()
@@ -84,27 +89,21 @@ export function QuoteForm() {
         return
       }
 
-      setStatus('success')
-      setForm(initialState)
+      // Fired before navigating so it lands even though the component
+      // unmounts immediately after — a real page (not just a swapped-in
+      // success message) is what lets this show up as a GA4/Google Ads
+      // conversion goal by URL, and survives a refresh/bookmark.
+      trackEvent('generate_lead', {
+        service: form.serviceSlug || 'unspecified',
+        urgency: form.urgency || 'unspecified',
+      })
+      setForm(makeInitialState())
+      router.push(
+        `/contact/thank-you?urgency=${encodeURIComponent(form.urgency || '')}`,
+      )
     } catch {
       setStatus('error')
     }
-  }
-
-  if (status === 'success') {
-    return (
-      <div className="border border-petrol/20 bg-petrol/5 p-8">
-        <h3 className="text-xl font-semibold text-ink">Request received</h3>
-        <p className="mt-3 text-sm leading-relaxed text-ink/70">
-          Our team will review the job details and get back to you by phone
-          or email. For anything urgent, call{' '}
-          <a href={company.phoneHref} className="link-underline font-semibold">
-            {company.phone}
-          </a>{' '}
-          directly.
-        </p>
-      </div>
-    )
   }
 
   if (status === 'not_configured') {

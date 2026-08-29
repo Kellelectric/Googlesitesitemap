@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { QuoteForm } from '@/components/sections/QuoteForm'
 import { CircuitLines } from '@/components/ui/CircuitLines'
+import { TrackedLink } from '@/components/ui/TrackedLink'
 import { company } from '@/content/company'
+import { getServiceBySlug } from '@/content/services'
 import { pageMetadata } from '@/lib/metadata'
 
 export const metadata: Metadata = pageMetadata({
@@ -11,7 +13,17 @@ export const metadata: Metadata = pageMetadata({
   path: '/contact',
 })
 
-export default function ContactPage() {
+// Lets "Request a Quote" buttons elsewhere on the site (service pages,
+// industry pages) land here with that service already selected, instead of
+// dumping the visitor into a blank form and making them re-pick it — one
+// less step between intent and a submitted lead.
+export default function ContactPage({
+  searchParams,
+}: {
+  searchParams: { service?: string }
+}) {
+  const prefillService = getServiceBySlug(searchParams.service ?? '')?.slug ?? ''
+
   return (
     <>
       <section className="relative overflow-hidden bg-petrol text-paper">
@@ -30,7 +42,7 @@ export default function ContactPage() {
 
       <section className="bg-paper py-20">
         <div className="container-content grid grid-cols-1 gap-16 lg:grid-cols-[1fr,380px]">
-          <QuoteForm />
+          <QuoteForm initialServiceSlug={prefillService} />
 
           <aside className="space-y-8">
             <div className="border border-ink/10 p-6">
@@ -38,21 +50,21 @@ export default function ContactPage() {
               <div className="mt-4 space-y-4 text-sm">
                 <div>
                   <p className="font-semibold text-ink">Phone</p>
-                  <a href={company.phoneHref} className="link-underline text-ink/70">
+                  <TrackedLink channel="phone" href={company.phoneHref} className="link-underline text-ink/70">
                     {company.phone}
-                  </a>
+                  </TrackedLink>
                 </div>
                 <div>
                   <p className="font-semibold text-ink">WhatsApp</p>
-                  <a href={company.whatsappHref} className="link-underline text-ink/70">
+                  <TrackedLink channel="whatsapp" href={company.whatsappHref} className="link-underline text-ink/70">
                     Message us on WhatsApp
-                  </a>
+                  </TrackedLink>
                 </div>
                 <div>
                   <p className="font-semibold text-ink">Email</p>
-                  <a href={`mailto:${company.email}`} className="link-underline text-ink/70">
+                  <TrackedLink channel="email" href={`mailto:${company.email}`} className="link-underline text-ink/70">
                     {company.email}
-                  </a>
+                  </TrackedLink>
                 </div>
               </div>
             </div>
@@ -92,9 +104,13 @@ export default function ContactPage() {
               </p>
               <p className="mt-3 text-sm leading-relaxed text-ink/75">
                 Email:{' '}
-                <a href={`mailto:${company.emergencyEmail}`} className="link-underline text-ink">
+                <TrackedLink
+                  channel="email"
+                  href={`mailto:${company.emergencyEmail}`}
+                  className="link-underline text-ink"
+                >
                   {company.emergencyEmail}
-                </a>
+                </TrackedLink>
                 <br />
                 We aim to respond {company.emergencyResponseTarget} for
                 emergency cases.

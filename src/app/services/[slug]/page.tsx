@@ -81,7 +81,7 @@ export default function ServiceDetailPage({ params }: Props) {
           <p className="mt-5 max-w-xl text-paper/70">{service.description}</p>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <Button href="/contact" variant="primary">
+            <Button href={`/contact?service=${service.slug}`} variant="primary">
               Request a Quote
             </Button>
             <Button href={company.phoneHref} variant="secondary">
@@ -151,7 +151,11 @@ export default function ServiceDetailPage({ params }: Props) {
         </div>
       </section>
 
-      <CTASection />
+      <CTASection
+        heading={`Ready to scope your ${service.name.toLowerCase()} job?`}
+        body="Tell us the details and we'll respond with a scoped assessment for this service specifically."
+        serviceSlug={service.slug}
+      />
     </>
   )
 }

@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { company } from '@/content/company'
 import { services } from '@/content/services'
 import { footerNav, legalNav } from '@/content/nav'
+import { TrackedLink } from '@/components/ui/TrackedLink'
 
 export function Footer() {
   const year = new Date().getFullYear()
@@ -63,20 +64,22 @@ export function Footer() {
           <address className="mt-4 space-y-3 text-sm not-italic text-paper/80">
             <p>{company.address.full}</p>
             <p>
-              <a
+              <TrackedLink
+                channel="phone"
                 href={company.phoneHref}
                 className="link-underline inline-flex -my-2 items-center py-2"
               >
                 {company.phone}
-              </a>
+              </TrackedLink>
             </p>
             <p>
-              <a
+              <TrackedLink
+                channel="email"
                 href={`mailto:${company.email}`}
                 className="link-underline inline-flex -my-2 items-center py-2"
               >
                 {company.email}
-              </a>
+              </TrackedLink>
             </p>
           </address>
 

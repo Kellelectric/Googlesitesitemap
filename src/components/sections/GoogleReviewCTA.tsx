@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/Button'
-import { getWriteReviewUrl } from '@/content/testimonials'
+import { getWriteReviewUrl, getTrustpilotUrl } from '@/content/testimonials'
 import { Reveal } from '@/components/ui/Reveal'
 
 export function GoogleReviewCTA() {
@@ -11,12 +11,17 @@ export function GoogleReviewCTA() {
             Had a great experience with Kell Electricals?
           </h2>
           <p className="mt-4 max-w-md text-paper/65">
-            Share your experience with us on Google.
+            Share your experience with us on Google or Trustpilot.
           </p>
         </div>
-        <Button href={getWriteReviewUrl()} variant="primary" target="_blank" rel="noopener noreferrer">
-          Write a Google Review
-        </Button>
+        <div className="flex flex-wrap gap-4">
+          <Button href={getWriteReviewUrl()} variant="primary" target="_blank" rel="noopener noreferrer">
+            Write a Google Review
+          </Button>
+          <Button href={getTrustpilotUrl()} variant="secondary" target="_blank" rel="noopener noreferrer">
+            Write a Trustpilot Review
+          </Button>
+        </div>
       </Reveal>
     </section>
   )

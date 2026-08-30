@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { ReviewSummary } from '@/components/ui/ReviewSummary'
 import { TestimonialCarousel } from '@/components/sections/TestimonialCarousel'
-import { TestimonialGrid } from '@/components/sections/TestimonialGrid'
+import { TestimonialFilterGrid } from '@/components/sections/TestimonialFilterGrid'
 import { GoogleReviewCTA } from '@/components/sections/GoogleReviewCTA'
-import { testimonials, getReviewUrl } from '@/content/testimonials'
+import { testimonials, getReviewUrl, getTrustpilotUrl } from '@/content/testimonials'
 import { company } from '@/content/company'
 import { breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
@@ -78,9 +78,12 @@ export default function TestimonialsPage() {
             className="mt-10"
           />
 
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap gap-4">
             <Button href={getReviewUrl()} variant="secondary" target="_blank" rel="noopener noreferrer">
               View all reviews on Google
+            </Button>
+            <Button href={getTrustpilotUrl()} variant="secondary" target="_blank" rel="noopener noreferrer">
+              View all reviews on Trustpilot
             </Button>
           </div>
         </div>
@@ -102,11 +105,11 @@ export default function TestimonialsPage() {
           <Reveal>
             <span className="eyebrow text-petrol/70">More Customer Experiences</span>
             <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-              More reviews from Google
+              More reviews from Google and Trustpilot
             </h2>
           </Reveal>
           <div className="mt-10">
-            <TestimonialGrid items={gridItems} />
+            <TestimonialFilterGrid items={gridItems} />
           </div>
         </div>
       </section>

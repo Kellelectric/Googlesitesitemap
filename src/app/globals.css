@@ -13,7 +13,7 @@
   h2,
   h3,
   h4 {
-    @apply font-display;
+    @apply font-display tracking-tight;
   }
   ::selection {
     @apply bg-yellow text-ink;

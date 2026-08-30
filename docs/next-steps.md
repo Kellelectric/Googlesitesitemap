@@ -1,5 +1,23 @@
 # Next Steps
 
+## Security headers added (this round)
+
+`next.config.js` had no security headers at all. Given the quote form
+collects real contact details (name, phone, email, project details), added
+the standard baseline via `headers()`, applied to every route:
+`X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY` (nothing on
+this site needs to be iframe-embedded elsewhere), `Referrer-Policy:
+strict-origin-when-cross-origin`, `Permissions-Policy` denying
+camera/microphone/geolocation (none are used anywhere on the site), and
+`Strict-Transport-Security` (HSTS, 2-year max-age with subdomains and
+preload — safe since the whole site is served over HTTPS via Vercel).
+Verified via `curl -I` that all five headers render, and re-ran a full
+Lighthouse pass to confirm nothing regressed (Best Practices still 100).
+Did a broader accessibility/SEO regression sweep across 18 pages while at
+it — everything is 100/100 except the two pages already intentionally
+`noindex` (`/legal/terms`, `/projects`), so the one bug caught and fixed in
+the previous round was the only real regression out there.
+
 ## Accessibility regression fixed: calculator components (this round)
 
 Re-ran a Lighthouse pass across the site after several rounds of new

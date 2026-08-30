@@ -1,5 +1,19 @@
 # Next Steps
 
+## Patched nanoid (this round)
+
+`npm audit` flagged 6 high-severity advisories. 5 of them (Next.js itself,
+and `glob`/`@next/eslint-plugin-next` via the ESLint config) only have a
+fix through a Next.js 15/16 major upgrade — already documented as
+deliberately deferred in the "Dependency note" below, since none of the
+underlying features (Middleware, Server Actions, custom Image
+Optimization remote patterns) are used here. The 6th, `nanoid` (a
+transitive dependency of PostCSS, used only at build time — not part of
+the runtime attack surface), had a non-breaking fix available via `npm
+audit fix` (no `--force`). Applied it: `package-lock.json` only,
+`nanoid` 3.3.17 → 3.3.18, no `package.json` change. Down to 5 remaining
+advisories, all still gated on the same deferred major upgrade.
+
 ## Security headers added (this round)
 
 `next.config.js` had no security headers at all. Given the quote form

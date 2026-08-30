@@ -1,5 +1,18 @@
 # Next Steps
 
+## FAQ section added to /calculators (this round)
+
+`/calculators` was the only remaining hub-style page without an FAQ
+section (services, industries, and the service/industry detail templates
+all got one in an earlier round). Added `calculatorsFAQs` to
+`src/content/faqs.ts` (4 questions) using the reusable `FAQSection`
+component — same `FAQPage` JSON-LD pattern as elsewhere. Content is
+policy/methodology only, no invented facts: what the tools' output does
+and doesn't represent, the exact assumptions cited in
+`src/lib/calculatorMath.ts` (80% DoD, 90% round-trip efficiency, ~75%
+system losses, ~5 peak sun hours), and why the load calculator applies a
+25% safety margin.
+
 ## New resource article: generator sizing (this round)
 
 Added a 9th `/resources` guide, `how-to-size-a-backup-generator`

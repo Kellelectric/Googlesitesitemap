@@ -89,6 +89,51 @@ export default function CareerTrackPage({ params }: Props) {
         </div>
       </section>
 
+      {(track.duration || track.stipend || track.intake || (track.eligibility && track.eligibility.length > 0)) && (
+        <section className="bg-paper pt-20">
+          <div className="container-content">
+            <Reveal>
+              <span className="eyebrow text-petrol/70">Programme details</span>
+              <p className="mt-2 max-w-2xl text-xs text-ink/50">
+                Indicative — confirmed directly once we hear from you.
+              </p>
+            </Reveal>
+            <StaggerGroup className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {track.duration && (
+                <MotionDiv variants={staggerItem} className="border border-ink/10 p-5">
+                  <span className="eyebrow text-petrol/70">Duration</span>
+                  <p className="mt-2 text-sm text-ink/80">{track.duration}</p>
+                </MotionDiv>
+              )}
+              {track.stipend && (
+                <MotionDiv variants={staggerItem} className="border border-ink/10 p-5">
+                  <span className="eyebrow text-petrol/70">Stipend</span>
+                  <p className="mt-2 text-sm text-ink/80">{track.stipend}</p>
+                </MotionDiv>
+              )}
+              {track.intake && (
+                <MotionDiv variants={staggerItem} className="border border-ink/10 p-5">
+                  <span className="eyebrow text-petrol/70">Intake</span>
+                  <p className="mt-2 text-sm text-ink/80">{track.intake}</p>
+                </MotionDiv>
+              )}
+              {track.eligibility && track.eligibility.length > 0 && (
+                <MotionDiv variants={staggerItem} className="border border-ink/10 p-5 sm:col-span-2 lg:col-span-1">
+                  <span className="eyebrow text-petrol/70">Eligibility</span>
+                  <ul className="mt-2 space-y-1.5">
+                    {track.eligibility.map((item) => (
+                      <li key={item} className="text-sm text-ink/80">
+                        &middot; {item}
+                      </li>
+                    ))}
+                  </ul>
+                </MotionDiv>
+              )}
+            </StaggerGroup>
+          </div>
+        </section>
+      )}
+
       <section className="bg-paper py-20">
         <div className="container-content grid grid-cols-1 gap-16 md:grid-cols-3">
           {track.whoItsFor.length > 0 && (

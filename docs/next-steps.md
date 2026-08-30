@@ -498,8 +498,9 @@ facts from it are now wired into the codebase:
   and real headshots — were supplied directly by the client afterward;
   no bio detail beyond title was given for these four, so their bios are
   a plain restatement of the role, not invented specifics. Photos live
-  in `public/images/team/` (resized to 640×640, JPEG). Thelma has no
-  photo yet — add if supplied.
+  in `public/images/team/` (resized to 640×640, JPEG). Thelma's photo
+  was supplied afterward too — all 6 team members now have a real
+  headshot.
 - Any additional named client references cleared for public use as a trust
   bar (logos require written permission per client).
 - Additional Google or Trustpilot reviews beyond the 23 already added to

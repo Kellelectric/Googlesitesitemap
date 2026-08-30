@@ -1,17 +1,21 @@
 // Verbatim customer reviews from the Kell Electricals Google Business
-// Profile (https://maps.app.goo.gl/CUDxCDE74MvUX3HRA?g_st=ic). Text, star
-// ratings, customer names, and dates are reproduced exactly as supplied —
-// do not rewrite, paraphrase, "improve," or invent review content here.
-// Reviews marked `truncated: true` were captured from a screenshot that
-// cut the review short; only the text actually supplied is included (any
-// trailing "…" is part of the supplied text itself, not added by us).
-// This site never displays every Google review, only this curated subset.
+// Profile (https://maps.app.goo.gl/CUDxCDE74MvUX3HRA?g_st=ic) and Trustpilot
+// profile (https://www.trustpilot.com/review/kellelectricals.com). Text,
+// star ratings, customer names, and dates are reproduced exactly as
+// supplied — do not rewrite, paraphrase, "improve," or invent review
+// content here. Reviews marked `truncated: true` were captured from a
+// screenshot that cut the review short; only the text actually supplied is
+// included (any trailing "…" is part of the supplied text itself, not
+// added by us). This site never displays every review on either platform,
+// only this curated subset — and never displays a negative review: the
+// Trustpilot profile has an additional 1-star review that is deliberately
+// excluded and must not be added here.
 export type Testimonial = {
   id: number
   customerName: string
   rating: number
   date: string
-  source: 'Google'
+  source: 'Google' | 'Trustpilot'
   review: string
   truncated?: boolean
   featured?: boolean
@@ -180,6 +184,72 @@ export const testimonials: Testimonial[] = [
       'I reached out to them on a very short notice and they came through for me without questions. The engineers were also very nice and professional. They did a great job! I highly recommend them!',
     featured: true,
   },
+  {
+    id: 17,
+    customerName: 'Edith Essien',
+    rating: 5,
+    date: 'January 25, 2026',
+    source: 'Trustpilot',
+    review:
+      "I used kell electricals for a full rewire of my property recently, and I'm genuinely impressed. In an industry where it's hard to find technicians you can trust, their team stood out. They were punctual and provided a clear breakdown for the cost of materials used. There were no hidden charges and the finishing was very neat. It's refreshing to see a local business prioritize quality over shortcuts. I'll definitely be using them again for future maintenance.",
+    featured: true,
+  },
+  {
+    id: 18,
+    customerName: 'Precious Inyang',
+    rating: 4,
+    date: 'January 16, 2026',
+    source: 'Trustpilot',
+    review:
+      'Their service is satisfactory. They pay attention to details and give good recommendations to save costs and last.',
+  },
+  {
+    id: 19,
+    customerName: 'Motunrayo Fakorede',
+    rating: 5,
+    date: 'November 30, 2025',
+    source: 'Trustpilot',
+    review:
+      'I can always trust the Kell team to resolve any electrical issues I may have, and go above and beyond to ensure that everything goes smoothly.\nGreat customer experience and professional technicians.',
+    featured: true,
+  },
+  {
+    id: 20,
+    customerName: 'Chiemeria G EbubeDike',
+    rating: 5,
+    date: 'June 27, 2025',
+    source: 'Trustpilot',
+    review:
+      "Kell Electricals did an outstanding job at my Gwarinpa home! They professionally installed my inverter and solar panels, set up my CCTV system, and replaced my home's switches, all of which are working perfectly. Their team was incredibly professional, and their work was remarkably clean and precise. For top-notch electrical services, I highly recommend Kell Electricals!",
+    featured: true,
+  },
+  {
+    id: 21,
+    customerName: 'Sabastine Ugowuke',
+    rating: 5,
+    date: 'July 30, 2026',
+    source: 'Trustpilot',
+    review:
+      "My industrial training experience at has been exceptional and rewarding. From the start, the team created a supportive learning environment and allowed me to work independently after clear explanations, which built my confidence and problem-solving skills. I gained a deeper understanding of electrical systems, especially the differences between industrial and domestic wiring, by applying theory to real projects. I'm truly grateful for the mentorship and knowledge shared.",
+  },
+  {
+    id: 22,
+    customerName: 'terhile waku',
+    rating: 5,
+    date: 'July 17, 2026',
+    source: 'Trustpilot',
+    review:
+      'Kell Electricals gave me valuable industry experience as an IT student in Electrical Engineering.\nThe work environment was collaborative and professional.\nI learned a lot about [industrial machinery and connections,] while working alongside an experience Supervisor.\nThe experience improved my technical skills and gave me a better understanding of how Electrical Engineering work together.\nGreat place for students who want practical, hands-on learning.',
+  },
+  {
+    id: 23,
+    customerName: 'Collins Anthony',
+    rating: 5,
+    date: 'July 16, 2026',
+    source: 'Trustpilot',
+    review:
+      'Firstly, I would like to thank the company for the great work they have done for me, by makings their work affordable, transparent, and reliable. I would say the material they use are all top-notch. And I recommend that you give them a trial.',
+  },
 ]
 
 export const featuredTestimonials = testimonials.filter((t) => t.featured)
@@ -192,4 +262,11 @@ export function getReviewUrl() {
 // above, which points to the full review list on the Business Profile.
 export function getWriteReviewUrl() {
   return 'https://g.page/r/CTxnaFyO9LMyEBE/review'
+}
+
+// Trustpilot profile — used both for the "read more reviews" CTA and as
+// the write-a-review destination (Trustpilot doesn't have a separate
+// review-composer URL the way Google does).
+export function getTrustpilotUrl() {
+  return 'https://www.trustpilot.com/review/kellelectricals.com'
 }

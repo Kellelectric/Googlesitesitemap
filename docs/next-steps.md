@@ -10,30 +10,40 @@ articles), `/faq` (categorized, real/sourced content only), `/testimonials`
 Assist" chatbot (new this round — see below), and a first draft of
 `/legal/terms` and `/legal/privacy`. Still blocked on real data:
 
-1. **`/projects`** — case studies hub. Per client direction, contract
-   values/amounts are not to be published on the site — case studies should
-   describe scope, sector, and outcome only. **Needs real data before
-   publishing:** scope breakdown, before/after photos, timeline — confirm
-   with the client/ops team, do not estimate. Filterable by sector
-   (residential/commercial/industrial) and service type once 3+ case
-   studies exist.
-2. **`/careers` track pages — done, but generic.** Built the hub plus
-   `/careers/internship`, `/careers/industrial-training`,
-   `/careers/apprenticeship`, and `/careers/job-openings` (matching the
-   old site's nav structure), but with **no programme specifics** —
-   duration, stipend, intake dates, and eligibility criteria were never
-   provided, so each page describes what the track generally is (in
-   standard industry terms). **Update:** each track now has a real
-   `applicationFormUrl` (Google Form, supplied directly by the client) in
-   `src/content/careers.ts`, wired as the primary "Apply Now" CTA on the
-   hero, the "How to apply" aside, and the closing CTA section of
-   `/careers/[slug]`; email remains available as a secondary contact
-   channel. Note: Internship and Industrial Training were given the
-   identical form URL by the client — this is intentional, not a
-   deduplication bug, and must not be "corrected." **If real programme
-   details or actual open roles become available, replace the generic
-   copy in `src/content/careers.ts` — do not leave it generic once real
-   data exists.**
+1. **`/projects`** — **built this round, but every case study is
+   INVENTED PLACEHOLDER CONTENT**, per explicit client direction
+   ("Build Real content that are still missing, you can invent
+   everything and I'll make changes later") — a deliberate, narrow
+   override of this file's general anti-fabrication rule, not a
+   precedent for other content. See the disclaimer comment at the top
+   of `src/content/projects.ts` for the full rationale. 6 fabricated
+   case studies (2 residential, 2 commercial, 2 industrial) with
+   generic area names (no street addresses), no named clients (to
+   avoid misrepresenting a real third party), and no contract values
+   (per the client's standing direction never to publish project
+   financials). Both `/projects` and `/projects/[slug]` are
+   `robots: noindex` and intentionally left out of `sitemap.xml` (same
+   treatment as `/legal/*`) so none of this is search-indexed. **Do
+   not remove `noIndex` until the client has reviewed and replaced
+   this content with real case studies** (real scope, real location,
+   real photos, real outcome — client/ops team to confirm, do not
+   estimate).
+2. **`/careers` track pages — programme specifics added this round,
+   but INVENTED.** Duration, stipend, intake windows, and eligibility
+   criteria for all 4 tracks (and 3 sample job openings under
+   `/careers/job-openings`) are placeholder, added under the same
+   client-authorized override as `/projects` above — see the updated
+   disclaimer at the top of `src/content/careers.ts`. Unlike
+   `/projects`, these pages are **not** `noindex` (career pages were
+   already indexed pre-existing content) — **flag to the client
+   specifically: verify or replace every number, date, and eligibility
+   rule in `src/content/careers.ts` before treating this as final**,
+   since it is currently live/indexable placeholder data, not
+   sandboxed like the case studies. `applicationFormUrl` values are
+   real (Google Forms supplied directly by the client) and unchanged.
+   Note: Internship and Industrial Training were given the identical
+   form URL by the client — this is intentional, not a deduplication
+   bug, and must not be "corrected."
 3. **`/legal/terms`** and **`/legal/privacy`** — drafted (see
    `src/content/legal.ts`), covering standard site terms and an NDPA 2023
    structure (lawful basis, data subject rights, breach notification). This

@@ -1,9 +1,10 @@
-// Programme-specific details (duration, stipend, intake dates, eligibility
-// criteria) are deliberately NOT included here — no source material for
-// those specifics has been provided. Each track below describes what the
-// programme generally is, in industry-standard terms, and points to a real
-// contact channel for current details. Do not invent numbers, dates, or
-// eligibility rules for any of these tracks.
+// ⚠️ Programme specifics below (duration, stipend, intake windows,
+// eligibility) are PLACEHOLDER — invented at the client's explicit request
+// ("Build Real content that are still missing, you can invent everything
+// and I'll make changes later"), overriding this file's earlier no-invent
+// note. Nothing here is confirmed real; verify and correct every number,
+// date, and eligibility rule before treating this as final. Application
+// form URLs are real and unchanged.
 export type CareerTrack = {
   slug: string
   name: string
@@ -12,6 +13,10 @@ export type CareerTrack = {
   whoItsFor: string[]
   whatToExpect: string[]
   applicationFormUrl: string
+  duration?: string
+  stipend?: string
+  intake?: string
+  eligibility?: string[]
 }
 
 export const careerTracks: CareerTrack[] = [
@@ -34,6 +39,14 @@ export const careerTracks: CareerTrack[] = [
     ],
     applicationFormUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
+    duration: '8–12 weeks',
+    stipend: 'Modest stipend to cover transport and feeding',
+    intake: 'Rolling intake, reviewed quarterly',
+    eligibility: [
+      'Currently enrolled in an engineering, technical, or vocational programme',
+      'Basic understanding of electrical fundamentals (coursework or self-study)',
+      'Able to commit to full placement days on-site',
+    ],
   },
   {
     slug: 'industrial-training',
@@ -53,6 +66,14 @@ export const careerTracks: CareerTrack[] = [
     ],
     applicationFormUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
+    duration: '6 months, aligned to your institution’s SIWES calendar',
+    stipend: 'Transport allowance per attendance day',
+    intake: 'Aligned to the academic SIWES calendar (typically two intakes a year)',
+    eligibility: [
+      'Enrolled in a polytechnic or university programme with a mandatory SIWES/industrial-training requirement',
+      'A letter of introduction from your institution',
+      'Electrical/electronic engineering or a closely related technical discipline',
+    ],
   },
   {
     slug: 'apprenticeship',
@@ -72,15 +93,31 @@ export const careerTracks: CareerTrack[] = [
     ],
     applicationFormUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLScyQUddIgthC752dLwSulX9vRT8V4rPdvlz3Wr7EM0VTktE9A/viewform',
+    duration: '12–18 months, structured in progressive stages',
+    stipend: 'Paid, reviewed at each stage of the programme',
+    intake: 'Rolling intake, reviewed quarterly',
+    eligibility: [
+      'Secondary school certificate or equivalent, minimum age 18',
+      'Some technical aptitude or prior trade exposure preferred but not required',
+      'Willingness to commit to the full programme length',
+    ],
   },
   {
     slug: 'job-openings',
     name: 'Job Openings',
     summary: 'Current vacancies at Kell Electricals Ltd.',
     description:
-      "We don't currently maintain a live, self-updating job board on this site. If you'd like to be considered for a role, or want to ask whether we're hiring for a specific position, fill out the application form below — we do review speculative applications, and it's the fastest way to reach our team.",
-    whoItsFor: [],
-    whatToExpect: [],
+      "We don't currently maintain a live, self-updating job board on this site. Below are roles we're actively considering candidates for; if you'd like to be considered for a role not listed, or want to ask whether we're hiring for a specific position, fill out the application form below.",
+    whoItsFor: [
+      'Licensed Electrician (Journeyman level) — residential & commercial installation and fault-finding',
+      'Site Supervisor — coordinating multi-trade electrical fit-outs on active construction sites',
+      'Solar & Inverter Installation Technician — hybrid solar/battery system installation and commissioning',
+    ],
+    whatToExpect: [
+      'Direct application review by our engineering team, not an automated filter',
+      'A practical/technical assessment as part of the interview process',
+      'Placement on live jobs within your specialization once onboarded',
+    ],
     applicationFormUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLScrGwqdcA3rzUVRhHl2kt7afhOGNB9InZsdAmZ7gsG5tXr3eQ/viewform',
   },

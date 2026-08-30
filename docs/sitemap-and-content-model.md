@@ -40,9 +40,12 @@ slugs render from real content), `/solar-energy-systems`, `/industries`,
 see caveat below), `/contact`, `/legal/terms`, `/legal/privacy` (drafted,
 see caveat below), plus `sitemap.xml` and `robots.txt`.
 
-Not yet built: `/projects` + detail pages — still blocked on real client
-data per the anti-fabrication rule (see "Content still needed from the
-client" below) — do not build this with invented content.
+`/projects` + detail pages are now built, but every case study is
+INVENTED PLACEHOLDER CONTENT under an explicit, one-time client
+authorization to fabricate ("you can invent everything and I'll make
+changes later") — see `src/content/projects.ts`. Both pages are
+`robots: noindex` and excluded from `sitemap.xml` until the client
+reviews and replaces this with real project data.
 
 **Careers caveat:** `/careers/[slug]` pages describe each track (Internship,
 Industrial Training, Apprenticeship, Job Openings) in general, industry-
@@ -180,9 +183,10 @@ number wasn't supplied, it is either omitted or explicitly marked:
 - **Projects completed (total count):** sourced from the live site's own
   content extract (100+) and now in `company.trust.projectsCompleted`.
 - **Case studies / project financials:** per client direction, project
-  contract values are not to be published on the site. `/projects` is not
-  yet built — still blocked on real per-project data (scope, sector,
-  outcome, photos), see `next-steps.md`.
+  contract values are not to be published on the site — no financials
+  appear anywhere in `/projects` even under the invented-content
+  override. `/projects` is now built with 6 fabricated case studies
+  (`noindex`, pending client review), see `next-steps.md`.
 - **Client logos / trust bar:** not built — no client has been confirmed
   for public logo use. Do not add logos without written permission from
   each client.

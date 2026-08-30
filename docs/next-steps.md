@@ -60,6 +60,16 @@ Assist" chatbot (new this round — see below), and a first draft of
 - **WhatsApp click-to-chat.** Confirmed WhatsApp-enabled — `company.whatsappHref`
   now points at the real business short-link (`wa.me/message/74H7FYXECPMXH1`)
   pulled from the live site.
+- **Fixed missing favicon.** `app/icon.png` existed and was being served fine
+  as a static file, but no `<link rel="icon">` tag was ever rendered in any
+  page's `<head>` — verified via curl. Root cause: `layout.tsx`'s metadata
+  export set `icons: { apple: '/apple-touch-icon.png' }`, and Next.js only
+  auto-detects the `app/icon.png` file convention when `metadata.icons` is
+  left unset entirely; explicitly setting it (even partially, for `apple`
+  only) disables that auto-detection for every icon type you didn't list.
+  Fixed by explicitly adding `icon: '/icon.png'` alongside `apple` in that
+  same object. Verified after the fix: both `<link rel="icon">` and
+  `<link rel="apple-touch-icon">` now render on every page.
 - **Typography refinement (design-technique pass).** The client shared a
   design-system writeup of Claude/Anthropic's own marketing site (cream
   canvas, coral CTAs, serif display type). Per direction, we did not adopt

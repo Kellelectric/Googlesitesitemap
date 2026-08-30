@@ -54,7 +54,12 @@ export const metadata: Metadata = {
     description: company.positioning,
     images: ['/og-image.jpg'],
   },
+  // Explicitly listing `icon` here (not just `apple`) is required: Next.js
+  // auto-detects app/icon.png for the favicon <link>, but that detection
+  // is skipped entirely once `metadata.icons` is set at all — without this,
+  // apple-touch-icon rendered but the actual browser-tab favicon did not.
   icons: {
+    icon: '/icon.png',
     apple: '/apple-touch-icon.png',
   },
   robots: {

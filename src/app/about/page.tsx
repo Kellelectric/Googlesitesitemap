@@ -7,6 +7,7 @@ import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { company } from '@/content/company'
 import { partners } from '@/content/partners'
 import { team } from '@/content/team'
+import { ceoMessage } from '@/content/ceoMessage'
 import { areas } from '@/content/areas'
 import { process } from '@/content/process'
 import { pageMetadata } from '@/lib/metadata'
@@ -144,6 +145,25 @@ export default function AboutPage() {
                 sizes="(min-width: 1024px) 700px, 100vw"
                 className="object-cover"
               />
+            </Reveal>
+
+            {/* CEO Message */}
+            <Reveal delay={0.1} className="mt-14 border-l-2 border-yellow bg-petrol/5 p-6 md:p-8">
+              <span className="eyebrow text-petrol/70">{ceoMessage.heading}</span>
+              {ceoMessage.message.map((paragraph, i) => (
+                <p
+                  key={i}
+                  className={`text-lg leading-relaxed text-ink/80 ${i === 0 ? 'mt-5' : 'mt-4'}`}
+                >
+                  {paragraph}
+                </p>
+              ))}
+              <p className="mt-5 font-display text-base font-semibold text-ink">
+                {ceoMessage.signOff}
+                <span className="ml-2 text-sm font-normal text-ink/60">
+                  {ceoMessage.signOffTitle}
+                </span>
+              </p>
             </Reveal>
 
             {/* Leadership */}

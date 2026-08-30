@@ -29,6 +29,7 @@ export const footerNav: NavLink[] = [
   { label: 'CCTV & Security Systems', href: '/cctv-security-systems' },
   { label: 'Industries', href: '/industries' },
   { label: 'Projects', href: '/projects' },
+  { label: 'Load & Solar Calculators', href: '/calculators' },
   { label: 'Resources', href: '/resources' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Testimonials', href: '/testimonials' },

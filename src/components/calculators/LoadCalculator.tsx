@@ -44,9 +44,9 @@ export function LoadCalculator() {
   return (
     <div className="border border-ink/10 bg-paper p-6 md:p-8">
       <span className="eyebrow text-petrol/70">Load calculator</span>
-      <h3 className="mt-2 text-xl font-semibold text-ink">
+      <h2 className="mt-2 text-xl font-semibold text-ink">
         Estimate your connected electrical load
-      </h3>
+      </h2>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/65">
         Pick a building type, adjust the quantities to match your property,
         and get an indicative connected load and recommended minimum
@@ -76,7 +76,7 @@ export function LoadCalculator() {
           <div key={item.key} className="flex items-center justify-between gap-4 border-b border-ink/10 pb-3">
             <div>
               <p className="text-sm font-medium text-ink">{item.label}</p>
-              <p className="text-xs text-ink/50">{item.watts}W each</p>
+              <p className="text-xs text-ink/60">{item.watts}W each</p>
             </div>
             <input
               type="number"
@@ -105,11 +105,11 @@ export function LoadCalculator() {
           <p className="mt-1 text-3xl font-semibold text-ink">
             {inverterWatts.toLocaleString()} <span className="text-lg font-normal text-ink/60">W</span>
           </p>
-          <p className="mt-1 text-xs text-ink/50">Includes a standard safety margin for motor start-up loads.</p>
+          <p className="mt-1 text-xs text-ink/60">Includes a standard safety margin for motor start-up loads.</p>
         </div>
       </div>
 
-      <p className="mt-6 text-xs leading-relaxed text-ink/50">
+      <p className="mt-6 text-xs leading-relaxed text-ink/60">
         Indicative estimate only, based on typical appliance wattages — not
         a measured load assessment.{' '}
         <Link href="/contact" className="link-underline font-semibold text-petrol">

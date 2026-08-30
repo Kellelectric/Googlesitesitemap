@@ -24,9 +24,9 @@ export function SolarSizingCalculator({ dark = false }: { dark?: boolean }) {
   return (
     <div className={`border ${borderClass} p-6 md:p-8 ${dark ? 'text-paper' : 'bg-paper'}`}>
       <span className={`eyebrow ${dark ? 'text-yellow' : 'text-petrol/70'}`}>Solar sizing calculator</span>
-      <h3 className={`mt-2 text-xl font-semibold ${headingClass}`}>
+      <h2 className={`mt-2 text-xl font-semibold ${headingClass}`}>
         Get a rough starting point for your system size
-      </h3>
+      </h2>
       <p className={`mt-3 max-w-2xl text-sm leading-relaxed ${textClass}`}>
         Enter the load you want backed up and how many hours you need it to
         run, and this gives an indicative battery and panel size based on

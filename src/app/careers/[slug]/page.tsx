@@ -62,8 +62,13 @@ export default function CareerTrackPage({ params }: Props) {
           <p className="mt-5 max-w-xl text-paper/70">{track.description}</p>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <Button href={`mailto:${company.email}`} variant="primary">
-              {isJobOpenings ? 'Send your CV' : 'Apply by email'}
+            <Button
+              href={track.applicationFormUrl}
+              variant="primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Apply Now
             </Button>
             <Button href={company.phoneHref} variant="secondary">
               Call {company.phone}
@@ -110,14 +115,22 @@ export default function CareerTrackPage({ params }: Props) {
             <div className="border border-ink/10 p-6">
               <span className="eyebrow text-petrol/70">How to apply</span>
               <p className="mt-4 text-sm leading-relaxed text-ink/75">
-                Send your CV to{' '}
+                Fill out our{' '}
+                <a
+                  href={track.applicationFormUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-underline font-semibold text-ink"
+                >
+                  {track.name} application form
+                </a>{' '}
+                and our team will follow up. Programme specifics (duration,
+                schedule, and current availability) are confirmed directly
+                once we hear from you. You can also reach us by email at{' '}
                 <a href={`mailto:${company.email}`} className="link-underline font-semibold text-ink">
                   {company.email}
-                </a>{' '}
-                with &ldquo;{track.name}&rdquo; in the subject line, and a short
-                note on your background and what you&rsquo;re looking for. Programme
-                specifics (duration, schedule, and current availability) are
-                confirmed directly once we hear from you.
+                </a>
+                .
               </p>
             </div>
           </aside>
@@ -148,9 +161,10 @@ export default function CareerTrackPage({ params }: Props) {
 
       <CTASection
         heading="Ready to apply?"
-        body="Send your CV and we'll follow up with next steps."
-        primaryLabel="Email us"
-        primaryHref={`mailto:${company.email}`}
+        body="Fill out the application form and we'll follow up with next steps."
+        primaryLabel="Apply Now"
+        primaryHref={track.applicationFormUrl}
+        primaryExternal
       />
     </>
   )

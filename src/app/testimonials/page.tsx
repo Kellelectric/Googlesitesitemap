@@ -2,11 +2,10 @@ import type { Metadata } from 'next'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { ReviewSummary } from '@/components/ui/ReviewSummary'
-import { TestimonialCard } from '@/components/sections/TestimonialCard'
 import { TestimonialCarousel } from '@/components/sections/TestimonialCarousel'
 import { TestimonialGrid } from '@/components/sections/TestimonialGrid'
 import { GoogleReviewCTA } from '@/components/sections/GoogleReviewCTA'
-import { testimonials, featuredTestimonials, getReviewUrl } from '@/content/testimonials'
+import { testimonials, getReviewUrl } from '@/content/testimonials'
 import { company } from '@/content/company'
 import { breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
@@ -22,12 +21,8 @@ export const metadata: Metadata = {
   title: { absolute: 'Google Reviews & Testimonials | Kell Electricals Ltd Abuja' },
 }
 
-// The one review used for the large featured quote — kept out of the
-// carousel/grid below so it isn't shown twice back to back.
-const featuredId = 11 // Amara
-const featuredReview = testimonials.find((t) => t.id === featuredId)!
-const carouselItems = featuredTestimonials.filter((t) => t.id !== featuredId)
-const gridItems = testimonials.filter((t) => t.id !== featuredId)
+const carouselItems = testimonials
+const gridItems = testimonials
 
 const trustSignals = [
   `${company.teamExperienceYears}+ Years Combined Experience`,
@@ -87,14 +82,6 @@ export default function TestimonialsPage() {
           <div className="mt-8">
             <TestimonialCarousel items={carouselItems} />
           </div>
-        </div>
-      </section>
-
-      <section className="bg-petrol-700 py-20 text-paper">
-        <div className="container-content flex justify-center">
-          <Reveal className="max-w-3xl">
-            <TestimonialCard testimonial={featuredReview} size="large" className="bg-paper" />
-          </Reveal>
         </div>
       </section>
 

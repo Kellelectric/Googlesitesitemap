@@ -102,6 +102,12 @@ export function Footer() {
             >
               LinkedIn
             </a>
+            <a
+              href={company.social.trustpilot}
+              className="link-underline inline-flex -my-2 items-center py-2"
+            >
+              Trustpilot
+            </a>
           </div>
         </div>
       </div>

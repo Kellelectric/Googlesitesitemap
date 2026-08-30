@@ -11,6 +11,7 @@ export type CareerTrack = {
   description: string
   whoItsFor: string[]
   whatToExpect: string[]
+  applicationFormUrl: string
 }
 
 export const careerTracks: CareerTrack[] = [
@@ -31,6 +32,8 @@ export const careerTracks: CareerTrack[] = [
       'Working alongside engineers, technicians, and project coordinators on live jobs',
       'Direct exposure to our documented process: assess, design, install, test, hand over',
     ],
+    applicationFormUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
   },
   {
     slug: 'industrial-training',
@@ -48,6 +51,8 @@ export const careerTracks: CareerTrack[] = [
       'Exposure to the documented assess-design-install-test-handover process on real sites',
       'Institution-required attendance and completion documentation, coordinated with your school',
     ],
+    applicationFormUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
   },
   {
     slug: 'apprenticeship',
@@ -65,15 +70,19 @@ export const careerTracks: CareerTrack[] = [
       'Progressive exposure to more complex installation, testing, and fault-finding work over time',
       'Working to the same safety and documentation standards as our certified team',
     ],
+    applicationFormUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLScyQUddIgthC752dLwSulX9vRT8V4rPdvlz3Wr7EM0VTktE9A/viewform',
   },
   {
     slug: 'job-openings',
     name: 'Job Openings',
     summary: 'Current vacancies at Kell Electricals Ltd.',
     description:
-      "We don't currently maintain a live, self-updating job board on this site. If you'd like to be considered for a role, or want to ask whether we're hiring for a specific position, send your CV and a short note about what you're looking for to the email below — we do review speculative applications.",
+      "We don't currently maintain a live, self-updating job board on this site. If you'd like to be considered for a role, or want to ask whether we're hiring for a specific position, fill out the application form below — we do review speculative applications, and it's the fastest way to reach our team.",
     whoItsFor: [],
     whatToExpect: [],
+    applicationFormUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLScrGwqdcA3rzUVRhHl2kt7afhOGNB9InZsdAmZ7gsG5tXr3eQ/viewform',
   },
 ]
 

@@ -8,6 +8,7 @@ type CTASectionProps = {
   serviceSlug?: string
   primaryLabel?: string
   primaryHref?: string
+  primaryExternal?: boolean
   secondaryLabel?: string
   secondaryHref?: string
 }
@@ -18,6 +19,7 @@ export function CTASection({
   serviceSlug,
   primaryLabel = 'Request a Quote',
   primaryHref,
+  primaryExternal = false,
   secondaryLabel,
   secondaryHref,
 }: CTASectionProps = {}) {
@@ -34,7 +36,11 @@ export function CTASection({
           <p className="mt-4 max-w-md text-paper/65">{body}</p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <Button href={resolvedPrimaryHref} variant="primary">
+          <Button
+            href={resolvedPrimaryHref}
+            variant="primary"
+            {...(primaryExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+          >
             {primaryLabel}
           </Button>
           <Button href={resolvedSecondaryHref} variant="secondary">

@@ -35,8 +35,9 @@ export const company = {
   teamExperienceYears: 20,
   social: {
     facebook: 'https://facebook.com/kellelectricals',
-    instagram: 'https://instagram.com/kell_electricals',
-    linkedin: 'https://linkedin.com/in/kellelectricals',
+    instagram: 'https://www.instagram.com/kell_electricalsltd?igsi=MXhzNGh4Y3Vkbmk0Yg==',
+    linkedin: 'https://www.linkedin.com/company/kellelectricalslimited/',
+    trustpilot: 'https://www.trustpilot.com/review/kellelectricals.com',
   },
   certifications: [
     {

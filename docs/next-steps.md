@@ -1,5 +1,22 @@
 # Next Steps
 
+## Accessibility regression fixed: calculator components (this round)
+
+Re-ran a Lighthouse pass across the site after several rounds of new
+content and found `/calculators` had dropped to 95 accessibility (home,
+about, and the new resource article all still scored 100). Two real
+findings in `LoadCalculator.tsx`/`SolarSizingCalculator.tsx`:
+- `text-ink/50` (3.4:1 on Paper) failed WCAG AA's 4.5:1 minimum for small
+  text — same category of bug fixed sitewide in an earlier round, just
+  introduced fresh in these two newer components. Bumped to `text-ink/60`
+  (4.64:1), matching the precedent set elsewhere in the codebase.
+- Both components used an `h3` for their card heading with no `h2`
+  anywhere before them on the page (a heading-order/skip violation).
+  Changed both to `h2`, matching how every other section component's
+  heading sits directly under the page's `h1`.
+Verified via Lighthouse: `/calculators` and `/` (which also embeds
+`SolarSizingCalculator`) both back to 100/100 accessibility.
+
 ## FAQ section added to /calculators (this round)
 
 `/calculators` was the only remaining hub-style page without an FAQ

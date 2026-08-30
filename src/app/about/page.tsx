@@ -12,6 +12,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     'Kell Electricals Ltd is a COREN and NEMSA certified electrical engineering company based in Wuse 2, Abuja, backed by 20+ years of combined engineering experience across residential, commercial, and industrial sites.',
   path: '/about',
+  image: '/images/photos/about-blueprint-review.jpg',
 })
 
 const milestones = [

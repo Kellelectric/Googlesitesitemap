@@ -12,6 +12,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     'Request a quote from Kell Electricals Ltd, COREN and NEMSA certified electrical engineers serving Wuse 2, Gwarinpa, Maitama, Asokoro, Guzape, Katampe, and wider Nigeria.',
   path: '/contact',
+  image: '/images/photos/contact-hero-consultation.jpg',
 })
 
 // Lets "Request a Quote" buttons elsewhere on the site (service pages,

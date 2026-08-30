@@ -37,4 +37,5 @@ export const footerNav: NavLink[] = [
 export const legalNav: NavLink[] = [
   { label: 'Terms & Conditions', href: '/legal/terms' },
   { label: 'Privacy Policy', href: '/legal/privacy' },
+  { label: 'Sitemap', href: '/site-map' },
 ]

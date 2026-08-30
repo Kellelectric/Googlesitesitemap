@@ -18,6 +18,7 @@ export const metadata: Metadata = pageMetadata({
   title: '24/7 Emergency Electrical Services',
   description: `Emergency electrical response across ${company.serviceRegion} for power outages, sparking, burning smells, exposed wiring, and other active hazards. Target response ${company.emergencyResponseTarget}.`,
   path: '/emergency-electrical-services',
+  image: '/images/photos/emergency-hero-switchboard.jpg',
 })
 
 const problemsWeSolve = [

@@ -60,6 +60,29 @@ Assist" chatbot (new this round — see below), and a first draft of
 - **WhatsApp click-to-chat.** Confirmed WhatsApp-enabled — `company.whatsappHref`
   now points at the real business short-link (`wa.me/message/74H7FYXECPMXH1`)
   pulled from the live site.
+- **SEO fixes and enhancements.** Found and fixed a real bug: `pageMetadata()`
+  (used by every page except the homepage) set its own `openGraph`/`twitter`
+  objects with no `images` field, and Next.js does not deep-merge those
+  nested objects with the root layout's — so every subpage was silently
+  missing `og:image`/`twitter:image` entirely (verified via curl: zero
+  `og:image` tags rendered). Fixed by giving `pageMetadata()` an optional
+  `image` param (defaulting to the site `/og-image.jpg`) and wiring in each
+  page's own hero photo, so shared links now get a distinct, correct
+  preview image per page instead of none at all. Also enhanced
+  `organizationSchema()` in `lib/schema.ts`: added `logo`, added Trustpilot
+  to `sameAs`, added a real `openingHoursSpecification` (parsed from
+  `company.businessHours` rather than hand-duplicated, so it can't drift),
+  and a `hasOfferCatalog` listing all 16 real services. Added a new
+  `articleSchema()` (schema.org `TechArticle`) wired into every
+  `/resources/[slug]` page — intentionally omits `datePublished` since no
+  real publish date exists for these guides (Google treats it as
+  recommended, not required, so omitting is correct over inventing one).
+- **Human-readable sitemap page.** Added `/site-map` — a full index of every
+  page on the site grouped by section (Company, Flagship Capabilities,
+  Services, Industries, Resources, Careers, Legal), linked from the
+  footer's legal row and included in `sitemap.ts` (the XML sitemap).
+  Distinct from `/sitemap.xml` (the machine-readable one Next.js already
+  generated, unchanged apart from the new `/site-map` entry).
 - **Deeper content structure sitewide.** Per client request to make the
   site "more detailed" without inventing anything new, added cross-links
   and stats sections that draw entirely from facts already established

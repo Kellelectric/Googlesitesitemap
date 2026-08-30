@@ -8,7 +8,7 @@ import { CTASection } from '@/components/sections/CTASection'
 import { getArticleBySlug, articles } from '@/content/resources'
 import { getServiceBySlug } from '@/content/services'
 import { company } from '@/content/company'
-import { breadcrumbSchema } from '@/lib/schema'
+import { articleSchema, breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
 
@@ -25,6 +25,7 @@ export function generateMetadata({ params }: Props): Metadata {
     title: article.title,
     description: article.summary,
     path: `/resources/${article.slug}`,
+    image: '/images/photos/resource-detail-hero-manual.jpg',
   })
 }
 
@@ -39,6 +40,18 @@ export default function ArticleDetailPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            articleSchema({
+              title: article.title,
+              summary: article.summary,
+              slug: article.slug,
+            }),
+          ),
+        }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

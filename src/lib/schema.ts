@@ -1,4 +1,52 @@
 import { company } from '@/content/company'
+import { services } from '@/content/services'
+
+// Business hours are authored as free text ("Monday – Friday", "8:00 AM
+// – 5:00 PM") for human display; schema.org's openingHoursSpecification
+// needs a day list and 24-hour times instead. This derives one from the
+// other rather than hand-maintaining a second copy that could drift.
+const dayOrder = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+]
+
+function expandDayRange(days: string): string[] {
+  if (!days.includes('–') && !days.includes('-')) return [days.trim()]
+  const [start, end] = days.split(/[–-]/).map((d) => d.trim())
+  const startIdx = dayOrder.indexOf(start)
+  const endIdx = dayOrder.indexOf(end)
+  if (startIdx === -1 || endIdx === -1) return [days.trim()]
+  return dayOrder.slice(startIdx, endIdx + 1)
+}
+
+function to24Hour(time: string): string {
+  const match = time.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
+  if (!match) return time
+  let [, hourStr, minute, meridiem] = match
+  let hour = parseInt(hourStr, 10)
+  if (meridiem.toUpperCase() === 'PM' && hour !== 12) hour += 12
+  if (meridiem.toUpperCase() === 'AM' && hour === 12) hour = 0
+  return `${String(hour).padStart(2, '0')}:${minute}`
+}
+
+function openingHoursSpecification() {
+  return company.businessHours
+    .filter((entry) => entry.hours !== 'Closed')
+    .flatMap((entry) => {
+      const [opens, closes] = entry.hours.split(/[–-]/).map((t) => to24Hour(t.trim()))
+      return {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: expandDayRange(entry.days),
+        opens,
+        closes,
+      }
+    })
+}
 
 export function organizationSchema() {
   return {
@@ -7,6 +55,7 @@ export function organizationSchema() {
     name: company.name,
     legalName: company.legalName,
     image: `${company.domain}/og-image.jpg`,
+    logo: `${company.domain}/brand/logo-on-light.png`,
     url: company.domain,
     telephone: company.phone,
     priceRange: '$$',
@@ -28,7 +77,26 @@ export function organizationSchema() {
     })),
     foundingDate: `${company.foundedYear}`,
     slogan: company.tagline,
-    sameAs: [company.social.facebook, company.social.instagram, company.social.linkedin],
+    openingHoursSpecification: openingHoursSpecification(),
+    sameAs: [
+      company.social.facebook,
+      company.social.instagram,
+      company.social.linkedin,
+      company.social.trustpilot,
+    ],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Electrical engineering services',
+      itemListElement: services.map((service) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: service.name,
+          description: service.summary,
+          url: `${company.domain}/services/${service.slug}`,
+        },
+      })),
+    },
   }
 }
 
@@ -66,6 +134,33 @@ export function faqSchema(items: { question: string; answer: string }[]) {
         text: item.answer,
       },
     })),
+  }
+}
+
+export function articleSchema(params: {
+  title: string
+  summary: string
+  slug: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline: params.title,
+    description: params.summary,
+    url: `${company.domain}/resources/${params.slug}`,
+    author: {
+      '@type': 'Organization',
+      name: company.name,
+      url: company.domain,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: company.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${company.domain}/brand/logo-on-light.png`,
+      },
+    },
   }
 }
 

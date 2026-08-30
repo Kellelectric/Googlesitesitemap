@@ -33,6 +33,7 @@ export function generateMetadata({ params }: Props): Metadata {
     title: service.name,
     description: service.summary,
     path: `/services/${service.slug}`,
+    image: '/images/photos/service-detail-hero-wiring.jpg',
   })
 }
 

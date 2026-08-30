@@ -24,6 +24,7 @@ export function generateMetadata({ params }: Props): Metadata {
     title: `${track.name} — Careers`,
     description: track.summary,
     path: `/careers/${track.slug}`,
+    image: '/images/photos/career-detail-hero-vocational-training.jpg',
   })
 }
 

@@ -14,9 +14,18 @@ export function pageMetadata(params: {
   description: string
   path: string
   noIndex?: boolean
+  // Page-specific share image (one of the hero photos under
+  // public/images/photos/, e.g. '/images/photos/solar-hero-panel-install.jpg').
+  // Falls back to the site default so every page still gets a valid
+  // og:image/twitter:image even before a hero photo exists for it.
+  image?: string
 }): Metadata {
-  const { title, description, path, noIndex } = params
+  const { title, description, path, noIndex, image = '/og-image.jpg' } = params
   const fullTitle = `${title} - ${company.name}`
+  // No hardcoded width/height: the hero photos passed in here vary in
+  // aspect ratio, and crawlers read a fetched image's actual dimensions
+  // anyway, so a hardcoded value would just be misleading if wrong.
+  const images = [{ url: image, alt: fullTitle }]
 
   return {
     title,
@@ -26,10 +35,12 @@ export function pageMetadata(params: {
       title: fullTitle,
       description,
       url: `${company.domain}${path}`,
+      images,
     },
     twitter: {
       title: fullTitle,
       description,
+      images,
     },
     ...(noIndex ? { robots: { index: false, follow: true } } : {}),
   }

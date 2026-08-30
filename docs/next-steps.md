@@ -17,6 +17,25 @@ shadows the rest of the site doesn't use (`src/components/chatbot/
 KellAssist.tsx`). Re-run the linter after any deliberate palette/type
 change and keep this file in sync with `tailwind.config.ts`.
 
+## New resource article (this round)
+
+Added an 8th `/resources` guide, `ev-charger-installation-what-your-property-
+needs`, matching the existing register (generic engineering knowledge, no
+company-specific claims): load assessment before charger selection, why a
+dedicated protected circuit is required, and how solar/generator integration
+changes the load-management picture. Cross-links to the real
+`/services/ev-charging-installation`, `panel-repair-upgrades`, and
+`solar-inverter-systems` service pages via `relatedServiceSlugs`. This was
+the one genuine content gap left after confirming the client's audit
+report's other two "missing service page" findings (generator, EV charger)
+were already built — the service pages existed, but no resource guide
+covered EV charging specifically, unlike solar and generators. Considered
+and explicitly skipped a "solar savings calculator" (also from the audit)
+since it would need an assumed grid-tariff figure to produce a number, which
+directly contradicts this site's established solar-page philosophy
+("measured, not estimated" — see `/solar-energy-systems`) and every
+existing article and service page's discipline against inventing numbers.
+
 ## Rate limiting and local SEO pages (this round)
 
 - **`/api/chat` rate limiting — done.** Extracted the quote endpoint's

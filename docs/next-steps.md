@@ -423,6 +423,16 @@ facts from it are now wired into the codebase:
 - Additional Google reviews beyond the 16 already added to
   `src/content/testimonials.ts`, if more should be featured — add them
   verbatim to that file, following the same no-rewrite rule.
+- **Partner/supplier logos.** `src/content/partners.ts` and the reusable
+  `PartnerLogos` component (wired into both `/` and `/about`, immediately
+  after "Our expertise") are built and ready, but the `partners` array is
+  intentionally empty — no partnerships were confirmed, so nothing is
+  rendered (the component returns `null` on an empty array; this is by
+  design, not a bug). Once the client supplies real partner/supplier
+  names, logo files, and (optionally) their website URLs and written
+  permission to display the logo, drop the logo under
+  `public/images/partners/` and add an entry to the `partners` array per
+  the file's header comment. Do not add placeholder or invented entries.
 
 ## Dependency note
 

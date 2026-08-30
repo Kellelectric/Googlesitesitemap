@@ -7,6 +7,8 @@ import { IndustriesPreview } from '@/components/sections/IndustriesPreview'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { TrustSection } from '@/components/sections/TrustSection'
 import { TestimonialsPreview } from '@/components/sections/TestimonialsPreview'
+import { PartnerLogos } from '@/components/sections/PartnerLogos'
+import { partners } from '@/content/partners'
 import { CTASection } from '@/components/sections/CTASection'
 
 export const metadata: Metadata = {
@@ -25,6 +27,7 @@ export default function HomePage() {
       <IndustriesPreview />
       <TrustSection />
       <TestimonialsPreview />
+      <PartnerLogos partners={partners} />
       <CTASection />
     </>
   )

@@ -485,10 +485,21 @@ facts from it are now wired into the codebase:
   `src/content/careers.ts` — sourced from the client's June 2026 site
   audit report). Internship and industrial-training's stipend/intake
   are still invented placeholders.
-- ~~Current team roster~~ **Done.** Real names/titles/bios for Thelma
-  Dogwoh (Managing Director) and Gabriel Ioryem (Lead Electrical
-  Engineer) are in `src/content/team.ts`, sourced from the same audit
-  report, shown on `/about`. No photos yet — add if supplied.
+- ~~Current team roster~~ **Done, now with photos.** Real names/titles/
+  bios for the full 6-person team are in `src/content/team.ts`, shown on
+  `/about` in a photo-card grid. Thelma Dogwoh (Managing Director) and
+  Gabriel Ioryem's names/bio facts came from the June 2026 audit report;
+  the client later corrected Gabriel's title directly to **Founder &
+  CEO** (was "Lead Electrical Engineer" per the audit — his bio was
+  updated to match while keeping the COREN/15-years facts, which the
+  client hasn't retracted). Justina (Procurement & Inventory Manager),
+  Folashade (Customer Relations Manager), Anthony (Interior Design &
+  Finishing Expert), and Sunday (Head of HVAC Systems) — names, titles,
+  and real headshots — were supplied directly by the client afterward;
+  no bio detail beyond title was given for these four, so their bios are
+  a plain restatement of the role, not invented specifics. Photos live
+  in `public/images/team/` (resized to 640×640, JPEG). Thelma has no
+  photo yet — add if supplied.
 - Any additional named client references cleared for public use as a trust
   bar (logos require written permission per client).
 - Additional Google or Trustpilot reviews beyond the 23 already added to

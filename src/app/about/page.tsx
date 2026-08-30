@@ -153,16 +153,25 @@ export default function AboutPage() {
                 Who you&rsquo;ll be working with
               </h2>
             </Reveal>
-            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+            <StaggerGroup className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {team.map((member) => (
-                <MotionDiv
-                  key={member.name}
-                  variants={staggerItem}
-                  className="border-t-2 border-petrol pt-5"
-                >
-                  <h3 className="text-lg font-semibold text-ink">{member.name}</h3>
-                  <p className="mt-1 text-sm font-semibold text-petrol/80">{member.title}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{member.bio}</p>
+                <MotionDiv key={member.name} variants={staggerItem} className="border border-ink/10">
+                  {member.photo && (
+                    <div className="relative aspect-square w-full overflow-hidden">
+                      <Image
+                        src={member.photo}
+                        alt={member.name}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="border-t-2 border-petrol p-5">
+                    <h3 className="text-lg font-semibold text-ink">{member.name}</h3>
+                    <p className="mt-1 text-sm font-semibold text-petrol/80">{member.title}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-ink/65">{member.bio}</p>
+                  </div>
                 </MotionDiv>
               ))}
             </StaggerGroup>

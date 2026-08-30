@@ -4,7 +4,8 @@
 
 Shipped since the original brief: `/about`, `/solar-energy-systems`,
 `/industries` (+ 7 sector pages), `/resources` (+ 7 articles), `/faq`
-(categorized, real/sourced content only), and a first draft of
+(categorized, real/sourced content only), `/testimonials` (real Google
+reviews), `/careers` (+ 4 track pages), and a first draft of
 `/legal/terms` and `/legal/privacy`. Still blocked on real data:
 
 1. **`/projects`** — case studies hub. Per client direction, contract
@@ -14,9 +15,19 @@ Shipped since the original brief: `/about`, `/solar-energy-systems`,
    with the client/ops team, do not estimate. Filterable by sector
    (residential/commercial/industrial) and service type once 3+ case
    studies exist.
-2. **`/careers`** — apprenticeship programme details. **Needs real data:**
-   programme structure, duration, intake schedule, eligibility — currently
-   no source material provided.
+2. **`/careers` track pages — done, but generic.** Built the hub plus
+   `/careers/internship`, `/careers/industrial-training`,
+   `/careers/apprenticeship`, and `/careers/job-openings` (matching the
+   old site's nav structure), but with **no programme specifics** —
+   duration, stipend, intake dates, and eligibility criteria were never
+   provided, so each page describes what the track generally is (in
+   standard industry terms) and directs applicants to email `company.email`
+   with details confirmed directly rather than fabricating numbers or
+   dates. `/careers/job-openings` is honest that there's no live job board:
+   it invites speculative applications by email. **If real programme
+   details or actual open roles become available, replace the generic
+   copy in `src/content/careers.ts` — do not leave it generic once real
+   data exists.**
 3. **`/legal/terms`** and **`/legal/privacy`** — drafted (see
    `src/content/legal.ts`), covering standard site terms and an NDPA 2023
    structure (lawful basis, data subject rights, breach notification). This
@@ -109,16 +120,43 @@ Shipped since the original brief: `/about`, `/solar-energy-systems`,
     in GA4 mark `generate_lead` as a key event and `/contact/thank-you` as a
     conversion-linked page; import that conversion into Google Ads once ads
     run. None of this fires anywhere without those two env vars set.
-- **Legacy-path redirects — done.** `next.config.js` now 301s the two
-  paths from the old site's `sitemap9.xml` that don't match 1:1 on the
-  new site: `/home` → `/`, `/testimonials` → `/` (temporary target — no
-  real `/testimonials` page exists yet; point this at `/testimonials`
-  once real quotes are provided, see the content-still-needed list
-  above). `/about`, `/services`, and `/contact` already matched the old
-  paths exactly, so no redirect was needed for those. Verified live:
-  `curl` against a freshly built+served instance confirmed both redirects
-  fire (308) and the unredirected paths still serve directly (200, no
+- **Legacy-path redirects — done.** `next.config.js` 301s the one path
+  from the old site's `sitemap9.xml` that doesn't match 1:1 on the new
+  site: `/home` → `/`. `/about`, `/services`, `/contact`, and
+  `/testimonials` already match the old paths exactly (a real
+  `/testimonials` page now exists, so the earlier placeholder redirect to
+  `/` was removed), so no redirect was needed for those. Verified live:
+  `curl` against a freshly built+served instance confirmed the redirect
+  fires (308) and the unredirected paths still serve directly (200, no
   loop).
+- **`/testimonials` — done.** Built from real, verbatim Google reviews
+  supplied directly by the client (from the Kell Electricals Google
+  Business Profile) — `src/content/testimonials.ts` holds the exact
+  review text, star ratings, customer names, and relative dates as
+  supplied, with a `truncated` flag preserved on the handful captured
+  from a screenshot that cut the review short (only the text actually
+  supplied is shown; nothing is invented to complete a cut-off review).
+  Never displays every Google review, only this curated set of 16 — the
+  hero explicitly links out to the full profile
+  (`https://maps.app.goo.gl/CUDxCDE74MvUX3HRA?g_st=ic`) via "View all
+  reviews on Google." `company.trust.googleRating`/`googleReviewCount`
+  were updated to the client's current figures (4.8 / 192) — the source
+  brief also mentioned "184+" in some literal template copy; 192 was used
+  throughout instead since it's the number stated under the profile's own
+  "Google Review Count," and using one consistent figure sitewide (it also
+  feeds the existing `AggregateRating` schema in `organizationSchema()`)
+  beats displaying two different counts on the same page. Reusable
+  components: `StarRating`, `GoogleReviewBadge` (labels the source as
+  "Google Review" only — never "Google Certified" or anything implying
+  Google verified the business through this site), `ReviewSummary`,
+  `TestimonialCard`, `TestimonialCarousel` (autoplay, pause on
+  hover/focus, keyboard arrow-key nav, touch swipe via native scroll-snap,
+  respects `prefers-reduced-motion`), `TestimonialGrid` (load-more), and
+  `GoogleReviewCTA`. No per-review `Review`/schema.org markup was added —
+  only the existing, already-real `AggregateRating` on the org schema —
+  since self-hosted review schema without Google's own verification is
+  the kind of "fake review schema" this task explicitly said not to
+  build.
 
 ## Content imported from the live site (this session)
 
@@ -129,8 +167,9 @@ facts from it are now wired into the codebase:
 - `src/content/company.ts`: emergency email, business hours, social links
   (Facebook/Instagram/LinkedIn), the real WhatsApp business link, founding
   year (2010, used to compute `yearsExperience` dynamically instead of a
-  hardcoded number), Google rating (4.9), and a completed-projects count
-  (100+).
+  hardcoded number), Google rating (4.8, updated this round from an
+  earlier 4.9), a Google review count (192, updated from 187), and a
+  completed-projects count (100+).
 - `/about`: real dated milestones (2010–2024) added as a timeline.
 - `/services`: real FAQ content added (with schema.org `FAQPage` markup).
 - `/contact`: business hours and emergency email added to the contact cards.
@@ -139,27 +178,26 @@ facts from it are now wired into the codebase:
 - **Team bios** (names/roles from the live site) — the client's own extract
   flagged these as possibly outdated versus the current staff roster.
   Do not add without confirmation these are current.
-- **Testimonials** — the live site has a Testimonials nav item, but the
-  extract provided contains no actual testimonial text/quotes/names, only
-  the fact that the page exists. Do not fabricate testimonial content;
-  wait for verbatim quotes with attribution.
-- **`/projects`, `/careers`** — per prior client direction, still blocked on
-  real case-study/programme data (see below). The live site's extract
-  additionally reveals `/careers` has four subpages (Internship, Industrial
-  Training, Apprenticeship, Job Openings) and the site links out to a
-  Paystack-hosted online store and a Blogspot "Solution Hub" — noted here
-  for future scope, not built.
+- **`/projects`** — per prior client direction, still blocked on real
+  case-study data (see below). The live site's extract additionally
+  reveals the site links out to a Paystack-hosted online store and a
+  Blogspot "Solution Hub" — noted here for future scope, not built.
 
 ## Content still needed from the client (do not fabricate)
 
 - Case study detail for any project to be featured on a future `/projects`
   page (scope, sector, outcome — no contract amounts).
-- Careers/apprenticeship programme specifics for the four subpages above.
-- Real, attributed testimonial quotes for a `/testimonials` page.
+- Real careers/programme specifics (duration, stipend, intake dates,
+  eligibility) for the four `/careers` track pages, which currently carry
+  generic, non-fabricated placeholder copy — see the `/careers` entry
+  above.
 - Current team roster (names/roles/photos) if a team section is wanted —
   the old site's list should be treated as unverified.
 - Any additional named client references cleared for public use as a trust
   bar (logos require written permission per client).
+- Additional Google reviews beyond the 16 already added to
+  `src/content/testimonials.ts`, if more should be featured — add them
+  verbatim to that file, following the same no-rewrite rule.
 
 ## Dependency note
 

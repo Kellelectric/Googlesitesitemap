@@ -15,7 +15,9 @@
 /resources                       Insights/technical articles index
 /resources/[slug]                Article detail
 /faq                             Full FAQ hub, categorized
-/careers                         Careers & apprenticeship programme
+/testimonials                    Google review testimonials
+/careers                         Careers hub
+/careers/[slug]                  Internship / Industrial Training / Apprenticeship / Job Openings
 /contact                         Contact / quote request
 /legal/terms                     Terms & Conditions
 /legal/privacy                   Privacy Policy (NDPA 2023)
@@ -29,12 +31,26 @@ Built and shipped: `/`, `/about`, `/services`, `/services/[slug]` (all 16
 slugs render from real content), `/solar-energy-systems`, `/industries`,
 `/industries/[slug]` (7 sector pages), `/resources`, `/resources/[slug]`
 (7 technical articles), `/faq` (categorized, all real/sourced content),
-`/contact`, `/legal/terms`, `/legal/privacy` (drafted, see caveat below),
-plus `sitemap.xml` and `robots.txt`.
+`/testimonials` (real, verbatim Google reviews — see caveat below),
+`/careers` + `/careers/[slug]` (4 tracks, generic non-fabricated copy —
+see caveat below), `/contact`, `/legal/terms`, `/legal/privacy` (drafted,
+see caveat below), plus `sitemap.xml` and `robots.txt`.
 
-Not yet built: `/projects` + detail pages, `/careers`. Both are blocked on
-real client data per the anti-fabrication rule (see "Content still needed
-from the client" below) — do not build these with invented content.
+Not yet built: `/projects` + detail pages — still blocked on real client
+data per the anti-fabrication rule (see "Content still needed from the
+client" below) — do not build this with invented content.
+
+**Careers caveat:** `/careers/[slug]` pages describe each track (Internship,
+Industrial Training, Apprenticeship, Job Openings) in general, industry-
+standard terms only — no programme duration, stipend, intake dates, or
+eligibility specifics are stated anywhere, since none were supplied.
+Applicants are directed to email `company.email` for current details. See
+`next-steps.md` before adding real programme specifics.
+
+**Testimonials caveat:** `/testimonials` shows only the 16 reviews supplied
+verbatim in `src/content/testimonials.ts`, not the full Google review set —
+the page links out to the real profile for the rest. Do not add a review
+here that wasn't supplied verbatim by the client.
 
 Primary navigation intentionally links only to pages that exist in this
 build — no dead links. It now includes Industries and Resources. `/legal/*`
@@ -108,6 +124,20 @@ The shared 4-stage engineering process (Assess → Design → Install →
 Test & Handover) used across every service detail page — this is the
 "systems thinking" pillar made visible in the UI, not just claimed in copy.
 
+### `src/content/testimonials.ts`
+16 `Testimonial` objects — real, verbatim Google reviews (customer name,
+star rating, relative date, review text, and a `truncated` flag where a
+review was captured mid-sentence from a screenshot) supplied directly by
+the client from the Kell Electricals Google Business Profile. Review text
+is never rewritten, paraphrased, or completed here — see the file's own
+header comment before editing.
+
+### `src/content/careers.ts`
+4 `CareerTrack` objects (internship, industrial-training, apprenticeship,
+job-openings) matching the old site's Careers nav structure. Deliberately
+excludes programme duration/stipend/intake/eligibility specifics — none
+were supplied — see the file's header comment and the Careers caveat above.
+
 ### `src/content/nav.ts`
 Primary and footer navigation arrays, gated to built pages only (see
 Build status above).
@@ -126,9 +156,9 @@ number wasn't supplied, it is either omitted or explicitly marked:
 - **Client logos / trust bar:** not built — no client has been confirmed
   for public logo use. Do not add logos without written permission from
   each client.
-- **Google review count/rating:** rating (4.9★) sourced from the live
-  site's content extract; review count (187) is still an earlier
-  unverified figure — re-verify both against the live Google Business
-  Profile before the next site update.
-- **Testimonials, careers programme details, current team roster:** still
-  blocked on real data from the client — see `next-steps.md`.
+- **Google review count/rating:** updated to 4.8★ / 192 reviews, sourced
+  directly from the client's stated Google Business Profile figures
+  (supplied alongside the 16 testimonials). Re-verify against the live
+  profile periodically since these drift as new reviews come in.
+- **Careers programme details, current team roster:** still blocked on
+  real data from the client — see `next-steps.md`.

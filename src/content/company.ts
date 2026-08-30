@@ -51,8 +51,8 @@ export const company = {
   ],
   serviceRegion: 'Abuja and wider Nigeria',
   trust: {
-    googleRating: 4.9,
-    googleReviewCount: 187,
+    googleRating: 4.8,
+    googleReviewCount: 192,
     projectsCompleted: 100,
   },
   domain: 'https://kellelectricals.com',

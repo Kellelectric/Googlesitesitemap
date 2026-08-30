@@ -6,14 +6,25 @@ type CTASectionProps = {
   heading?: string
   body?: string
   serviceSlug?: string
+  primaryLabel?: string
+  primaryHref?: string
+  secondaryLabel?: string
+  secondaryHref?: string
 }
 
 export function CTASection({
   heading = 'Scope a job with our team',
   body = 'Tell us what you need engineered, repaired, or installed. We respond with a scoped assessment, not a guess.',
   serviceSlug,
+  primaryLabel = 'Request a Quote',
+  primaryHref,
+  secondaryLabel,
+  secondaryHref,
 }: CTASectionProps = {}) {
-  const quoteHref = serviceSlug ? `/contact?service=${serviceSlug}` : '/contact'
+  const resolvedPrimaryHref =
+    primaryHref ?? (serviceSlug ? `/contact?service=${serviceSlug}` : '/contact')
+  const resolvedSecondaryLabel = secondaryLabel ?? `Call ${company.phone}`
+  const resolvedSecondaryHref = secondaryHref ?? company.phoneHref
 
   return (
     <section className="bg-petrol-700 text-paper">
@@ -23,11 +34,11 @@ export function CTASection({
           <p className="mt-4 max-w-md text-paper/65">{body}</p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <Button href={quoteHref} variant="primary">
-            Request a Quote
+          <Button href={resolvedPrimaryHref} variant="primary">
+            {primaryLabel}
           </Button>
-          <Button href={company.phoneHref} variant="secondary">
-            Call {company.phone}
+          <Button href={resolvedSecondaryHref} variant="secondary">
+            {resolvedSecondaryLabel}
           </Button>
         </div>
       </Reveal>

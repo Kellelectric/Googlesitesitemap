@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next'
 import { services } from '@/content/services'
 import { industries } from '@/content/industries'
 import { articles } from '@/content/resources'
+import { careerTracks } from '@/content/careers'
 import { company } from '@/content/company'
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -15,6 +16,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/industries`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/resources`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/faq`, lastModified: new Date(), priority: 0.6, changeFrequency: 'monthly' },
+    { url: `${base}/testimonials`, lastModified: new Date(), priority: 0.6, changeFrequency: 'weekly' },
+    { url: `${base}/careers`, lastModified: new Date(), priority: 0.5, changeFrequency: 'monthly' },
     { url: `${base}/contact`, lastModified: new Date(), priority: 0.8, changeFrequency: 'monthly' },
   ]
 
@@ -39,5 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly',
   }))
 
-  return [...staticRoutes, ...serviceRoutes, ...industryRoutes, ...articleRoutes]
+  const careerRoutes: MetadataRoute.Sitemap = careerTracks.map((track) => ({
+    url: `${base}/careers/${track.slug}`,
+    lastModified: new Date(),
+    priority: 0.4,
+    changeFrequency: 'monthly',
+  }))
+
+  return [...staticRoutes, ...serviceRoutes, ...industryRoutes, ...articleRoutes, ...careerRoutes]
 }

@@ -60,6 +60,27 @@ Assist" chatbot (new this round — see below), and a first draft of
 - **WhatsApp click-to-chat.** Confirmed WhatsApp-enabled — `company.whatsappHref`
   now points at the real business short-link (`wa.me/message/74H7FYXECPMXH1`)
   pulled from the live site.
+- **Deeper content structure sitewide.** Per client request to make the
+  site "more detailed" without inventing anything new, added cross-links
+  and stats sections that draw entirely from facts already established
+  elsewhere in the content model:
+  - `/services/[slug]` (16 pages) gained a "Where this is used" section
+    (industries that need that service, reverse-mapped from
+    `industries.ts`'s `serviceSlugs`), a "Why choose Kell Electricals"
+    stats block (same COREN/NEMSA/experience/rating/projects facts used
+    elsewhere), and an FAQ section (General + Services & scheduling).
+  - `/services` hub gained the same "Why choose us" stats block between
+    the category grid and the FAQ preview.
+  - Each `/resources/[slug]` article gained a new `relatedServiceSlugs`
+    field in `resources.ts`, editorially mapped from each article's actual
+    subject matter to the real services it discusses, rendered as a
+    "Related services" cross-link card.
+  - The homepage gained two new sections: `IndustriesPreview` (all 7
+    industries, linking to `/industries/[slug]`) and `TestimonialsPreview`
+    (3 featured real reviews + the review summary, linking to
+    `/testimonials`) — placed to keep the light/dark section rhythm
+    alternating (`ProcessSection` → `IndustriesPreview` → `TrustSection`)
+    rather than stacking two dark full-bleed sections back to back.
 - **Hero photography on every page.** Every remaining bare petrol-color hero
   (careers hub, contact, FAQ, industries hub, resources hub, testimonials,
   solar, emergency, home automation, CCTV, and the shared services/industries/

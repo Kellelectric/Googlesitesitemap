@@ -100,7 +100,10 @@ education, healthcare, retail), each with a `challenges` list and
 7 `Article` objects across 5 categories (Solar & Energy, Compliance,
 Maintenance, Security & Automation, Industrial) — general electrical-
 engineering explainers, not company-specific claims, so none of it is
-blocked on client data.
+blocked on client data. Each article also carries `relatedServiceSlugs`,
+an editorial cross-reference into `services.ts` (which service lines the
+article's subject matter is actually about), rendered as a "Related
+services" card on the article page.
 
 ### Generated illustration assets
 `public/images/industries/*.png` (one per industry slug) and

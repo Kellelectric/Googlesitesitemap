@@ -5,11 +5,20 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
+import { FAQSection } from '@/components/sections/FAQSection'
 import { getServiceBySlug, services, categoryLabels } from '@/content/services'
+import { industries } from '@/content/industries'
 import { process } from '@/content/process'
 import { company } from '@/content/company'
+import { faqCategories } from '@/content/faqs'
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
+import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
+
+const faqs = [
+  ...(faqCategories.find((c) => c.category === 'General')?.items ?? []),
+  ...(faqCategories.find((c) => c.category === 'Services & scheduling')?.items ?? []),
+]
 
 type Props = { params: { slug: string } }
 
@@ -34,6 +43,8 @@ export default function ServiceDetailPage({ params }: Props) {
   const related = services
     .filter((s) => s.category === service.category && s.slug !== service.slug)
     .slice(0, 3)
+
+  const relatedIndustries = industries.filter((i) => i.serviceSlugs.includes(service.slug))
 
   return (
     <>
@@ -161,6 +172,58 @@ export default function ServiceDetailPage({ params }: Props) {
           </aside>
         </div>
       </section>
+
+      {relatedIndustries.length > 0 && (
+        <section className="bg-petrol-700 py-20 text-paper">
+          <div className="container-content">
+            <Reveal>
+              <span className="eyebrow text-yellow">Where this is used</span>
+              <h2 className="mt-3 max-w-xl text-2xl font-semibold md:text-3xl">
+                Properties that typically need {service.name.toLowerCase()}
+              </h2>
+            </Reveal>
+            <StaggerGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {relatedIndustries.map((industry) => (
+                <MotionDiv key={industry.slug} variants={staggerItem}>
+                  <Link
+                    href={`/industries/${industry.slug}`}
+                    className="link-underline block border border-paper/15 p-5 text-sm font-medium text-paper/90 hover:border-yellow"
+                  >
+                    {industry.name}
+                  </Link>
+                </MotionDiv>
+              ))}
+            </StaggerGroup>
+          </div>
+        </section>
+      )}
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">Why choose Kell Electricals</span>
+          </Reveal>
+          <StaggerGroup className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {[
+              'COREN and NEMSA certified',
+              `${company.teamExperienceYears}+ years of combined engineering experience`,
+              `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ reviews`,
+              `${company.trust.projectsCompleted}+ projects completed`,
+            ].map((item) => (
+              <MotionDiv
+                key={item}
+                variants={staggerItem}
+                className="flex gap-3 border-b border-ink/10 pb-3 text-sm text-ink/75"
+              >
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-petrol" />
+                {item}
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <FAQSection items={faqs} viewAllHref="/faq" />
 
       <CTASection
         heading={`Ready to scope your ${service.name.toLowerCase()} job?`}

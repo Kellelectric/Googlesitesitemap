@@ -9,6 +9,10 @@ export type Article = {
   summary: string
   category: 'Solar & Energy' | 'Compliance' | 'Maintenance' | 'Security & Automation' | 'Industrial'
   sections: ArticleSection[]
+  // Cross-references into services.ts — the service lines this guide's
+  // subject matter is directly about, so a reader can jump straight from
+  // the explainer to the relevant service page.
+  relatedServiceSlugs: string[]
 }
 
 export const articles: Article[] = [
@@ -48,6 +52,7 @@ export const articles: Article[] = [
         ],
       },
     ],
+    relatedServiceSlugs: ['solar-inverter-systems', 'energy-audits'],
   },
   {
     slug: 'nemsa-compliance-commercial-fitout',
@@ -82,6 +87,11 @@ export const articles: Article[] = [
           'Commercial fit-outs typically also need fire alarm and emergency lighting circuits coordinated with the main electrical scope, not installed as an afterthought by a separate trade. Getting this sequencing right the first time avoids the rework that comes from running fire-rated cabling after walls and ceilings are already closed up.',
         ],
       },
+    ],
+    relatedServiceSlugs: [
+      'commercial-office-fitout',
+      'electrical-wiring-installation',
+      'earthing-lightning-protection',
     ],
   },
   {
@@ -122,6 +132,7 @@ export const articles: Article[] = [
         ],
       },
     ],
+    relatedServiceSlugs: ['panel-repair-upgrades', 'fault-finding-diagnostics'],
   },
   {
     slug: 'generator-vs-solar-vs-hybrid',
@@ -154,6 +165,11 @@ export const articles: Article[] = [
           'Before comparing systems, we measure how often outages happen, how long they typically last, and what has to keep running during them. That data, not a preference for solar or skepticism about generators, is what actually determines the right answer for a given property.',
         ],
       },
+    ],
+    relatedServiceSlugs: [
+      'generator-installation-maintenance',
+      'solar-inverter-systems',
+      'energy-audits',
     ],
   },
   {
@@ -188,6 +204,7 @@ export const articles: Article[] = [
         ],
       },
     ],
+    relatedServiceSlugs: ['cctv-surveillance', 'automated-gates-access-control'],
   },
   {
     slug: 'three-phase-power-basics-for-facility-managers',
@@ -221,6 +238,7 @@ export const articles: Article[] = [
         ],
       },
     ],
+    relatedServiceSlugs: ['industrial-electrical-systems', 'preventive-maintenance-contracts'],
   },
   {
     slug: 'earthing-and-lightning-protection-what-to-know',
@@ -254,6 +272,7 @@ export const articles: Article[] = [
         ],
       },
     ],
+    relatedServiceSlugs: ['earthing-lightning-protection', 'panel-repair-upgrades'],
   },
 ]
 

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { getArticleBySlug, articles } from '@/content/resources'
+import { getServiceBySlug } from '@/content/services'
 import { company } from '@/content/company'
 import { breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
@@ -32,6 +33,9 @@ export default function ArticleDetailPage({ params }: Props) {
   if (!article) notFound()
 
   const related = articles.filter((a) => a.slug !== article.slug).slice(0, 2)
+  const relatedServices = article.relatedServiceSlugs
+    .map((slug) => getServiceBySlug(slug))
+    .filter((service): service is NonNullable<typeof service> => Boolean(service))
 
   return (
     <>
@@ -95,7 +99,25 @@ export default function ArticleDetailPage({ params }: Props) {
           </div>
 
           <aside>
-            <div className="border border-ink/10 p-6">
+            {relatedServices.length > 0 && (
+              <div className="border border-ink/10 p-6">
+                <span className="eyebrow text-petrol/70">Related services</span>
+                <ul className="mt-4 space-y-3">
+                  {relatedServices.map((s) => (
+                    <li key={s.slug}>
+                      <Link
+                        href={`/services/${s.slug}`}
+                        className="link-underline text-sm font-medium text-ink"
+                      >
+                        {s.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <div className="mt-8 border border-ink/10 p-6">
               <span className="eyebrow text-petrol/70">Have a job like this?</span>
               <p className="mt-3 text-sm leading-relaxed text-ink/70">
                 We run the same assessment process on site before quoting.

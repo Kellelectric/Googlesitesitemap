@@ -187,3 +187,9 @@ export const featuredTestimonials = testimonials.filter((t) => t.featured)
 export function getReviewUrl() {
   return 'https://maps.app.goo.gl/CUDxCDE74MvUX3HRA?g_st=ic'
 }
+
+// Direct link to the Google review composer — distinct from getReviewUrl()
+// above, which points to the full review list on the Business Profile.
+export function getWriteReviewUrl() {
+  return 'https://g.page/r/CTxnaFyO9LMyEBE/review'
+}

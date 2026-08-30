@@ -115,6 +115,19 @@ or `public/services/...` directly — those paths collide with the
 `/industries/[slug]` and `/services/[slug]` app routes, which Next.js's
 router matches before falling through to the public folder.
 
+### Hero photography
+Every page hero (top-level pages, and the shared `services/[slug]`,
+`industries/[slug]`, `resources/[slug]`, `careers/[slug]` detail templates)
+now carries a licensed Adobe Stock photo behind the standard petrol gradient
+overlay, matching the pattern established on Home/Solar-feature/About/
+Services in an earlier round. Files live in `public/images/photos/*.jpg`
+(2000px long edge, re-encoded JPEG). Detail-page templates use one shared
+photo across every slug under that template (e.g. one photo for all 16
+`/services/[slug]` pages) rather than a distinct photo per slug — consistent
+with how About/Services hub already used a single photo. `/legal/terms` and
+`/legal/privacy` were intentionally left without hero photos (thin utility
+pages, noindexed).
+
 ### `src/content/faqs.ts`
 `servicesFAQs` (4 items, shown on `/services`) plus `faqCategories` (the
 full categorized set shown on `/faq`: General, Services & scheduling,

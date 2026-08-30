@@ -13,6 +13,11 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-paper/10 bg-petrol">
+      {/* Row 1 (lg+): logo, phone, primary CTA. Below lg — phones, tablets,
+          and narrow laptop windows — this collapses to logo + hamburger,
+          since the full nav plus phone plus CTA no longer fits one row
+          once there are this many primary links; a squeezed single row
+          was pushing the CTA off to the side rather than staying usable. */}
       <div className="container-content flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center" aria-label={`${company.name} home`}>
           <Image
@@ -25,19 +30,7 @@ export function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          {primaryNav.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="link-underline eyebrow inline-flex items-center px-1 py-2 text-paper/80 hover:text-paper"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-4 lg:flex">
           <a
             href={company.phoneHref}
             onClick={() => trackEvent('contact', { channel: 'phone' })}
@@ -54,7 +47,7 @@ export function Header() {
           type="button"
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
-          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
+          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 lg:hidden"
           onClick={() => setOpen((v) => !v)}
         >
           <span
@@ -69,8 +62,24 @@ export function Header() {
         </button>
       </div>
 
+      {/* Row 2 (lg+ only): full-width nav on its own line below the logo
+          row, instead of squeezed to one side of it. */}
+      <nav className="hidden border-t border-paper/10 lg:block">
+        <div className="container-content flex h-14 items-center justify-center gap-8">
+          {primaryNav.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="link-underline eyebrow inline-flex items-center px-1 py-2 text-paper/80 hover:text-paper"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
+
       {open && (
-        <div className="border-t border-paper/10 bg-petrol md:hidden">
+        <div className="border-t border-paper/10 bg-petrol lg:hidden">
           <nav className="container-content flex flex-col gap-1 py-4">
             {primaryNav.map((link) => (
               <Link

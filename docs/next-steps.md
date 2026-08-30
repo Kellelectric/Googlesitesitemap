@@ -23,10 +23,14 @@ Assist" chatbot (new this round — see below), and a first draft of
    old site's nav structure), but with **no programme specifics** —
    duration, stipend, intake dates, and eligibility criteria were never
    provided, so each page describes what the track generally is (in
-   standard industry terms) and directs applicants to email `company.email`
-   with details confirmed directly rather than fabricating numbers or
-   dates. `/careers/job-openings` is honest that there's no live job board:
-   it invites speculative applications by email. **If real programme
+   standard industry terms). **Update:** each track now has a real
+   `applicationFormUrl` (Google Form, supplied directly by the client) in
+   `src/content/careers.ts`, wired as the primary "Apply Now" CTA on the
+   hero, the "How to apply" aside, and the closing CTA section of
+   `/careers/[slug]`; email remains available as a secondary contact
+   channel. Note: Internship and Industrial Training were given the
+   identical form URL by the client — this is intentional, not a
+   deduplication bug, and must not be "corrected." **If real programme
    details or actual open roles become available, replace the generic
    copy in `src/content/careers.ts` — do not leave it generic once real
    data exists.**
@@ -56,6 +60,42 @@ Assist" chatbot (new this round — see below), and a first draft of
 - **WhatsApp click-to-chat.** Confirmed WhatsApp-enabled — `company.whatsappHref`
   now points at the real business short-link (`wa.me/message/74H7FYXECPMXH1`)
   pulled from the live site.
+- **Hero photography on every page.** Every remaining bare petrol-color hero
+  (careers hub, contact, FAQ, industries hub, resources hub, testimonials,
+  solar, emergency, home automation, CCTV, and the shared services/industries/
+  resources/careers detail templates — 14 in total) now has a licensed Adobe
+  Stock photo behind the standard gradient overlay. See "Hero photography" in
+  `docs/sitemap-and-content-model.md` for the file locations and the
+  one-photo-per-template convention on detail pages.
+- **Header nav restructured for wide/tablet screens.** The desktop nav used
+  to squeeze logo + all 10 primary links + phone + CTA into one row, which
+  broke down once Industries/Resources/Testimonials/Careers were added —
+  narrow laptop and tablet widths pushed the CTA button oddly to the side.
+  `Header.tsx` now renders two rows at `lg:` (1024px+): a top row with logo
+  + phone + "Request a Quote", and a full-width nav row centered below it.
+  Below `lg`, phones and tablets alike get the compact hamburger menu (the
+  breakpoint moved from `md` to `lg` specifically so tablets no longer hit
+  the cramped single-row squeeze). `MobileCallBar` and the body's bottom
+  padding in `layout.tsx` were updated to the same `lg` breakpoint to match.
+- **Real social links.** `company.social` now has the client's real Instagram
+  and LinkedIn profile URLs (replacing earlier placeholders) plus a new
+  `trustpilot` field, linked from the footer's social row alongside
+  Facebook. `src/content/testimonials.ts` also gained `getWriteReviewUrl()`
+  (`g.page/r/CTxnaFyO9LMyEBE/review`), the direct Google review composer
+  link — distinct from the existing `getReviewUrl()`, which points to the
+  full review list on the Business Profile and is still used for "View all
+  reviews." `GoogleReviewCTA`'s "Write a Google Review" button now uses
+  `getWriteReviewUrl()`.
+- **Testimonials carousel simplified per client instruction.** Removed the
+  standalone large "Featured Testimonial" section on `/testimonials` (the
+  client asked that a review "should only remain on the review slide," not
+  be extended into a separate showcase block) and removed the visible
+  prev/next arrow buttons from `TestimonialCarousel` — the carousel is
+  still fully navigable by keyboard (arrow keys) and touch/swipe scroll.
+  Autoplay interval was reduced from 5500ms to 3000ms for a faster feel.
+  `carouselItems`/`gridItems` on the testimonials page now show the full
+  `testimonials` set (previously one review, Amara's, was excluded to
+  avoid duplicating it with the removed featured section).
 - **Real photography.** This round added four licensed Adobe Stock photos
   (`public/images/photos/*.jpg`, resized to a 2000px long edge and
   compressed to keep page weight down — originals were 6-11MB each) as

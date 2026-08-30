@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
@@ -115,6 +116,16 @@ export default function EmergencyElectricalServicesPage() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-petrol text-paper">
+        <Image
+          src="/images/photos/emergency-hero-switchboard.jpg"
+          alt=""
+          fill
+          priority
+          quality={60}
+          sizes="100vw"
+          className="object-cover object-[60%_45%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-24 md:py-28">
           <span className="eyebrow text-yellow">24/7 Emergency Electrical Services</span>

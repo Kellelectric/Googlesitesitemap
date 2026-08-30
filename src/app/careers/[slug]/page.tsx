@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
@@ -48,6 +49,16 @@ export default function CareerTrackPage({ params }: Props) {
       />
 
       <section className="relative overflow-hidden bg-petrol text-paper">
+        <Image
+          src="/images/photos/career-detail-hero-vocational-training.jpg"
+          alt=""
+          fill
+          priority
+          quality={60}
+          sizes="100vw"
+          className="object-cover object-[50%_30%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">
           <nav className="eyebrow flex gap-2 text-paper/60" aria-label="Breadcrumb">
@@ -62,8 +73,13 @@ export default function CareerTrackPage({ params }: Props) {
           <p className="mt-5 max-w-xl text-paper/70">{track.description}</p>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <Button href={`mailto:${company.email}`} variant="primary">
-              {isJobOpenings ? 'Send your CV' : 'Apply by email'}
+            <Button
+              href={track.applicationFormUrl}
+              variant="primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Apply Now
             </Button>
             <Button href={company.phoneHref} variant="secondary">
               Call {company.phone}
@@ -110,14 +126,22 @@ export default function CareerTrackPage({ params }: Props) {
             <div className="border border-ink/10 p-6">
               <span className="eyebrow text-petrol/70">How to apply</span>
               <p className="mt-4 text-sm leading-relaxed text-ink/75">
-                Send your CV to{' '}
+                Fill out our{' '}
+                <a
+                  href={track.applicationFormUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link-underline font-semibold text-ink"
+                >
+                  {track.name} application form
+                </a>{' '}
+                and our team will follow up. Programme specifics (duration,
+                schedule, and current availability) are confirmed directly
+                once we hear from you. You can also reach us by email at{' '}
                 <a href={`mailto:${company.email}`} className="link-underline font-semibold text-ink">
                   {company.email}
-                </a>{' '}
-                with &ldquo;{track.name}&rdquo; in the subject line, and a short
-                note on your background and what you&rsquo;re looking for. Programme
-                specifics (duration, schedule, and current availability) are
-                confirmed directly once we hear from you.
+                </a>
+                .
               </p>
             </div>
           </aside>
@@ -148,9 +172,10 @@ export default function CareerTrackPage({ params }: Props) {
 
       <CTASection
         heading="Ready to apply?"
-        body="Send your CV and we'll follow up with next steps."
-        primaryLabel="Email us"
-        primaryHref={`mailto:${company.email}`}
+        body="Fill out the application form and we'll follow up with next steps."
+        primaryLabel="Apply Now"
+        primaryHref={track.applicationFormUrl}
+        primaryExternal
       />
     </>
   )

@@ -5,7 +5,7 @@ import { useReducedMotion } from 'framer-motion'
 import { TestimonialCard } from '@/components/sections/TestimonialCard'
 import type { Testimonial } from '@/content/testimonials'
 
-const AUTOPLAY_INTERVAL_MS = 5500
+const AUTOPLAY_INTERVAL_MS = 3000
 
 export function TestimonialCarousel({ items }: { items: Testimonial[] }) {
   const trackRef = useRef<HTMLDivElement>(null)
@@ -86,31 +86,6 @@ export function TestimonialCarousel({ items }: { items: Testimonial[] }) {
             <TestimonialCard testimonial={testimonial} />
           </div>
         ))}
-      </div>
-
-      <div className="mt-6 flex justify-center gap-3">
-        <button
-          type="button"
-          aria-label="Previous testimonial"
-          onClick={() => {
-            setPaused(true)
-            scrollByCards(-1)
-          }}
-          className="flex h-10 w-10 items-center justify-center border border-ink/15 text-ink transition-colors hover:border-petrol hover:text-petrol focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
-        >
-          <span aria-hidden="true">&larr;</span>
-        </button>
-        <button
-          type="button"
-          aria-label="Next testimonial"
-          onClick={() => {
-            setPaused(true)
-            scrollByCards(1)
-          }}
-          className="flex h-10 w-10 items-center justify-center border border-ink/15 text-ink transition-colors hover:border-petrol hover:text-petrol focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
-        >
-          <span aria-hidden="true">&rarr;</span>
-        </button>
       </div>
     </div>
   )

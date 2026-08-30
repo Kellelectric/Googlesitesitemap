@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/Button'
-import { getReviewUrl } from '@/content/testimonials'
+import { getWriteReviewUrl } from '@/content/testimonials'
 import { Reveal } from '@/components/ui/Reveal'
 
 export function GoogleReviewCTA() {
@@ -14,7 +14,7 @@ export function GoogleReviewCTA() {
             Share your experience with us on Google.
           </p>
         </div>
-        <Button href={getReviewUrl()} variant="primary" target="_blank" rel="noopener noreferrer">
+        <Button href={getWriteReviewUrl()} variant="primary" target="_blank" rel="noopener noreferrer">
           Write a Google Review
         </Button>
       </Reveal>

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useReducedMotion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
@@ -11,7 +12,17 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-petrol text-paper">
-      <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-40" />
+      <Image
+        src="/images/photos/hero-control-panel.jpg"
+        alt=""
+        fill
+        priority
+        quality={60}
+        sizes="100vw"
+        className="object-cover object-[70%_50%]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
+      <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-20" />
       <CircuitLines className="pointer-events-none absolute -right-24 top-0 h-full w-[60%] text-paper/10 motion-safe:animate-[reveal-up_1.1s_ease-out]" />
 
       <motion.div

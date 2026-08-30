@@ -309,7 +309,7 @@ export function KellAssist() {
           type="button"
           onClick={handleOpen}
           aria-label="Open Kell Assist chat"
-          className="fixed bottom-20 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-petrol text-paper shadow-lg transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow md:bottom-6 md:right-6"
+          className="fixed bottom-20 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-petrol text-paper transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow md:bottom-6 md:right-6"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 fill-current">
             <path d="M4 4h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9l-4.3 3.6A.5.5 0 0 1 4 20.2V17H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" />
@@ -318,8 +318,8 @@ export function KellAssist() {
       )}
 
       {open && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-paper sm:inset-auto sm:bottom-6 sm:right-6 sm:h-[640px] sm:w-[380px] sm:rounded-lg sm:border sm:border-ink/10 sm:shadow-2xl">
-          <header className="flex shrink-0 items-center justify-between bg-petrol px-5 py-4 text-paper sm:rounded-t-lg">
+        <div className="fixed inset-0 z-50 flex flex-col bg-paper sm:inset-auto sm:bottom-6 sm:right-6 sm:h-[640px] sm:w-[380px] sm:border sm:border-ink/10">
+          <header className="flex shrink-0 items-center justify-between bg-petrol px-5 py-4 text-paper">
             <div>
               <p className="font-display text-sm font-semibold">Kell Assist</p>
               <p className="text-xs text-paper/60">Your Kell Electricals Service Assistant</p>

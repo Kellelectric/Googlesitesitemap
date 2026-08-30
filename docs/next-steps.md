@@ -1,5 +1,22 @@
 # Next Steps
 
+## Design system
+
+`/DESIGN.md` (repo root) is now the formal, machine-checkable record of
+this site's visual identity, written in the [DESIGN.md
+format](https://github.com/google/design.md) (tokens + prose, validated
+with `npx @google/design.md lint DESIGN.md`, currently 0 errors/0
+warnings). It documents the brand exactly as already shipped — petrol
+green / energy yellow / burnt orange / paper / ink, Space Grotesk
+headings + Inter body, sharp corners everywhere except a 4px radius on
+buttons, no drop shadows, hairline borders for hierarchy — it is
+documentation of the existing system, not a rebrand. Auditing the site
+against it caught one real inconsistency, since fixed: the Kell Assist
+chatbot panel and its floating button had rounded corners and drop
+shadows the rest of the site doesn't use (`src/components/chatbot/
+KellAssist.tsx`). Re-run the linter after any deliberate palette/type
+change and keep this file in sync with `tailwind.config.ts`.
+
 ## Remaining pages (in suggested build order)
 
 Shipped since the original brief: `/about` (rewritten this round — see

@@ -75,7 +75,7 @@ export function TestimonialCarousel({ items }: { items: Testimonial[] }) {
             scrollByCards(-1)
           }
         }}
-        className="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        className="flex items-start snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
       >
         {loopItems.map((testimonial, i) => (
           <div

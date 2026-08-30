@@ -1,5 +1,19 @@
 # Next Steps
 
+## Fixed: oversized mobile testimonial cards
+
+`TestimonialCarousel`'s track was a flex row with no `align-items`
+override, so it used flexbox's default `stretch` — every card in the
+entire (doubled, for the seamless loop) set stretched to match the
+height of the single longest testimonial anywhere in the carousel. On
+mobile, where one card fills most of the viewport, a short review (e.g.
+Kelechi Nnajiofor's 2-line review) rendered with a huge empty gap below
+the text before the name/badge footer, because it had inherited the
+height of a much longer review elsewhere in the loop. Fixed by adding
+`items-start` to the track, so each card now sizes to its own content.
+`TestimonialGrid` didn't have this bug (CSS grid's per-row stretch only
+matches cards in the same row, and mobile is single-column there anyway).
+
 ## CEO message, homepage expansion, and calculators (this round)
 
 - **CEO message — DRAFT, pending Gabriel's sign-off.** `src/content/

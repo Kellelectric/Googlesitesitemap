@@ -310,6 +310,48 @@ export const articles: Article[] = [
     ],
     relatedServiceSlugs: ['ev-charging-installation', 'panel-repair-upgrades', 'solar-inverter-systems'],
   },
+  {
+    slug: 'how-to-size-a-backup-generator',
+    title: 'How to Size a Backup Generator: kVA, Running Load, and Fuel Type',
+    summary:
+      'A generator sized from total connected wattage alone is usually wrong. Starting current and fuel logistics matter as much as running load.',
+    category: 'Solar & Energy',
+    sections: [
+      {
+        heading: 'kVA is not the same measurement as kW',
+        body: [
+          'Generators are rated in kVA (apparent power), while most appliance labels list kW (real power). The two are only equal at a power factor of 1.0, which motors, compressors, and other inductive loads rarely have. Sizing a generator from a kW total without converting for power factor is a common way installs end up undersized.',
+          'A generator sized correctly on paper for running load can still trip or stall in practice if this conversion was skipped, because the true apparent power demand was higher than the kW figure suggested.',
+        ],
+      },
+      {
+        heading: 'Starting current, not running current, usually sets the minimum size',
+        body: [
+          'Motors, compressors, and pumps draw several times their running current for a brief moment at start-up, air conditioners and boreholes are common culprits. A generator sized only for steady-state running load can be overwhelmed the instant one of these loads switches on, even though it would carry the same load comfortably once running.',
+          'The correct sizing approach adds up steady running load first, then checks whether the single largest starting surge (not all of them at once, in a well-sequenced system) still fits within the generator\'s surge capacity.',
+        ],
+      },
+      {
+        heading: 'Oversizing has a real running cost, not just an upfront one',
+        body: [
+          'A generator run well below its rated capacity for long periods runs inefficiently and can suffer from wet-stacking (unburned fuel fouling the engine), which shortens its service life. The instinct to "size up for safety" trades one problem (undersizing risk) for another (chronic light-loading) if it isn\'t paired with an actual load calculation.',
+          'The right size is the smallest rating that comfortably clears the largest starting surge on top of running load, not the largest generator that fits the budget.',
+        ],
+      },
+      {
+        heading: 'Fuel type is a sizing input, not an afterthought',
+        body: [
+          'Diesel, petrol, and gas generators differ in run-time per fuel volume, refuelling logistics, and noise and emissions profile, which changes how practical a given capacity actually is for continuous or extended-outage use. A correctly sized generator on the wrong fuel type for the site\'s realistic refuelling access still fails the property during a long outage.',
+          'This is why generator sizing and selection is done together with the same load assessment used for solar and hybrid systems, not as a separate, simpler calculation — the underlying discipline (measure the real load, then size to it) is the same regardless of which backup technology is chosen.',
+        ],
+      },
+    ],
+    relatedServiceSlugs: [
+      'generator-installation-maintenance',
+      'energy-audits',
+      'preventive-maintenance-contracts',
+    ],
+  },
 ]
 
 export function getArticleBySlug(slug: string): Article | undefined {

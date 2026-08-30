@@ -23,6 +23,7 @@ export const footerNav: NavLink[] = [
   { label: 'About', href: '/about' },
   { label: 'Services', href: '/services' },
   { label: 'Solar & Energy Systems', href: '/solar-energy-systems' },
+  { label: '24/7 Emergency Electrical', href: '/emergency-electrical-services' },
   { label: 'Industries', href: '/industries' },
   { label: 'Resources', href: '/resources' },
   { label: 'FAQ', href: '/faq' },

@@ -3,17 +3,16 @@ import Image from 'next/image'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { company } from '@/content/company'
+import { process } from '@/content/process'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
   title: 'About Us',
   description:
-    'Kell Electricals Ltd is a COREN and NEMSA certified electrical engineering company based in Wuse 2, Abuja, serving homes, businesses, and industrial sites across Abuja and wider Nigeria.',
+    'Kell Electricals Ltd is a COREN and NEMSA certified electrical engineering company based in Wuse 2, Abuja, backed by 20+ years of combined engineering experience across residential, commercial, and industrial sites.',
   path: '/about',
 })
-
-const foundingYear = company.foundedYear
 
 const milestones = [
   { year: '2010', description: 'Company founded to provide reliable electrical services in Abuja.' },
@@ -23,6 +22,48 @@ const milestones = [
   { year: '2020', description: 'Solar and smart home solutions launched.' },
   { year: '2023', description: 'Expansion of project work beyond Abuja.' },
   { year: '2024', description: 'Largest project to date completed: electrical work for a 200-home estate.' },
+]
+
+const whatWeDo = [
+  'Residential electrical installation and repair',
+  'Commercial electrical fit-outs and maintenance',
+  'Industrial electrical systems and power distribution',
+  'Solar and inverter systems',
+  'Home automation and smart building infrastructure',
+  'CCTV and security systems',
+  'Preventive and emergency electrical maintenance',
+]
+
+const values = [
+  {
+    title: 'Safety first',
+    description:
+      'Every job follows documented safety isolation and site protocols, not shortcuts, regardless of how routine the work looks.',
+  },
+  {
+    title: 'Documented, not just done',
+    description:
+      'A specified design, commissioning tests, and as-built documentation on handover — so the client has a record, not just a memory.',
+  },
+  {
+    title: 'Engineered for real conditions',
+    description:
+      "Load analysis and design decisions based on Nigeria's actual grid conditions, not textbook assumptions.",
+  },
+  {
+    title: 'One standard, every crew',
+    description:
+      "The same documented process on every job, so the quality of the work doesn't depend on which technician shows up.",
+  },
+]
+
+const whyChooseUs = [
+  `${company.teamExperienceYears}+ years of combined engineering experience across residential, commercial, and industrial sites`,
+  `COREN and NEMSA certified`,
+  `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ customer reviews`,
+  `Emergency response target of ${company.emergencyResponseTarget}`,
+  `${company.trust.projectsCompleted}+ projects completed`,
+  `Service coverage across ${company.serviceAreas.length} zones in Abuja, plus project work across ${company.serviceRegion.replace('Abuja and ', '')}`,
 ]
 
 const teamRoles = [
@@ -56,7 +97,7 @@ export default function AboutPage() {
         <div className="container-content relative py-20">
           <span className="eyebrow text-yellow">About Us</span>
           <h1 className="mt-3 max-w-2xl text-4xl font-semibold md:text-5xl">
-            {company.tagline}
+            Engineering Power. Building Trust.
           </h1>
           <p className="mt-5 max-w-xl text-paper/70">{company.positioning}</p>
         </div>
@@ -65,26 +106,27 @@ export default function AboutPage() {
       <section className="bg-paper py-20">
         <div className="container-content grid grid-cols-1 gap-16 lg:grid-cols-[1fr,380px]">
           <div>
+            {/* Who We Are */}
             <Reveal>
-              <span className="eyebrow text-petrol/70">Our mission</span>
+              <span className="eyebrow text-petrol/70">Who we are</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-                Electrical work that holds up under Nigeria&rsquo;s real
-                operating conditions
+                A professional electrical engineering and technical services
+                company, based in Abuja
               </h2>
               <p className="mt-5 leading-relaxed text-ink/75">
-                Since {foundingYear}, {company.name} has worked on the
-                assumption that electrical infrastructure in Nigeria has to
-                be engineered for the grid conditions that actually exist,
-                not the ones on paper. That means load analysis before
-                design, documented specifications before installation, and
-                compliance testing before handover, on every job regardless
-                of size.
+                {company.name} ({company.legalName}, RC {company.rcNumber}) is
+                a COREN and NEMSA certified electrical engineering company
+                serving homes, businesses, and industrial sites across Abuja
+                and wider Nigeria. Our team brings {company.teamExperienceYears}+
+                years of combined engineering experience to every job, from a
+                single socket repair to a full industrial power distribution
+                build-out.
               </p>
               <p className="mt-4 leading-relaxed text-ink/75">
                 We don&rsquo;t put a name on the door. The team behind every
-                job (engineers, technicians, and project coordinators)
-                works to the same documented process, so the standard of
-                work doesn&rsquo;t depend on which crew shows up.
+                job (engineers, technicians, and project coordinators) works
+                to the same documented process, so the standard of work
+                doesn&rsquo;t depend on which crew shows up.
               </p>
             </Reveal>
 
@@ -99,9 +141,9 @@ export default function AboutPage() {
             </Reveal>
 
             <Reveal delay={0.1} className="mt-14">
-              <span className="eyebrow text-petrol/70">Milestones</span>
+              <span className="eyebrow text-petrol/70">Company history</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-                From startup to Abuja&rsquo;s go-to electrical experts
+                From startup to Abuja&rsquo;s go-to electrical engineering team
               </h2>
             </Reveal>
 
@@ -118,45 +160,134 @@ export default function AboutPage() {
               ))}
             </StaggerGroup>
 
+            {/* What We Do */}
             <Reveal delay={0.1} className="mt-14">
-              <span className="eyebrow text-petrol/70">How the team is organized</span>
+              <span className="eyebrow text-petrol/70">What we do</span>
+              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+                Electrical engineering across every property type
+              </h2>
+            </Reveal>
+            <StaggerGroup className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {whatWeDo.map((item) => (
+                <MotionDiv
+                  key={item}
+                  variants={staggerItem}
+                  className="flex gap-3 border-b border-ink/10 pb-3 text-sm text-ink/75"
+                >
+                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-petrol" />
+                  {item}
+                </MotionDiv>
+              ))}
+            </StaggerGroup>
+
+            {/* Mission / Vision */}
+            <Reveal delay={0.1} className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-2">
+              <div className="border-t-2 border-petrol pt-5">
+                <span className="eyebrow text-petrol/70">Our mission</span>
+                <p className="mt-3 leading-relaxed text-ink/75">
+                  To engineer electrical infrastructure for the grid
+                  conditions that actually exist in Nigeria — with load
+                  analysis before design, documented specifications before
+                  installation, and compliance testing before handover, on
+                  every job regardless of size.
+                </p>
+              </div>
+              <div className="border-t-2 border-petrol pt-5">
+                <span className="eyebrow text-petrol/70">Our vision</span>
+                <p className="mt-3 leading-relaxed text-ink/75">
+                  To be the electrical engineering partner Nigerian homes,
+                  businesses, and industrial sites trust by default — known
+                  for work that is engineered, documented, and built to last.
+                </p>
+              </div>
+            </Reveal>
+
+            {/* Our Values */}
+            <Reveal delay={0.1} className="mt-14">
+              <span className="eyebrow text-petrol/70">Our values</span>
+              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+                What every job is held to
+              </h2>
+            </Reveal>
+            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+              {values.map((value) => (
+                <MotionDiv key={value.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
+                  <h3 className="text-lg font-semibold text-ink">{value.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{value.description}</p>
+                </MotionDiv>
+              ))}
+            </StaggerGroup>
+
+            {/* Our Expertise */}
+            <Reveal delay={0.1} className="mt-14">
+              <span className="eyebrow text-petrol/70">Our expertise</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
                 Four functions, one process
               </h2>
             </Reveal>
-
             <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
               {teamRoles.map((role) => (
                 <MotionDiv key={role.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
                   <h3 className="text-lg font-semibold text-ink">{role.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/65">
-                    {role.description}
-                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{role.description}</p>
+                </MotionDiv>
+              ))}
+            </StaggerGroup>
+
+            {/* Our Process */}
+            <Reveal delay={0.1} className="mt-14">
+              <span className="eyebrow text-petrol/70">Our process</span>
+              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+                Assess, design, install, test &amp; handover
+              </h2>
+            </Reveal>
+            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+              {process.map((step) => (
+                <MotionDiv key={step.step} variants={staggerItem} className="border-t-2 border-petrol pt-5">
+                  <span className="font-display text-sm font-semibold text-petrol">{step.step}</span>
+                  <h3 className="mt-1 text-lg font-semibold text-ink">{step.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{step.description}</p>
                 </MotionDiv>
               ))}
             </StaggerGroup>
           </div>
 
           <aside className="space-y-8">
+            {/* Why Choose Us */}
+            <Reveal delay={0.16} className="border border-orange/30 bg-orange/5 p-6">
+              <span className="eyebrow text-ink">Why choose us</span>
+              <ul className="mt-4 space-y-3">
+                {whyChooseUs.map((item) => (
+                  <li key={item} className="flex gap-3 text-sm leading-relaxed text-ink/75">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-orange" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+
+            {/* Credentials */}
             <Reveal className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/70">Certified & registered</span>
+              <span className="eyebrow text-petrol/70">Credentials</span>
               <ul className="mt-4 space-y-4">
                 {company.certifications.map((cert) => (
                   <li key={cert.name}>
                     <p className="font-semibold text-ink">{cert.name}</p>
-                    <p className="mt-1 text-sm leading-relaxed text-ink/65">
-                      {cert.fullName}
-                    </p>
+                    <p className="mt-1 text-sm leading-relaxed text-ink/65">{cert.fullName}</p>
                   </li>
                 ))}
               </ul>
               <p className="mt-5 border-t border-ink/10 pt-4 text-xs text-ink/65">
                 RC {company.rcNumber} · {company.legalName}
               </p>
+              <p className="mt-3 text-xs text-ink/65">
+                Certification details available upon request.
+              </p>
             </Reveal>
 
+            {/* Service Coverage */}
             <Reveal delay={0.08} className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/70">Where we work</span>
+              <span className="eyebrow text-petrol/70">Service coverage</span>
               <ul className="mt-4 space-y-2 text-sm text-ink/75">
                 {company.serviceAreas.map((area) => (
                   <li key={area}>{area}</li>
@@ -164,15 +295,6 @@ export default function AboutPage() {
               </ul>
               <p className="mt-4 border-t border-ink/10 pt-4 text-xs text-ink/65">
                 Plus project work across {company.serviceRegion.replace('Abuja and ', '')}.
-              </p>
-            </Reveal>
-
-            <Reveal delay={0.16} className="border border-orange/30 bg-orange/5 p-6">
-              <span className="eyebrow text-ink">{company.yearsExperience}+ years</span>
-              <p className="mt-3 text-sm leading-relaxed text-ink/75">
-                in electrical engineering across residential, commercial,
-                and industrial sites, with {company.trust.projectsCompleted}+
-                projects completed.
               </p>
             </Reveal>
           </aside>

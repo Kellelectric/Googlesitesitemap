@@ -62,7 +62,7 @@ export function Hero() {
           variants={staggerItem}
           className="mt-16 flex flex-wrap gap-x-10 gap-y-4 border-t border-paper/10 pt-8 text-sm text-paper/60"
         >
-          <span>{company.yearsExperience}+ years in the field</span>
+          <span>{company.teamExperienceYears}+ years of combined engineering experience</span>
           <span>
             {company.trust.googleRating}★ rating · {company.trust.googleReviewCount} Google reviews
           </span>

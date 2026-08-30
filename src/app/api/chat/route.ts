@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { buildKnowledgeBase, uncertainResponseMessage } from '@/content/chatbot'
 import { company } from '@/content/company'
+import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 
 export const runtime = 'nodejs'
+
+// Each free-text turn costs a real Anthropic API call once ANTHROPIC_API_KEY
+// is set, so this is stricter than the quote form's rate limit — a normal
+// back-and-forth conversation stays well under 20 turns in 10 minutes, but
+// a script hammering this endpoint gets cut off well before running up a
+// meaningful bill.
+const isRateLimited = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 20 })
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string }
 
@@ -74,6 +82,11 @@ If asked about anything outside this knowledge base (pricing specifics, project 
 }
 
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request)
+  if (isRateLimited(ip)) {
+    return NextResponse.json({ ok: false, reason: 'rate_limited' }, { status: 429 })
+  }
+
   let body: unknown
   try {
     body = await request.json()

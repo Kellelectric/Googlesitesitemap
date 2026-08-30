@@ -7,6 +7,7 @@ import { industries } from '@/content/industries'
 import { articles } from '@/content/resources'
 import { careerTracks } from '@/content/careers'
 import { projects } from '@/content/projects'
+import { areas } from '@/content/areas'
 import { legalNav } from '@/content/nav'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
@@ -70,6 +71,13 @@ const groups: LinkGroup[] = [
       { label: 'Projects Overview', href: '/projects' },
       ...projects.map((p) => ({ label: p.title, href: `/projects/${p.slug}` })),
     ],
+  },
+  {
+    heading: 'Service Areas',
+    links: areas.map((area) => ({
+      label: `Electrician in ${area.name}`,
+      href: `/electrician/${area.slug}`,
+    })),
   },
   {
     heading: 'Careers',

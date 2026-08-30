@@ -3,6 +3,7 @@ import { services } from '@/content/services'
 import { industries } from '@/content/industries'
 import { articles } from '@/content/resources'
 import { careerTracks } from '@/content/careers'
+import { areas } from '@/content/areas'
 import { company } from '@/content/company'
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -53,5 +54,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly',
   }))
 
-  return [...staticRoutes, ...serviceRoutes, ...industryRoutes, ...articleRoutes, ...careerRoutes]
+  const areaRoutes: MetadataRoute.Sitemap = areas.map((area) => ({
+    url: `${base}/electrician/${area.slug}`,
+    lastModified: new Date(),
+    priority: 0.6,
+    changeFrequency: 'monthly',
+  }))
+
+  return [
+    ...staticRoutes,
+    ...serviceRoutes,
+    ...industryRoutes,
+    ...articleRoutes,
+    ...careerRoutes,
+    ...areaRoutes,
+  ]
 }

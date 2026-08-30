@@ -98,4 +98,44 @@ export const faqCategories: FAQCategory[] = [
       },
     ],
   },
+  {
+    category: 'Home Automation',
+    items: [
+      {
+        question: 'Can automation be added to an existing property, or only new builds?',
+        answer:
+          'Both. New builds let us design the wiring and control layout together from the start, which is cleaner, but retrofitting smart lighting, climate, and access control into an existing property is a regular part of our scope too — it just needs a site assessment first to plan around the existing circuits.',
+      },
+      {
+        question: 'Will a power outage disable the automation system?',
+        answer:
+          'Depends on the setup. Most smart lighting and control panels need power to function, same as any electrical system, so we discuss backup priorities (generator or inverter integration) as part of the design if outage resilience matters to you.',
+      },
+      {
+        question: 'Do you work with a specific smart home platform?',
+        answer:
+          "We design the electrical and control-panel infrastructure to work with your chosen app/platform rather than locking you into one — tell us what you're trying to control (lighting, climate, access, scenes) and we scope the electrical side accordingly.",
+      },
+    ],
+  },
+  {
+    category: 'CCTV & Security',
+    items: [
+      {
+        question: 'How many cameras do I need?',
+        answer:
+          "Depends on the property and what you're trying to cover (entry points, perimeter, specific assets). We do a site survey and propose camera placement for actual coverage needs rather than a fixed package.",
+      },
+      {
+        question: 'Can I view footage remotely?',
+        answer:
+          'Yes — remote viewing and alert setup on your phone or computer is part of a standard installation, alongside the NVR/DVR recording setup on site.',
+      },
+      {
+        question: 'Can CCTV be integrated with gates or access control?',
+        answer:
+          'Yes, integration with automated gates and access control is a regular part of our security and automation scope — worth mentioning upfront if you want them working together rather than as separate systems.',
+      },
+    ],
+  },
 ]

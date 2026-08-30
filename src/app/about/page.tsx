@@ -71,6 +71,7 @@ const whyChooseUs = [
   `Emergency response target of ${company.emergencyResponseTarget}`,
   `${company.trust.projectsCompleted}+ projects completed`,
   `Service coverage across ${company.serviceAreas.length} zones in Abuja, plus project work across ${company.serviceRegion.replace('Abuja and ', '')}`,
+  'Client portal for electronic invoices, quote approval, and project tracking from anywhere in the world',
 ]
 
 const teamRoles = [

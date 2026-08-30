@@ -1,5 +1,20 @@
 # Next Steps
 
+## Client portal / electronic invoicing (this round)
+
+Added a real capability, confirmed directly by the client: Kell
+Electricals offers clients a portal for electronic invoices and quote
+approval, plus project tracking from anywhere in the world. No portal
+login URL or platform name was supplied, so the CTA points to `/contact`
+("Get Set Up") rather than a direct login link — do not invent one.
+- `src/content/clientPortal.ts` — the copy, with a header comment noting
+  this is a real, client-confirmed capability, not invented.
+- New homepage section `ClientPortalFeature` (between Trust and Team
+  preview, breaking up what was becoming a long run of light sections).
+- Added FAQ: "Can I manage my project if I'm not in Nigeria?" under the
+  General category.
+- Added a bullet to `/about`'s "Why choose us" list.
+
 ## Fixed: oversized mobile testimonial cards
 
 `TestimonialCarousel`'s track was a flex row with no `align-items`

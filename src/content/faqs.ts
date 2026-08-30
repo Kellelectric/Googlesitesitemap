@@ -53,6 +53,11 @@ export const faqCategories: FAQCategory[] = [
         question: 'How do I get a quote?',
         answer: `Submit the form on our Contact page, call ${company.phone}, or message us on WhatsApp. We respond with a scoped assessment rather than a rough estimate over the phone.`,
       },
+      {
+        question: "Can I manage my project if I'm not in Nigeria?",
+        answer:
+          'Yes. Every client gets access to a portal for electronic invoices and quotes, so you can review and approve them online and follow your project\'s progress from anywhere in the world, on your own schedule.',
+      },
     ],
   },
   {

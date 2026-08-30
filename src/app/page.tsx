@@ -9,6 +9,7 @@ import { IndustriesPreview } from '@/components/sections/IndustriesPreview'
 import { AreasPreview } from '@/components/sections/AreasPreview'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { TrustSection } from '@/components/sections/TrustSection'
+import { ClientPortalFeature } from '@/components/sections/ClientPortalFeature'
 import { TeamPreview } from '@/components/sections/TeamPreview'
 import { TestimonialsPreview } from '@/components/sections/TestimonialsPreview'
 import { PartnerLogos } from '@/components/sections/PartnerLogos'
@@ -48,6 +49,7 @@ export default function HomePage() {
       <IndustriesPreview />
       <AreasPreview />
       <TrustSection />
+      <ClientPortalFeature />
       <TeamPreview />
       <TestimonialsPreview />
       <PartnerLogos partners={partners} />

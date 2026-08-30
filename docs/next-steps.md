@@ -60,6 +60,23 @@ Assist" chatbot (new this round — see below), and a first draft of
 - **WhatsApp click-to-chat.** Confirmed WhatsApp-enabled — `company.whatsappHref`
   now points at the real business short-link (`wa.me/message/74H7FYXECPMXH1`)
   pulled from the live site.
+- **Hero photography on every page.** Every remaining bare petrol-color hero
+  (careers hub, contact, FAQ, industries hub, resources hub, testimonials,
+  solar, emergency, home automation, CCTV, and the shared services/industries/
+  resources/careers detail templates — 14 in total) now has a licensed Adobe
+  Stock photo behind the standard gradient overlay. See "Hero photography" in
+  `docs/sitemap-and-content-model.md` for the file locations and the
+  one-photo-per-template convention on detail pages.
+- **Header nav restructured for wide/tablet screens.** The desktop nav used
+  to squeeze logo + all 10 primary links + phone + CTA into one row, which
+  broke down once Industries/Resources/Testimonials/Careers were added —
+  narrow laptop and tablet widths pushed the CTA button oddly to the side.
+  `Header.tsx` now renders two rows at `lg:` (1024px+): a top row with logo
+  + phone + "Request a Quote", and a full-width nav row centered below it.
+  Below `lg`, phones and tablets alike get the compact hamburger menu (the
+  breakpoint moved from `md` to `lg` specifically so tablets no longer hit
+  the cramped single-row squeeze). `MobileCallBar` and the body's bottom
+  padding in `layout.tsx` were updated to the same `lg` breakpoint to match.
 - **Real social links.** `company.social` now has the client's real Instagram
   and LinkedIn profile URLs (replacing earlier placeholders) plus a new
   `trustpilot` field, linked from the footer's social row alongside

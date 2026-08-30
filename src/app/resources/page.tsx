@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
@@ -17,6 +18,16 @@ export default function ResourcesPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-petrol text-paper">
+        <Image
+          src="/images/photos/resources-hero-engineer-blueprint.jpg"
+          alt=""
+          fill
+          priority
+          quality={60}
+          sizes="100vw"
+          className="object-cover object-[55%_30%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
         <CircuitLines className="pointer-events-none absolute -right-16 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">
           <span className="eyebrow text-yellow">Resources</span>

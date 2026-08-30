@@ -238,32 +238,34 @@ Assist" chatbot (new this round — see below), and a first draft of
     worth adding before `ANTHROPIC_API_KEY` is set, to avoid a cost-abuse
     vector); persisting chat history server-side (currently client-only,
     lost on refresh).
-- **Full 7-category service page restructure — now 6 of 7 done as flagship
-  pages, one follow-up left.** The brief asked for seven top-level service
-  category pages (Residential, Commercial, Industrial, Solar & Inverter,
-  Home Automation, CCTV & Security, Emergency), each with long-form
-  sections (overview, services included, problems solved, who we serve,
-  process, why choose us, technical considerations, FAQ, CTA, related
-  services) covering dozens of subcategories. Current state:
+- **Full 7-category service page restructure — done, all 7.** The brief
+  asked for seven top-level service category pages (Residential,
+  Commercial, Industrial, Solar & Inverter, Home Automation, CCTV &
+  Security, Emergency), each with long-form sections (overview, services
+  included, problems solved, process, why choose us, FAQ, CTA, related
+  services). Final state:
   - **Solar & Inverter** — `/solar-energy-systems` (pre-existing flagship page).
-  - **Emergency** — `/emergency-electrical-services` (built two rounds ago).
-  - **Home Automation** — `/home-automation` (built this round: services
-    included, problems solved, who we serve, process, why choose us,
-    technical considerations, FAQ, CTA, related services — all sourced
-    from `services.ts`/`industries.ts`/`process.ts`, plus 3 new FAQs added
-    to `faqs.ts` under a new "Home Automation" category, which also
-    enriches `/faq`).
-  - **CCTV & Security** — `/cctv-security-systems` (built this round, same
-    structure; 3 new FAQs added under "CCTV & Security").
-  - **Residential / Commercial / Industrial** — still only the existing
-    `/industries/residential`, `/industries/commercial`,
-    `/industries/industrial` pages (challenges + related services, not the
-    full 10-section flagship structure the brief describes). **This is the
-    one remaining piece** if the full spec is wanted: either deepen those
-    three industry pages toward the flagship structure, or build them as
-    separate top-level pages the way Home Automation/CCTV were — the
-    former reuses existing URLs and avoids content/SEO overlap with
-    `/industries/*`, so it's the recommended approach if picked up next.
+  - **Emergency** — `/emergency-electrical-services`.
+  - **Home Automation** — `/home-automation` (services included, problems
+    solved, who we serve, process, why choose us, technical
+    considerations, FAQ, CTA, related services — sourced from
+    `services.ts`/`industries.ts`/`process.ts`, plus 3 new FAQs under a
+    "Home Automation" category in `faqs.ts`, which also enriches `/faq`).
+  - **CCTV & Security** — `/cctv-security-systems` (same structure; 3 new
+    FAQs under "CCTV & Security").
+  - **Residential / Commercial / Industrial** — deepened in place at their
+    existing `/industries/[slug]` URLs (the recommended approach noted
+    previously: reuses existing URLs, avoids content/SEO overlap with a
+    duplicate top-level page). `src/app/industries/[slug]/page.tsx` now
+    renders Problems We Solve (the existing `challenges` list, retitled),
+    Services Included (expanded from a sidebar link list into full cards
+    with each service's summary), Our Process (shared `process.ts`
+    4-stage flow), Why Choose Us (real certifications/experience/rating
+    stats), an FAQ section (General + Services & scheduling categories),
+    and the existing "Other properties we serve" cross-links — applied
+    uniformly across all 7 industry pages (not just the three requested),
+    since hospitality/education/healthcare/retail benefit from the same
+    depth and splitting them would have left the site inconsistent.
 
 ## Content imported from the live site (this session)
 

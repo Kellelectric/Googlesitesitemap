@@ -70,7 +70,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable}`}>
-      <body className="pb-16 md:pb-0">
+      <body className="pb-16 lg:pb-0">
         <GoogleAnalytics />
         <script
           type="application/ld+json"

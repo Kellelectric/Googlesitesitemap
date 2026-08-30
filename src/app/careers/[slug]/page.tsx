@@ -89,13 +89,15 @@ export default function CareerTrackPage({ params }: Props) {
         </div>
       </section>
 
-      {(track.duration || track.stipend || track.intake || (track.eligibility && track.eligibility.length > 0)) && (
+      {(track.duration || track.stipend || track.programmeFee || track.intake || (track.eligibility && track.eligibility.length > 0)) && (
         <section className="bg-paper pt-20">
           <div className="container-content">
             <Reveal>
               <span className="eyebrow text-petrol/70">Programme details</span>
               <p className="mt-2 max-w-2xl text-xs text-ink/50">
-                Indicative — confirmed directly once we hear from you.
+                {track.programmeDetailsConfirmed
+                  ? 'Confirmed programme terms.'
+                  : 'Indicative — confirmed directly once we hear from you.'}
               </p>
             </Reveal>
             <StaggerGroup className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -103,6 +105,12 @@ export default function CareerTrackPage({ params }: Props) {
                 <MotionDiv variants={staggerItem} className="border border-ink/10 p-5">
                   <span className="eyebrow text-petrol/70">Duration</span>
                   <p className="mt-2 text-sm text-ink/80">{track.duration}</p>
+                </MotionDiv>
+              )}
+              {track.programmeFee && (
+                <MotionDiv variants={staggerItem} className="border border-ink/10 p-5">
+                  <span className="eyebrow text-petrol/70">Programme fee</span>
+                  <p className="mt-2 text-sm text-ink/80">{track.programmeFee}</p>
                 </MotionDiv>
               )}
               {track.stipend && (
@@ -189,6 +197,20 @@ export default function CareerTrackPage({ params }: Props) {
                 </a>
                 .
               </p>
+              {track.applicationChecklist && track.applicationChecklist.length > 0 && (
+                <div className="mt-5 border-t border-ink/10 pt-4">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-ink/60">
+                    What to include
+                  </span>
+                  <ul className="mt-2 space-y-1.5">
+                    {track.applicationChecklist.map((item) => (
+                      <li key={item} className="text-sm text-ink/75">
+                        &middot; {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </aside>
         </div>

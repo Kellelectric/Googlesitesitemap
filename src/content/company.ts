@@ -29,10 +29,12 @@ export const company = {
   yearsExperience: new Date().getFullYear() - 2010,
   // Combined electrical engineering experience of the team (engineers and
   // technicians), which predates the company's own 2010 incorporation —
-  // this is the "20+ years" figure used in headline marketing copy
+  // this is the "15+ years" figure used in headline marketing copy
   // sitewide, distinct from and not a substitute for the founding date
-  // above. Do not derive this from foundedYear.
-  teamExperienceYears: 20,
+  // above. Do not derive this from foundedYear. Corrected from a prior
+  // 20 to 15 per the client's site audit (matches Gabriel's real ~15
+  // years as lead engineer) — do not revert without client confirmation.
+  teamExperienceYears: 15,
   social: {
     facebook: 'https://facebook.com/kellelectricals',
     instagram: 'https://www.instagram.com/kell_electricalsltd?igsi=MXhzNGh4Y3Vkbmk0Yg==',

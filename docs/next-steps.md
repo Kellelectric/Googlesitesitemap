@@ -432,12 +432,18 @@ facts from it are now wired into the codebase:
 - Real careers/programme specifics (duration, stipend, intake dates,
   eligibility) for the four `/careers` track pages, which currently carry
   generic, non-fabricated placeholder copy — see the `/careers` entry
-  above.
-- Current team roster (names/roles/photos) if a team section is wanted —
-  the old site's list should be treated as unverified.
+  above. **Update:** the `apprenticeship` track's duration and fee, and
+  `industrial-training`'s application checklist, are now real (see
+  `src/content/careers.ts` — sourced from the client's June 2026 site
+  audit report). Internship and industrial-training's stipend/intake
+  are still invented placeholders.
+- ~~Current team roster~~ **Done.** Real names/titles/bios for Thelma
+  Dogwoh (Managing Director) and Gabriel Ioryem (Lead Electrical
+  Engineer) are in `src/content/team.ts`, sourced from the same audit
+  report, shown on `/about`. No photos yet — add if supplied.
 - Any additional named client references cleared for public use as a trust
   bar (logos require written permission per client).
-- Additional Google reviews beyond the 16 already added to
+- Additional Google or Trustpilot reviews beyond the 23 already added to
   `src/content/testimonials.ts`, if more should be featured — add them
   verbatim to that file, following the same no-rewrite rule.
 - **Partner/supplier logos.** `src/content/partners.ts` and the reusable

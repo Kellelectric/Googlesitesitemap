@@ -30,7 +30,7 @@ const carouselItems = featuredTestimonials.filter((t) => t.id !== featuredId)
 const gridItems = testimonials.filter((t) => t.id !== featuredId)
 
 const trustSignals = [
-  `${company.yearsExperience}+ Years Experience`,
+  `${company.teamExperienceYears}+ Years Combined Experience`,
   `${company.trust.googleRating}★ Google Rating`,
   `${company.trust.googleReviewCount}+ Google Reviews`,
   'Licensed & Insured',

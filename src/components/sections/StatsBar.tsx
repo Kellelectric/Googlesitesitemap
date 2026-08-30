@@ -5,7 +5,7 @@ export function StatsBar() {
   return (
     <section className="border-y border-paper/10 bg-petrol-600">
       <div className="container-content grid grid-cols-2 gap-8 py-16 md:grid-cols-4">
-        <StatCounter value={company.yearsExperience} suffix="+" label="Years of engineering experience" />
+        <StatCounter value={company.teamExperienceYears} suffix="+" label="Years of combined engineering experience" />
         <StatCounter
           value={company.trust.googleRating}
           decimals={1}

@@ -8,6 +8,7 @@
 /services                        Services hub (all 16 lines)
 /services/[slug]                 16 service detail pages
 /solar-energy-systems            Flagship product-style page for solar/hybrid
+/emergency-electrical-services   Flagship 24/7 emergency page
 /projects                        Case studies index (filterable)
 /projects/[slug]                 Individual case study
 /industries                      Industries served hub
@@ -137,6 +138,16 @@ header comment before editing.
 job-openings) matching the old site's Careers nav structure. Deliberately
 excludes programme duration/stipend/intake/eligibility specifics — none
 were supplied — see the file's header comment and the Careers caveat above.
+
+### `src/content/chatbot.ts`
+Structured knowledge base for the "Kell Assist" chatbot widget
+(`src/components/chatbot/KellAssist.tsx`) — conversation starters, lead
+field labels, emergency keywords/safety message, solar flow questions, and
+a `buildKnowledgeBase()` composer that pulls from `services.ts`,
+`industries.ts`, `faqs.ts`, `careers.ts`, and `company.ts` rather than
+duplicating facts. The chat API route (`src/app/api/chat/route.ts`) builds
+its system prompt entirely from this file, gated on `ANTHROPIC_API_KEY`
+being set — see `next-steps.md`.
 
 ### `src/content/nav.ts`
 Primary and footer navigation arrays, gated to built pages only (see

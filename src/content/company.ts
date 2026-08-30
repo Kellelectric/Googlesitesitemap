@@ -24,7 +24,15 @@ export const company = {
     { days: 'Sunday', hours: 'Closed' },
   ],
   foundedYear: 2010,
+  // Company age (years since incorporation) — used for the milestone
+  // timeline on /about, not for headline marketing copy.
   yearsExperience: new Date().getFullYear() - 2010,
+  // Combined electrical engineering experience of the team (engineers and
+  // technicians), which predates the company's own 2010 incorporation —
+  // this is the "20+ years" figure used in headline marketing copy
+  // sitewide, distinct from and not a substitute for the founding date
+  // above. Do not derive this from foundedYear.
+  teamExperienceYears: 20,
   social: {
     facebook: 'https://facebook.com/kellelectricals',
     instagram: 'https://instagram.com/kell_electricals',

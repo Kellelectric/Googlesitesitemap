@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
+import { FAQSection } from '@/components/sections/FAQSection'
 import { LoadCalculator } from '@/components/calculators/LoadCalculator'
 import { SolarSizingCalculator } from '@/components/calculators/SolarSizingCalculator'
 import { company } from '@/content/company'
+import { calculatorsFAQs } from '@/content/faqs'
 import { breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
@@ -61,6 +63,8 @@ export default function CalculatorsPage() {
           </Reveal>
         </div>
       </section>
+
+      <FAQSection items={calculatorsFAQs} viewAllHref="/faq" />
 
       <CTASection />
     </>

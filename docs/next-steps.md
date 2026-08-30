@@ -1,6 +1,35 @@
 # Next Steps
 
-## Client portal / electronic invoicing (this round)
+## FAQ section added to /calculators (this round)
+
+`/calculators` was the only remaining hub-style page without an FAQ
+section (services, industries, and the service/industry detail templates
+all got one in an earlier round). Added `calculatorsFAQs` to
+`src/content/faqs.ts` (4 questions) using the reusable `FAQSection`
+component — same `FAQPage` JSON-LD pattern as elsewhere. Content is
+policy/methodology only, no invented facts: what the tools' output does
+and doesn't represent, the exact assumptions cited in
+`src/lib/calculatorMath.ts` (80% DoD, 90% round-trip efficiency, ~75%
+system losses, ~5 peak sun hours), and why the load calculator applies a
+25% safety margin.
+
+## New resource article: generator sizing (this round)
+
+Added a 9th `/resources` guide, `how-to-size-a-backup-generator`
+(category `Solar & Energy`, matching `generator-vs-solar-vs-hybrid`'s
+category). This closes a real content gap: the existing generator
+content compares generator/solar/hybrid as backup options, and the
+inverter-sizing guide covers hybrid systems, but nothing on the site
+explained how to size a generator itself. Covers kVA vs. kW (power
+factor), starting/surge current vs. running load (the usual cause of
+"correctly sized on paper, trips anyway" installs), the real cost of
+oversizing (wet-stacking, inefficiency), and fuel type as a sizing input
+rather than an afterthought. Generic engineering knowledge only, same
+register as the other 8 articles — no company-specific claims. Cross-links
+to `generator-installation-maintenance`, `energy-audits`, and
+`preventive-maintenance-contracts` via `relatedServiceSlugs`.
+
+## Client portal / electronic invoicing (previous round)
 
 Added a real capability, confirmed directly by the client: Kell
 Electricals offers clients a portal for electronic invoices and quote

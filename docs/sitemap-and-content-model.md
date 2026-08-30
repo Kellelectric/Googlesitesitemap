@@ -34,7 +34,7 @@
 Built and shipped: `/`, `/about`, `/services`, `/services/[slug]` (all 16
 slugs render from real content), `/solar-energy-systems`, `/industries`,
 `/industries/[slug]` (7 sector pages), `/resources`, `/resources/[slug]`
-(7 technical articles), `/faq` (categorized, all real/sourced content),
+(9 technical articles), `/faq` (categorized, all real/sourced content),
 `/testimonials` (real, verbatim Google reviews — see caveat below),
 `/careers` + `/careers/[slug]` (4 tracks, generic non-fabricated copy —
 see caveat below), `/contact`, `/legal/terms`, `/legal/privacy` (drafted,

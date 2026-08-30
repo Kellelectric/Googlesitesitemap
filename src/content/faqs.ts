@@ -33,6 +33,29 @@ export const servicesFAQs: FAQ[] = [
   },
 ]
 
+export const calculatorsFAQs: FAQ[] = [
+  {
+    question: 'Do these calculators replace a real load assessment?',
+    answer:
+      "No. Both tools give an indicative planning estimate using standard engineering assumptions, not a measurement of your property's actual wiring and equipment. We still run a site visit and circuit-level load assessment before specifying or quoting any inverter, generator, or solar system.",
+  },
+  {
+    question: 'What assumptions does the solar sizing calculator use?',
+    answer:
+      "It assumes a lithium battery bank at 80% usable depth-of-discharge, 90% round-trip efficiency, roughly 75% combined system losses (inverter conversion, wiring, temperature derating, dust), and Abuja's widely cited average of about 5 peak sun hours a day. None of these are guarantees for your specific site or season — a real design uses your measured load and a site-specific irradiance and shading assessment.",
+  },
+  {
+    question: 'Why does the load calculator add 25% to my connected wattage?',
+    answer:
+      'That 25% safety margin covers the starting/surge current that motors and compressors (air conditioners, pumps, fridges) draw briefly when they switch on, which is higher than their steady running wattage. Sizing an inverter or generator to only the running total risks nuisance tripping the moment one of those loads starts.',
+  },
+  {
+    question: "The appliance list doesn't match what I actually have — is that a problem?",
+    answer:
+      "Not for the tool's purpose. The wattages are generic, publicly known typical figures for each appliance category, not measurements of your specific units, and every quantity and item is editable. Treat the result as a starting point for a conversation, not a spec sheet — a real load assessment measures your actual equipment.",
+  },
+]
+
 export const faqCategories: FAQCategory[] = [
   {
     category: 'General',

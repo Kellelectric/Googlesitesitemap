@@ -274,6 +274,42 @@ export const articles: Article[] = [
     ],
     relatedServiceSlugs: ['earthing-lightning-protection', 'panel-repair-upgrades'],
   },
+  {
+    slug: 'ev-charger-installation-what-your-property-needs',
+    title: 'EV Charger Installation: What Your Property Actually Needs First',
+    summary:
+      'An EV charger is a sustained, high-current load. The question that matters before installation is whether your panel already has room for it.',
+    category: 'Solar & Energy',
+    sections: [
+      {
+        heading: 'An EV charger is not like plugging in another appliance',
+        body: [
+          'Most appliances draw power briefly or intermittently. A home EV charger draws a sustained, high-current load for hours at a stretch, often while other major loads (air conditioning, water heating) are also running. Panels sized for a typical household load profile were rarely designed with this in mind.',
+          'The first question in any EV charger installation is not which charger to buy, it is whether the existing distribution board has the spare capacity to carry the load safely, and if not, what upgrade closes that gap.',
+        ],
+      },
+      {
+        heading: 'A load assessment comes before a charger recommendation',
+        body: [
+          'A proper installation starts with assessing the property\'s available capacity against its existing loads, the same load-assessment discipline used for any major electrical addition. This determines whether the charger can go on the existing supply, whether the panel needs upgrading first, or whether a dedicated circuit with its own protection is the right approach.',
+          'Skipping this step is how installations end up with nuisance tripping, or with a charger that works until another major appliance runs at the same time.',
+        ],
+      },
+      {
+        heading: 'The circuit needs to be dedicated and correctly protected',
+        body: [
+          'A charger installation should run on its own dedicated circuit, sized and protected specifically for the sustained current it draws, not shared with other sockets or circuits. This includes correctly rated cable, breaker, and, where applicable, residual current protection specified for EV charging rather than general-purpose sockets.',
+        ],
+      },
+      {
+        heading: 'Solar or generator integration changes the picture further',
+        body: [
+          'On a property with solar, hybrid inverter, or generator backup already installed, an EV charger adds a large new load to that system\'s own capacity planning. Load management, scheduling charging outside peak demand periods, or coordinating with an existing hybrid system\'s battery cycling, needs to be part of the installation design, not an afterthought once the charger is already live.',
+        ],
+      },
+    ],
+    relatedServiceSlugs: ['ev-charging-installation', 'panel-repair-upgrades', 'solar-inverter-systems'],
+  },
 ]
 
 export function getArticleBySlug(slug: string): Article | undefined {

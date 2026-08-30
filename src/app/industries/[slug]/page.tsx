@@ -28,6 +28,7 @@ export function generateMetadata({ params }: Props): Metadata {
     title: `${industry.name} Electrical Services`,
     description: industry.summary,
     path: `/industries/${industry.slug}`,
+    image: '/images/photos/industry-detail-hero-control-room.jpg',
   })
 }
 

@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     description:
       'Read real customer reviews and testimonials for Kell Electricals Ltd, a professional electrical, solar, inverter, CCTV and power solutions company in Abuja, Nigeria.',
     path: '/testimonials',
+    image: '/images/photos/testimonials-hero-handshake.jpg',
   }),
   title: { absolute: 'Google Reviews & Testimonials | Kell Electricals Ltd Abuja' },
 }

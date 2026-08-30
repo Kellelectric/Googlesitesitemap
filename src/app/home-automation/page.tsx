@@ -21,6 +21,7 @@ export const metadata: Metadata = pageMetadata({
     company.serviceRegion +
     '.',
   path: '/home-automation',
+  image: '/images/photos/home-automation-hero-smart-panel.jpg',
 })
 
 const servicesIncluded = [

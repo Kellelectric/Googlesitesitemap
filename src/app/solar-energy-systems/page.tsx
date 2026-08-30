@@ -14,6 +14,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     'Load-analyzed solar and hybrid inverter systems sized for Nigeria’s grid reality: methodology, system tiers, and what a proper sizing process actually involves.',
   path: '/solar-energy-systems',
+  image: '/images/photos/solar-hero-panel-install.jpg',
 })
 
 const methodology = [

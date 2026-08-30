@@ -12,6 +12,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     'Technical guides on solar sizing, NEMSA compliance, electrical maintenance, security systems, and industrial power from a COREN and NEMSA certified engineering team in Abuja.',
   path: '/resources',
+  image: '/images/photos/resources-hero-engineer-blueprint.jpg',
 })
 
 export default function ResourcesPage() {

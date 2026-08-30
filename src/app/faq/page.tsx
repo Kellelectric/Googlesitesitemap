@@ -13,6 +13,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     'Answers on service areas, business hours, licensing, emergency response, and how we scope a job, from a COREN and NEMSA certified electrical engineering team in Abuja.',
   path: '/faq',
+  image: '/images/photos/faq-hero-inspection.jpg',
 })
 
 export default function FAQPage() {

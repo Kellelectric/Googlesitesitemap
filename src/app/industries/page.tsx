@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { industries } from '@/content/industries'
+import { company } from '@/content/company'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     'Electrical engineering for residential, commercial, industrial, hospitality, education, healthcare, and retail properties across Abuja, engineered for the demands specific to each.',
   path: '/industries',
+  image: '/images/photos/industries-hero-commercial-building.jpg',
 })
 
 export default function IndustriesPage() {
@@ -72,6 +74,34 @@ export default function IndustriesPage() {
                     <span aria-hidden="true">&rarr;</span>
                   </span>
                 </Link>
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <section className="bg-petrol-700 py-20 text-paper">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-yellow">Why choose Kell Electricals</span>
+            <h2 className="mt-3 max-w-xl text-2xl font-semibold md:text-3xl">
+              One certified team, engineered for every property type
+            </h2>
+          </Reveal>
+          <StaggerGroup className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              'COREN and NEMSA certified',
+              `${company.teamExperienceYears}+ years of combined engineering experience`,
+              `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ reviews`,
+              `${company.trust.projectsCompleted}+ projects completed`,
+            ].map((item) => (
+              <MotionDiv
+                key={item}
+                variants={staggerItem}
+                className="flex gap-3 border-b border-paper/15 pb-3 text-sm text-paper/80"
+              >
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-yellow" />
+                {item}
               </MotionDiv>
             ))}
           </StaggerGroup>

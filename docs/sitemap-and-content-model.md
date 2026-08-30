@@ -24,6 +24,7 @@
 /contact                         Contact / quote request
 /legal/terms                     Terms & Conditions
 /legal/privacy                   Privacy Policy (NDPA 2023)
+/site-map                        Human-readable index of every page (distinct from /sitemap.xml)
 /sitemap.xml                     Generated (next/sitemap route)
 /robots.txt                      Generated
 ```

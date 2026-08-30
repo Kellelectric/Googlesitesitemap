@@ -13,6 +13,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     'Internship, industrial training, apprenticeship, and job opportunities at Kell Electricals Ltd, a COREN and NEMSA certified electrical engineering company in Abuja.',
   path: '/careers',
+  image: '/images/photos/careers-hero-apprentice-training.jpg',
 })
 
 export default function CareersPage() {
@@ -79,6 +80,31 @@ export default function CareersPage() {
               keep it on file.
             </p>
           </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-petrol-700 py-20 text-paper">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-yellow">Why train with Kell Electricals</span>
+          </Reveal>
+          <StaggerGroup className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {[
+              'COREN and NEMSA certified engineering team',
+              `${company.teamExperienceYears}+ years of combined engineering experience to learn from`,
+              `${company.trust.projectsCompleted}+ projects completed across residential, commercial, and industrial sites`,
+              'Hands-on exposure to our documented process: assess, design, install, test, hand over',
+            ].map((item) => (
+              <MotionDiv
+                key={item}
+                variants={staggerItem}
+                className="flex gap-3 border-b border-paper/15 pb-3 text-sm text-paper/80"
+              >
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-yellow" />
+                {item}
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
         </div>
       </section>
 

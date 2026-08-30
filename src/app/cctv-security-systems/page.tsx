@@ -21,6 +21,7 @@ export const metadata: Metadata = pageMetadata({
     company.serviceRegion +
     '.',
   path: '/cctv-security-systems',
+  image: '/images/photos/cctv-hero-camera-install.jpg',
 })
 
 const servicesIncluded = [

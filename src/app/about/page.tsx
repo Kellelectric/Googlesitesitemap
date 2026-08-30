@@ -1,11 +1,13 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { company } from '@/content/company'
 import { partners } from '@/content/partners'
 import { team } from '@/content/team'
+import { areas } from '@/content/areas'
 import { process } from '@/content/process'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
@@ -321,8 +323,12 @@ export default function AboutPage() {
             <Reveal delay={0.08} className="border border-ink/10 p-6">
               <span className="eyebrow text-petrol/70">Service coverage</span>
               <ul className="mt-4 space-y-2 text-sm text-ink/75">
-                {company.serviceAreas.map((area) => (
-                  <li key={area}>{area}</li>
+                {areas.map((area) => (
+                  <li key={area.slug}>
+                    <Link href={`/electrician/${area.slug}`} className="link-underline">
+                      {area.name}
+                    </Link>
+                  </li>
                 ))}
               </ul>
               <p className="mt-4 border-t border-ink/10 pt-4 text-xs text-ink/65">

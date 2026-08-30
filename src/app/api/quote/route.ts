@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 
 export const runtime = 'nodejs'
 
@@ -39,27 +40,13 @@ function isValidPayload(body: unknown): body is QuotePayload {
 // payload immediately after loading the page get rejected here.
 const MIN_SUBMIT_SECONDS = 3
 
-// Best-effort in-memory rate limit: max requests per IP per window. This
-// resets on cold start and does not share state across serverless
-// instances, so it will not stop a distributed attack, but it does stop
-// a single script hammering the endpoint from one warm instance.
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000
-const RATE_LIMIT_MAX_REQUESTS = 5
-const requestLog = new Map<string, number[]>()
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now()
-  const recent = (requestLog.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS)
-  recent.push(now)
-  requestLog.set(ip, recent)
-  return recent.length > RATE_LIMIT_MAX_REQUESTS
-}
+const isRateLimited = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 5 })
 
 // Forwards validated quote requests to a configurable webhook (Zoho Flow,
 // Zapier, Make, etc.) set via QUOTE_WEBHOOK_URL. No destination is
 // hardcoded — see docs/next-steps.md for setup.
 export async function POST(request: NextRequest) {
-  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  const ip = getClientIp(request)
   if (isRateLimited(ip)) {
     return NextResponse.json({ ok: false, reason: 'rate_limited' }, { status: 429 })
   }

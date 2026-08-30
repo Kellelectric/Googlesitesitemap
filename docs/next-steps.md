@@ -17,6 +17,35 @@ shadows the rest of the site doesn't use (`src/components/chatbot/
 KellAssist.tsx`). Re-run the linter after any deliberate palette/type
 change and keep this file in sync with `tailwind.config.ts`.
 
+## Rate limiting and local SEO pages (this round)
+
+- **`/api/chat` rate limiting — done.** Extracted the quote endpoint's
+  in-memory per-IP rate limiter into a shared `src/lib/rateLimit.ts`
+  (`createRateLimiter`, `getClientIp`) and wired it into `/api/chat` too
+  (20 requests / 10 minutes per IP — looser than the quote form's 5,
+  since a normal chat conversation is naturally several turns). This was
+  flagged as a gap: `/api/chat` calls a real (billed) Anthropic API once
+  `ANTHROPIC_API_KEY` is set, and had no abuse protection at all. Same
+  caveat as before — in-memory, resets on cold start, won't stop a
+  distributed attack, but does stop a single script hammering the
+  endpoint.
+- **Location-specific service-area pages — new.** Per the client's audit
+  report's SEO recommendation ("Electrician in Gwarinpa", etc.), added
+  `/electrician/[area]` for all 7 real service areas already in
+  `company.serviceAreas` (`src/content/areas.ts` derives the slug list
+  directly from that array — no separate list to drift). Each page lists
+  every real service with a link to its detail page, the same
+  certifications/experience/rating stats used sitewide, and general FAQs
+  — no area-specific claims are invented (no per-area review counts,
+  project counts, or completed-job claims). Linked from `/about`'s
+  "Service coverage" list (now real links instead of plain text),
+  `/site-map`, and `sitemap.xml`. Not added to primary/footer nav to
+  avoid crowding — discoverable via About, the sitemap, and search.
+  Recommendation #1/#2 from the same audit report (dedicated generator
+  and EV-charger service pages) turned out to be **already built** on
+  this site at `/services/generator-installation-maintenance` and
+  `/services/ev-charging-installation` — no action needed there.
+
 ## Remaining pages (in suggested build order)
 
 Shipped since the original brief: `/about` (rewritten this round — see

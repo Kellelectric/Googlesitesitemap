@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
+import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { company } from '@/content/company'
+import { partners } from '@/content/partners'
 import { process } from '@/content/process'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
@@ -234,6 +236,13 @@ export default function AboutPage() {
                 </MotionDiv>
               ))}
             </StaggerGroup>
+
+            {/* Partners & Suppliers */}
+            {partners.length > 0 && (
+              <div className="mt-14">
+                <PartnerLogos partners={partners} />
+              </div>
+            )}
 
             {/* Our Process */}
             <Reveal delay={0.1} className="mt-14">

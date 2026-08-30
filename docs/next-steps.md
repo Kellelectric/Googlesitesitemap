@@ -1,5 +1,53 @@
 # Next Steps
 
+## CEO message, homepage expansion, and calculators (this round)
+
+- **CEO message — DRAFT, pending Gabriel's sign-off.** `src/content/
+  ceoMessage.ts` holds a placeholder founder's message on `/about`,
+  written by request ("draft a placeholder for review") since no real
+  message from Gabriel was supplied. The file's header comment marks it
+  loudly as not his actual words — uses only facts already established
+  elsewhere (2010 founding, COREN/NEMSA, documented-process values) but
+  the phrasing itself is AI-drafted. **Get Gabriel's sign-off (or his
+  real words) before treating this as final; don't leave it live
+  indefinitely unreviewed.**
+- **Mission/Vision** — already existed on `/about` (not rebuilt); confirmed
+  still present and unchanged.
+- **Homepage expanded** with two new real-content sections (no invented
+  facts): `TeamPreview` (photo grid of all 6 team members, links to
+  `/about`) and `AreasPreview` (links to all 7 `/electrician/[area]`
+  pages), plus the new embedded Solar Sizing Calculator (below). Section
+  order: Hero → Stats → Services → Solar feature → **Solar calculator** →
+  Process → Industries → **Areas** → Trust → **Team** → Testimonials →
+  Partners → CTA.
+- **New: Load & Solar Sizing Calculators** (`/calculators`, plus the
+  Solar Sizing Calculator embedded directly on the homepage per request).
+  Two client-side tools, `src/components/calculators/`:
+  - **Solar Sizing Calculator** — user enters critical load (W) and
+    desired backup hours, gets an indicative battery (kWh), panel array
+    (kW), and minimum inverter size. Deliberately different from the
+    "solar savings calculator" already rejected earlier this session:
+    this one only uses physics/engineering constants (Abuja's ~5 average
+    peak sun hours, 80% battery depth-of-discharge, ~75% system
+    efficiency — all cited in `src/lib/calculatorMath.ts`), never an
+    assumed electricity tariff or a ₦ savings figure, so it doesn't
+    contradict `/solar-energy-systems`'s "measured, not estimated"
+    positioning — it's explicitly framed as a rough starting point, with
+    a link to that page's real methodology and a "request a sizing
+    consultation" CTA.
+  - **Load Calculator** — user picks a building type (apartment, house,
+    office, retail, workshop) and gets a pre-filled, fully editable
+    appliance checklist (generic, publicly known typical wattages, see
+    `src/content/calculators.ts` — not Kell-specific data) that sums to
+    a total connected load and a recommended minimum inverter/generator
+    size (with a standard 1.25× safety margin for motor start-up).
+  - Both tools are explicitly labeled as indicative planning estimates
+    throughout, not a quote or a substitute for a real load assessment —
+    keep that framing if these are ever edited.
+  - `/calculators` added to sitemap.xml, `/site-map`, and footer nav; not
+    added to the primary header nav (already at 10 items) to avoid
+    crowding, matching how `/emergency-electrical-services` was handled.
+
 ## Design system
 
 `/DESIGN.md` (repo root) is now the formal, machine-checkable record of

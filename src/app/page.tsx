@@ -1,15 +1,20 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { Hero } from '@/components/sections/Hero'
 import { StatsBar } from '@/components/sections/StatsBar'
 import { ServicesPreview } from '@/components/sections/ServicesPreview'
 import { SolarFeature } from '@/components/sections/SolarFeature'
+import { SolarSizingCalculator } from '@/components/calculators/SolarSizingCalculator'
 import { IndustriesPreview } from '@/components/sections/IndustriesPreview'
+import { AreasPreview } from '@/components/sections/AreasPreview'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { TrustSection } from '@/components/sections/TrustSection'
+import { TeamPreview } from '@/components/sections/TeamPreview'
 import { TestimonialsPreview } from '@/components/sections/TestimonialsPreview'
 import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { partners } from '@/content/partners'
 import { CTASection } from '@/components/sections/CTASection'
+import { Reveal } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = {
   title: 'Certified Electrical Engineering in Abuja',
@@ -23,9 +28,27 @@ export default function HomePage() {
       <StatsBar />
       <ServicesPreview />
       <SolarFeature />
+
+      <section className="bg-paper py-24">
+        <div className="container-content">
+          <Reveal>
+            <SolarSizingCalculator />
+          </Reveal>
+          <p className="mt-6 text-sm text-ink/60">
+            Need a full connected-load estimate instead?{' '}
+            <Link href="/calculators" className="link-underline font-semibold text-petrol">
+              Try the load calculator
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+
       <ProcessSection />
       <IndustriesPreview />
+      <AreasPreview />
       <TrustSection />
+      <TeamPreview />
       <TestimonialsPreview />
       <PartnerLogos partners={partners} />
       <CTASection />

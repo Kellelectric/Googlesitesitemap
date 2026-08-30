@@ -60,6 +60,18 @@ Assist" chatbot (new this round — see below), and a first draft of
 - **WhatsApp click-to-chat.** Confirmed WhatsApp-enabled — `company.whatsappHref`
   now points at the real business short-link (`wa.me/message/74H7FYXECPMXH1`)
   pulled from the live site.
+- **Typography refinement (design-technique pass).** The client shared a
+  design-system writeup of Claude/Anthropic's own marketing site (cream
+  canvas, coral CTAs, serif display type). Per direction, we did not adopt
+  Anthropic's specific palette or typeface — Kell Electricals keeps its own
+  petrol/yellow/orange brand and Space Grotesk display font — but borrowed
+  one transferable technique: tighter (`tracking-tight`) letter-spacing on
+  all display headings (h1–h4), applied once in `globals.css` so it's
+  sitewide without touching individual pages. Also audited every page's
+  section background sequence for the "don't stack two identical full-bleed
+  bands" issue that was previously found and fixed on the homepage — no
+  further instances found; the few consecutive light (`bg-paper`) sections
+  that do exist are intentional continuous content blocks, not a rhythm bug.
 - **SEO fixes and enhancements.** Found and fixed a real bug: `pageMetadata()`
   (used by every page except the homepage) set its own `openGraph`/`twitter`
   objects with no `images` field, and Next.js does not deep-merge those

@@ -28,6 +28,7 @@ export const team: TeamMember[] = [
     name: 'Thelma Dogwoh',
     title: 'Managing Director',
     bio: 'Thelma leads the day-to-day operations of Kell Electricals, overseeing project delivery, client relations, financial management, and business development. She is the primary contact for client-facing correspondence and ensures every project is completed on time, within budget, and to the client’s satisfaction.',
+    photo: '/images/team/thelma-dogwoh.jpg',
   },
   {
     name: 'Justina',

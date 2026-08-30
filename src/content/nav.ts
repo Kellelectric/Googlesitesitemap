@@ -24,6 +24,8 @@ export const footerNav: NavLink[] = [
   { label: 'Services', href: '/services' },
   { label: 'Solar & Energy Systems', href: '/solar-energy-systems' },
   { label: '24/7 Emergency Electrical', href: '/emergency-electrical-services' },
+  { label: 'Home Automation', href: '/home-automation' },
+  { label: 'CCTV & Security Systems', href: '/cctv-security-systems' },
   { label: 'Industries', href: '/industries' },
   { label: 'Resources', href: '/resources' },
   { label: 'FAQ', href: '/faq' },

@@ -9,6 +9,8 @@
 /services/[slug]                 16 service detail pages
 /solar-energy-systems            Flagship product-style page for solar/hybrid
 /emergency-electrical-services   Flagship 24/7 emergency page
+/home-automation                 Flagship home automation page
+/cctv-security-systems           Flagship CCTV & security page
 /projects                        Case studies index (filterable)
 /projects/[slug]                 Individual case study
 /industries                      Industries served hub

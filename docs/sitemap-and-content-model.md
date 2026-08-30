@@ -194,5 +194,10 @@ number wasn't supplied, it is either omitted or explicitly marked:
   directly from the client's stated Google Business Profile figures
   (supplied alongside the 16 testimonials). Re-verify against the live
   profile periodically since these drift as new reviews come in.
-- **Careers programme details, current team roster:** still blocked on
-  real data from the client — see `next-steps.md`.
+- **Team roster:** real, sourced from the client's June 2026 site audit
+  report — `src/content/team.ts`, shown on `/about` ("Leadership").
+- **Careers programme details:** partially real now (apprenticeship
+  duration/fee, industrial-training application checklist) — see
+  `next-steps.md` for what's still placeholder.
+- **Team experience figure:** corrected from "20+" to "15+ years" per
+  the same audit (`company.teamExperienceYears`), propagates sitewide.

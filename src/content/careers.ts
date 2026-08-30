@@ -1,10 +1,15 @@
-// ⚠️ Programme specifics below (duration, stipend, intake windows,
+// ⚠️ Most programme specifics below (duration, stipend, intake windows,
 // eligibility) are PLACEHOLDER — invented at the client's explicit request
 // ("Build Real content that are still missing, you can invent everything
 // and I'll make changes later"), overriding this file's earlier no-invent
-// note. Nothing here is confirmed real; verify and correct every number,
-// date, and eligibility rule before treating this as final. Application
-// form URLs are real and unchanged.
+// note. Verify and correct every number, date, and eligibility rule before
+// treating this as final. Application form URLs are real and unchanged.
+//
+// Exception: the `apprenticeship` track's `duration` and `programmeFee`
+// (2-year/₦400,000 or 4-year/₦700,000), and `industrial-training`'s
+// `applicationChecklist`, are REAL — sourced from the client's June 2026
+// site audit report, not invented. Do not treat those two fields as
+// placeholder or "fix later."
 export type CareerTrack = {
   slug: string
   name: string
@@ -15,8 +20,14 @@ export type CareerTrack = {
   applicationFormUrl: string
   duration?: string
   stipend?: string
+  programmeFee?: string
   intake?: string
   eligibility?: string[]
+  applicationChecklist?: string[]
+  // True only when duration/fee/etc. below are confirmed real (currently
+  // just `apprenticeship`) — controls whether the detail page shows the
+  // "indicative, unconfirmed" caveat or not.
+  programmeDetailsConfirmed?: boolean
 }
 
 export const careerTracks: CareerTrack[] = [
@@ -74,14 +85,19 @@ export const careerTracks: CareerTrack[] = [
       'A letter of introduction from your institution',
       'Electrical/electronic engineering or a closely related technical discipline',
     ],
+    applicationChecklist: [
+      'Updated CV',
+      'Student ID card',
+      'SIWES introduction letter from your institution',
+    ],
   },
   {
     slug: 'apprenticeship',
     name: 'Apprenticeship',
     summary:
-      'Structured, hands-on skills development for candidates building toward a career as a qualified electrical technician.',
+      'A paid-tuition, structured 2-year or 4-year track for candidates building toward a career as a qualified electrical technician.',
     description:
-      "An apprenticeship is a longer-term, hands-on path for candidates who want to build real electrical trade skills under working technicians and engineers, rather than a short placement. It's aimed at people committing to electrical work as a career, not a one-off exposure.",
+      "An apprenticeship is a longer-term, hands-on path for candidates who want to build real electrical trade skills under working technicians and engineers, rather than a short placement. It's aimed at people committing to electrical work as a career, not a one-off exposure. Unlike our internship and industrial training tracks, this is a paid-tuition programme with a defined fee structure (see below), not a stipend placement.",
     whoItsFor: [
       'Candidates committing to electrical installation and maintenance as a trade',
       'People with some technical aptitude or prior training looking to build practical, on-the-job skill',
@@ -93,14 +109,15 @@ export const careerTracks: CareerTrack[] = [
     ],
     applicationFormUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLScyQUddIgthC752dLwSulX9vRT8V4rPdvlz3Wr7EM0VTktE9A/viewform',
-    duration: '12–18 months, structured in progressive stages',
-    stipend: 'Paid, reviewed at each stage of the programme',
+    duration: '2-year or 4-year track',
+    programmeFee: '₦400,000 (2-year track) or ₦700,000 (4-year track)',
     intake: 'Rolling intake, reviewed quarterly',
     eligibility: [
-      'Secondary school certificate or equivalent, minimum age 18',
+      'WAEC/SSCE or equivalent, minimum age 18',
       'Some technical aptitude or prior trade exposure preferred but not required',
-      'Willingness to commit to the full programme length',
+      'Able to commit to and pay the full programme fee for the chosen track',
     ],
+    programmeDetailsConfirmed: true,
   },
   {
     slug: 'job-openings',

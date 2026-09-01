@@ -64,4 +64,14 @@ export const partners: Partner[] = [
     logo: '/images/partners/ja-solar.png',
     category: 'Equipment supplier',
   },
+  {
+    name: 'JinkoSolar',
+    logo: '/images/partners/jinko-solar.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Felicity Solar',
+    logo: '/images/partners/felicity-solar.png',
+    category: 'Equipment supplier',
+  },
 ]

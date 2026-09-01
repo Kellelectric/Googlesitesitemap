@@ -37,7 +37,13 @@ import { Reveal } from '@/components/ui/Reveal'
 // Pauses on hover/focus (mouse or keyboard) and falls back to a static
 // wrapped row — no animation, no repetition — when the visitor has
 // prefers-reduced-motion set.
-const GAP_PX = 64 // must match the gap-16 class used on both rows below
+//
+// Logos render in their real brand colors (no grayscale treatment) — per
+// client direction. 48px (~0.5in at 96dpi/CSS-px) keeps every logo-to-logo
+// gap comfortably under the "no more than 1 inch" ask with margin for
+// browser zoom/DPI variance, while still reading as a deliberately even
+// strip rather than crowded.
+const GAP_PX = 48 // must match the gap-12 class used on both rows below
 export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; dark?: boolean }) {
   const reduceMotion = useReducedMotion()
   const [paused, setPaused] = useState(false)
@@ -78,12 +84,20 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
   const repeat =
     setSlotWidth > 0 ? Math.max(2, Math.ceil((containerWidth * 2) / setSlotWidth)) : 2
 
-  const logoClass = `h-10 w-auto object-contain grayscale transition-[filter] duration-200 hover:grayscale-0 ${dark ? 'brightness-0 invert hover:brightness-100 hover:invert-0' : ''}`
-
   function renderLogo(partner: Partner) {
-    const logo = (
-      <Image src={partner.logo} alt={partner.name} width={140} height={56} className={logoClass} />
+    const image = (
+      <Image
+        src={partner.logo}
+        alt={partner.name}
+        width={140}
+        height={56}
+        className="h-10 w-auto object-contain"
+      />
     )
+    // On the dark section variant, logos get a small white card so real
+    // brand colors (many of which are dark text/marks) stay legible
+    // against the petrol background, instead of forcing them to white.
+    const logo = dark ? <div className="rounded bg-paper px-3 py-2">{image}</div> : image
     return partner.url ? (
       <a href={partner.url} target="_blank" rel="noopener noreferrer" aria-label={partner.name}>
         {logo}
@@ -124,7 +138,7 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
             <div
               ref={measureRef}
               aria-hidden="true"
-              className="pointer-events-none absolute left-0 top-0 flex w-max items-center gap-16 opacity-0"
+              className="pointer-events-none absolute left-0 top-0 flex w-max items-center gap-12 opacity-0"
             >
               {partners.map((partner) => (
                 <div key={partner.name} className="shrink-0">
@@ -134,7 +148,7 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
             </div>
 
             <div
-              className="flex w-max items-center gap-16 animate-marquee"
+              className="flex w-max items-center gap-12 animate-marquee"
               style={{
                 animationDuration: `${setSlotWidth > 0 ? setSlotWidth / 60 : partners.length * 4}s`,
                 animationPlayState: paused || setSlotWidth === 0 ? 'paused' : 'running',

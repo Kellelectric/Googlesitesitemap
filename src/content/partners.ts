@@ -119,4 +119,9 @@ export const partners: Partner[] = [
     logo: '/images/partners/starlink.png',
     category: 'Connectivity provider',
   },
+  {
+    name: 'Hikvision',
+    logo: '/images/partners/hikvision.png',
+    category: 'Equipment supplier',
+  },
 ]

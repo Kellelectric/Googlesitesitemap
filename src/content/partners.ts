@@ -74,4 +74,29 @@ export const partners: Partner[] = [
     logo: '/images/partners/felicity-solar.png',
     category: 'Equipment supplier',
   },
+  {
+    name: 'Nigerchin',
+    logo: '/images/partners/nigerchin.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Lagostar',
+    logo: '/images/partners/lagostar.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Coleman Wires and Cables',
+    logo: '/images/partners/coleman-wires-cables.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'EZVIZ',
+    logo: '/images/partners/ezviz.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Philips',
+    logo: '/images/partners/philips.png',
+    category: 'Equipment supplier',
+  },
 ]

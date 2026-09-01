@@ -27,7 +27,7 @@ export function Hero() {
 
       <motion.div
         className="container-content relative py-24 md:py-32"
-        initial={reduceMotion ? undefined : 'hidden'}
+        initial={false}
         animate={reduceMotion ? undefined : 'visible'}
         variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } } }}
       >

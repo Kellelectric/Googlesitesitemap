@@ -1,5 +1,42 @@
 # Next Steps
 
+## Fixed: hero content invisible on first load (this round)
+
+Client-reported bug: on a fresh page load, the homepage hero's headline,
+eyebrow badge, buttons, and stats row were completely invisible (only the
+background photo showed) until navigating to another page and back. Root
+cause confirmed via SSR HTML inspection: `Hero.tsx`'s `motion.div` used
+`initial={reduceMotion ? undefined : 'hidden'}`, so Framer Motion baked
+`style="opacity:0"` directly into the server-rendered markup for every
+hero element, and the fade-in animation only ran once client-side JS
+finished hydrating. Any delay or hiccup in hydration on the initial load
+left the hero permanently invisible; a client-side navigation (which
+reuses an already-hydrated page) masked the bug entirely, matching the
+report exactly.
+
+Fixed by changing `initial='hidden'` to `initial={false}` on the hero's
+motion wrapper — this is above-the-fold, most-important content, so it
+should never depend on JS for basic visibility. With `initial={false}`,
+Framer Motion skips applying the hidden variant during SSR entirely;
+verified via `curl` that the server-rendered `<h1>` now has
+`opacity:1;transform:none` baked in from the start, with no animation
+gamble. Scroll-triggered reveal animations elsewhere on the page
+(`Reveal`/`StaggerGroup`, using `whileInView`) are unaffected and still
+correctly fade in — those are lower-risk since hydration has virtually
+always finished by the time a user scrolls that far down.
+
+Separately, found (via `get_project_deployment_protection`) that Vercel
+Authentication (SSO protection) was enabled for all deployment URLs
+except a custom domain — and since no custom domain is attached yet,
+every URL including the ones being tested required a Vercel login,
+which is what caused the "shows me to login" report in an incognito
+window. Disabled it via `update_project_deployment_protection`
+(`ssoProtection: {enabled: false}`) so the site is now publicly viewable
+at its `.vercel.app` URLs without authentication. Re-enable this (or
+just attach the real custom domain, which bypasses it anyway) once
+launch is closer if the site shouldn't be publicly crawlable/visible
+yet — right now nothing is blocking public access.
+
 ## Patched nanoid (this round)
 
 `npm audit` flagged 6 high-severity advisories. 5 of them (Next.js itself,

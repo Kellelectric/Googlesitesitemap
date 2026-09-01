@@ -1,5 +1,42 @@
 # Next Steps
 
+## Sitewide title/meta-description length audit (this round)
+
+Wrote `scripts/audit-seo.mjs` — a production-server crawl of every URL in
+`sitemap.xml` checking title/description length against Google's real
+display budgets, canonical/H1 presence, and broken internal links. First
+run: 24 of 58 pages over/under budget, 0 broken links. All fixed; re-run
+after confirmed clean (0 issues). Re-run this after adding new content —
+it's a real dev tool now, not a one-off script (`npm run build && npm run
+start -- -p 3999 &` then `PORT=3999 node scripts/audit-seo.mjs`).
+
+- New optional `seoTitle` on `Article` (resources.ts) and `Service`
+  (services.ts) — used only for the `<title>` tag, never the on-page
+  H1/heading, which stays exactly as-is. Set for the 9 resource articles
+  and 2 services whose full descriptive title (plus the unavoidable
+  `" - Kell Electricals Ltd"` suffix Next.js's title template adds to
+  every page) ran past 60 characters.
+- Trimmed 11 hub-page meta descriptions to fit the ~160-char cutoff —
+  wording only, no facts removed or added.
+- **Real bug found and fixed**, not just a length issue: `/about`'s meta
+  description was hardcoded `"20+ years of combined engineering
+  experience"` — stale copy left over from before `company.
+  teamExperienceYears` was corrected to 15 in an earlier round (see that
+  round's note above). Every other one of the ~14 places this figure
+  appears sitewide already correctly used the live variable; this was
+  the one that got missed. Now a template literal referencing the same
+  field, so it can't drift out of sync again.
+- `/careers/job-openings` had an oddly terse 42-char summary versus the
+  other 3 tracks' 130-150 char ones — rewrote using only the real fact
+  already stated in that page's own body copy (no live job board, apply
+  via the form even for unlisted roles).
+- `/electrician/[area]`: dropped the redundant trailing "from Kell
+  Electricals" from the shared description template, and used "CBD" —
+  the genuinely common local shorthand for Central Business District,
+  not an invented abbreviation — in the `<title>` tag only for that one
+  area (the one whose full name doesn't fit); its on-page H1 still reads
+  "Central Business District" in full, unchanged.
+
 ## Speed Insights, PWA manifest, structured data, favicon (this round)
 
 Continuing improvements while domain attachment stays on hold per the

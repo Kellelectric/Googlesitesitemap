@@ -164,6 +164,35 @@ export function articleSchema(params: {
   }
 }
 
+// For pages that describe Kell Electricals' services in a specific context
+// (a service area or an industry) rather than a single named service —
+// distinct from serviceSchema() above, which is for the 16 individual
+// /services/[slug] detail pages. areaServed defaults to every real service
+// area rather than being omitted, since a Service without one is less
+// useful for local search than one scoped to where the work actually happens.
+export function localServiceSchema(params: {
+  name: string
+  description: string
+  url: string
+  areaServed?: string[]
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: params.name,
+    name: params.name,
+    description: params.description,
+    provider: {
+      '@type': 'ElectricalContractor',
+      name: company.name,
+      telephone: company.phone,
+      address: company.address.full,
+    },
+    areaServed: params.areaServed ?? company.serviceAreas,
+    url: params.url,
+  }
+}
+
 export function breadcrumbSchema(items: { name: string; url: string }[]) {
   return {
     '@context': 'https://schema.org',

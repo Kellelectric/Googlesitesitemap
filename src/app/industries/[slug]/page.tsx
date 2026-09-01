@@ -11,7 +11,7 @@ import { getServiceBySlug } from '@/content/services'
 import { company } from '@/content/company'
 import { process } from '@/content/process'
 import { faqCategories } from '@/content/faqs'
-import { breadcrumbSchema } from '@/lib/schema'
+import { breadcrumbSchema, localServiceSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
@@ -56,6 +56,18 @@ export default function IndustryDetailPage({ params }: Props) {
               { name: 'Industries', url: `${company.domain}/industries` },
               { name: industry.name, url: `${company.domain}/industries/${industry.slug}` },
             ]),
+          ),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            localServiceSchema({
+              name: `Electrical Services for ${industry.name}`,
+              description: industry.description,
+              url: `${company.domain}/industries/${industry.slug}`,
+            }),
           ),
         }}
       />

@@ -39,4 +39,29 @@ export const partners: Partner[] = [
     logo: '/images/partners/deye.png',
     category: 'Equipment supplier',
   },
+  {
+    name: 'ABB',
+    logo: '/images/partners/abb.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Vell.Max',
+    logo: '/images/partners/vell-max.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Siemens',
+    logo: '/images/partners/siemens.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Legrand',
+    logo: '/images/partners/legrand.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'JA Solar',
+    logo: '/images/partners/ja-solar.png',
+    category: 'Equipment supplier',
+  },
 ]

@@ -21,9 +21,14 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const area = getAreaBySlug(params.area)
   if (!area) return {}
+  // "CBD" is the common, real-world local shorthand for Central Business
+  // District (used locally, not an invented abbreviation) — used only in
+  // the <title> tag to fit Google's ~60-char display budget; the on-page
+  // H1 below still shows the full "Central Business District" for clarity.
+  const metaAreaName = area.name === 'Central Business District' ? 'CBD' : area.name
   return pageMetadata({
-    title: `Electrician in ${area.name}, Abuja`,
-    description: `COREN and NEMSA certified electrical services in ${area.name}, Abuja — wiring, solar, CCTV, home automation, and emergency response from Kell Electricals.`,
+    title: `Electrician in ${metaAreaName}, Abuja`,
+    description: `COREN and NEMSA certified electrical services in ${area.name}, Abuja — wiring, solar, CCTV, home automation, and emergency response.`,
     path: `/electrician/${area.slug}`,
   })
 }
@@ -56,7 +61,7 @@ export default function AreaPage({ params }: Props) {
           __html: JSON.stringify(
             localServiceSchema({
               name: `Electrician in ${area.name}`,
-              description: `COREN and NEMSA certified electrical services in ${area.name}, Abuja — wiring, solar, CCTV, home automation, and emergency response from Kell Electricals.`,
+              description: `COREN and NEMSA certified electrical services in ${area.name}, Abuja — wiring, solar, CCTV, home automation, and emergency response.`,
               url: `${company.domain}/electrician/${area.slug}`,
               areaServed: [area.name],
             }),

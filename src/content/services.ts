@@ -8,6 +8,11 @@ export type ServiceCategory =
 export type Service = {
   slug: string
   name: string
+  // Optional shorter name for the <title> tag / SERP snippet only — the
+  // on-page H1/heading always uses `name` above, unchanged. Set this when
+  // `name` (name + " - Kell Electricals Ltd") would push the rendered
+  // <title> past Google's ~60-character display budget.
+  seoTitle?: string
   category: ServiceCategory
   summary: string
   description: string
@@ -259,6 +264,7 @@ export const services: Service[] = [
   {
     slug: 'fault-finding-diagnostics',
     name: 'Electrical Fault Finding & Diagnostics',
+    seoTitle: 'Fault Finding & Diagnostics',
     category: 'maintenance',
     summary:
       'Systematic fault tracing using proper test equipment, not a guess-and-replace approach.',
@@ -320,6 +326,7 @@ export const services: Service[] = [
   {
     slug: 'commercial-office-fitout',
     name: 'Commercial & Office Fit-Out Electrical',
+    seoTitle: 'Commercial & Office Fit-Out',
     category: 'industrial',
     summary:
       'Electrical scope for office and commercial fit-outs, coordinated with the wider build programme.',

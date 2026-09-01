@@ -122,7 +122,8 @@ export const careerTracks: CareerTrack[] = [
   {
     slug: 'job-openings',
     name: 'Job Openings',
-    summary: 'Current vacancies at Kell Electricals Ltd.',
+    summary:
+      "Current openings and roles we're actively considering candidates for at Kell Electricals Ltd — apply even if your exact role isn't listed.",
     description:
       "We don't currently maintain a live, self-updating job board on this site. Below are roles we're actively considering candidates for; if you'd like to be considered for a role not listed, or want to ask whether we're hiring for a specific position, fill out the application form below.",
     whoItsFor: [

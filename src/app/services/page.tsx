@@ -20,7 +20,7 @@ const categoryImages: Partial<Record<ServiceCategory, string>> = {
 export const metadata: Metadata = pageMetadata({
   title: 'Electrical Engineering Services',
   description:
-    '16 electrical service lines across power systems, energy & solar, security & automation, industrial, and maintenance, delivered by a COREN and NEMSA certified team in Abuja.',
+    '16 electrical service lines — power, energy & solar, security & automation, industrial, and maintenance — from a COREN and NEMSA certified team in Abuja.',
   path: '/services',
   image: '/images/photos/services-substation.jpg',
 })

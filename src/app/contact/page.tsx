@@ -10,7 +10,7 @@ import { pageMetadata } from '@/lib/metadata'
 export const metadata: Metadata = pageMetadata({
   title: 'Contact & Request a Quote',
   description:
-    'Request a quote from Kell Electricals Ltd, COREN and NEMSA certified electrical engineers serving Wuse 2, Gwarinpa, Maitama, Asokoro, Guzape, Katampe, and wider Nigeria.',
+    'Request a quote from Kell Electricals Ltd, COREN and NEMSA certified electrical engineers serving Wuse 2, Gwarinpa, Maitama, Asokoro, and wider Abuja.',
   path: '/contact',
   image: '/images/photos/contact-hero-consultation.jpg',
 })

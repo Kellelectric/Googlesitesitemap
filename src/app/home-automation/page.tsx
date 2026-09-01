@@ -15,11 +15,9 @@ import { process } from '@/content/process'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Home Automation & Smart Building Systems',
+  title: 'Home Automation Systems',
   description:
-    'Smart lighting, climate, and access control integrated at the electrical layer, not bolted on — for homes, offices, and new builds across ' +
-    company.serviceRegion +
-    '.',
+    'Smart lighting, climate, and access control integrated at the electrical layer, not bolted on — for homes, offices, and new builds across Abuja.',
   path: '/home-automation',
   image: '/images/photos/home-automation-hero-smart-panel.jpg',
 })

@@ -16,8 +16,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 
 export const metadata: Metadata = pageMetadata({
   title: 'About Us',
-  description:
-    'Kell Electricals Ltd is a COREN and NEMSA certified electrical engineering company based in Wuse 2, Abuja, backed by 20+ years of combined engineering experience across residential, commercial, and industrial sites.',
+  description: `COREN and NEMSA certified electrical engineering in Wuse 2, Abuja — ${company.teamExperienceYears}+ years of combined experience in residential, commercial, and industrial work.`,
   path: '/about',
   image: '/images/photos/about-blueprint-review.jpg',
 })

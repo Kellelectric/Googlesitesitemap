@@ -22,7 +22,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const article = getArticleBySlug(params.slug)
   if (!article) return {}
   return pageMetadata({
-    title: article.title,
+    title: article.seoTitle ?? article.title,
     description: article.summary,
     path: `/resources/${article.slug}`,
     image: '/images/photos/resource-detail-hero-manual.jpg',

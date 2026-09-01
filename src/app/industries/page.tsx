@@ -11,7 +11,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 export const metadata: Metadata = pageMetadata({
   title: 'Industries We Serve',
   description:
-    'Electrical engineering for residential, commercial, industrial, hospitality, education, healthcare, and retail properties across Abuja, engineered for the demands specific to each.',
+    'Electrical engineering for residential, commercial, industrial, hospitality, education, healthcare, and retail properties across Abuja.',
   path: '/industries',
   image: '/images/photos/industries-hero-commercial-building.jpg',
 })

@@ -99,4 +99,24 @@ export const partners: Partner[] = [
     logo: '/images/partners/philips.png',
     category: 'Equipment supplier',
   },
+  {
+    name: 'Alexa',
+    logo: '/images/partners/alexa.png',
+    category: 'Smart home platform',
+  },
+  {
+    name: 'Ring',
+    logo: '/images/partners/ring.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'TP-Link',
+    logo: '/images/partners/tp-link.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Starlink',
+    logo: '/images/partners/starlink.png',
+    category: 'Connectivity provider',
+  },
 ]

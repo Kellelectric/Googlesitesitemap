@@ -11,6 +11,7 @@ import { ceoMessage } from '@/content/ceoMessage'
 import { areas } from '@/content/areas'
 import { process } from '@/content/process'
 import { pageMetadata } from '@/lib/metadata'
+import { teamSchema } from '@/lib/schema'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
@@ -100,6 +101,10 @@ const teamRoles = [
 export default function AboutPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(teamSchema(team)) }}
+      />
       <section className="relative overflow-hidden bg-petrol text-paper">
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">

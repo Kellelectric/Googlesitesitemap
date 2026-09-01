@@ -193,6 +193,27 @@ export function localServiceSchema(params: {
   }
 }
 
+// Real, named staff (see src/content/team.ts's own header comment for the
+// provenance of each name/title/photo) as schema.org Person entities —
+// only fields already shown on /about (name, title, photo) are used here,
+// nothing additional is invented (no sameAs profile links, no alumniOf).
+export function teamSchema(members: { name: string; title: string; photo?: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@graph': members.map((member) => ({
+      '@type': 'Person',
+      name: member.name,
+      jobTitle: member.title,
+      worksFor: {
+        '@type': 'Organization',
+        name: company.name,
+        url: company.domain,
+      },
+      ...(member.photo ? { image: `${company.domain}${member.photo}` } : {}),
+    })),
+  }
+}
+
 export function breadcrumbSchema(items: { name: string; url: string }[]) {
   return {
     '@context': 'https://schema.org',

@@ -1,10 +1,9 @@
-// No partner or supplier logos/names have been supplied for this site yet.
-// Do NOT invent partnerships, logos, or brand names here — leave this array
-// empty until the client provides real assets. PartnerLogos (see
-// src/components/sections/PartnerLogos.tsx) renders nothing when this array
-// is empty, so the Home and About pages stay clean until real data exists.
+// Real partner/supplier logos, supplied directly by the client. Do NOT
+// invent partnerships, logos, or brand names beyond what's supplied here.
+// PartnerLogos (see src/components/sections/PartnerLogos.tsx) renders
+// nothing when this array is empty.
 //
-// To add a real partner once assets are supplied: drop the logo file under
+// To add another once supplied: drop the logo file under
 // public/images/partners/ and add an entry below, e.g.
 //   { name: 'Example Manufacturer', logo: '/images/partners/example.png', category: 'Equipment supplier', url: 'https://example.com' }
 export type Partner = {
@@ -14,4 +13,30 @@ export type Partner = {
   url?: string
 }
 
-export const partners: Partner[] = []
+export const partners: Partner[] = [
+  {
+    name: 'Schneider Electric',
+    logo: '/images/partners/schneider-electric.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Hager',
+    logo: '/images/partners/hager.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'SIASE',
+    logo: '/images/partners/siase.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'CHINT',
+    logo: '/images/partners/chint.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'Deye',
+    logo: '/images/partners/deye.png',
+    category: 'Equipment supplier',
+  },
+]

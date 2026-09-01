@@ -10,7 +10,6 @@ import { AreasPreview } from '@/components/sections/AreasPreview'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { TrustSection } from '@/components/sections/TrustSection'
 import { ClientPortalFeature } from '@/components/sections/ClientPortalFeature'
-import { TeamPreview } from '@/components/sections/TeamPreview'
 import { TestimonialsPreview } from '@/components/sections/TestimonialsPreview'
 import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { partners } from '@/content/partners'
@@ -50,7 +49,6 @@ export default function HomePage() {
       <AreasPreview />
       <TrustSection />
       <ClientPortalFeature />
-      <TeamPreview />
       <TestimonialsPreview />
       <PartnerLogos partners={partners} />
       <CTASection />

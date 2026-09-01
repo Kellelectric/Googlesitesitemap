@@ -16,7 +16,7 @@ export function TrustSection() {
             </span>
           </div>
           <p className="mt-5 text-sm leading-relaxed text-ink/70">
-            Our rating reflects work carried out across {company.serviceAreas.join(', ')}, and wider {company.serviceRegion.replace('Abuja and ', '')}, verifiable on our Google Business Profile.
+            Our rating reflects work carried out across Abuja — including {company.serviceAreas.join(', ')}, and every other district — plus {company.serviceRegion}, verifiable on our Google Business Profile.
           </p>
         </Reveal>
 

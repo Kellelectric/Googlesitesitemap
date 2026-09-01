@@ -12,7 +12,7 @@ export function AreasPreview() {
           <div>
             <span className="eyebrow text-petrol/70">Where we work</span>
             <h2 className="mt-3 max-w-xl text-3xl font-semibold text-ink md:text-4xl">
-              Covering {areas.length} districts across Abuja
+              Serving all of Abuja, plus project work across Nigeria
             </h2>
           </div>
           <Button href="/contact" variant="secondary" data-on-light="true">
@@ -20,7 +20,11 @@ export function AreasPreview() {
           </Button>
         </Reveal>
 
-        <StaggerGroup className="mt-10 flex flex-wrap gap-3">
+        <p className="mt-6 max-w-2xl text-sm text-ink/70">
+          Featured districts with a dedicated page below — every other part
+          of Abuja is covered too.
+        </p>
+        <StaggerGroup className="mt-6 flex flex-wrap gap-3">
           {areas.map((area) => (
             <MotionDiv key={area.slug} variants={staggerItem}>
               <Link
@@ -33,7 +37,7 @@ export function AreasPreview() {
           ))}
         </StaggerGroup>
         <p className="mt-6 text-sm text-ink/60">
-          Plus project work across {company.serviceRegion.replace('Abuja and ', '')}.
+          Plus project work in {company.serviceRegion}.
         </p>
       </div>
     </section>

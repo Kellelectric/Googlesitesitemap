@@ -70,7 +70,7 @@ const whyChooseUs = [
   `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ customer reviews`,
   `Emergency response target of ${company.emergencyResponseTarget}`,
   `${company.trust.projectsCompleted}+ projects completed`,
-  `Service coverage across ${company.serviceAreas.length} zones in Abuja, plus project work across ${company.serviceRegion.replace('Abuja and ', '')}`,
+  `Service coverage across all of Abuja, plus project work in ${company.serviceRegion}`,
   'Client portal for electronic invoices, quote approval, and project tracking from anywhere in the world',
 ]
 
@@ -356,6 +356,9 @@ export default function AboutPage() {
             {/* Service Coverage */}
             <Reveal delay={0.08} className="border border-ink/10 p-6">
               <span className="eyebrow text-petrol/70">Service coverage</span>
+              <p className="mt-3 text-sm text-ink/70">
+                We serve all of Abuja. Featured districts with a dedicated page:
+              </p>
               <ul className="mt-4 space-y-2 text-sm text-ink/75">
                 {areas.map((area) => (
                   <li key={area.slug}>
@@ -366,7 +369,7 @@ export default function AboutPage() {
                 ))}
               </ul>
               <p className="mt-4 border-t border-ink/10 pt-4 text-xs text-ink/65">
-                Plus project work across {company.serviceRegion.replace('Abuja and ', '')}.
+                Plus project work in {company.serviceRegion}.
               </p>
             </Reveal>
           </aside>

@@ -16,7 +16,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 
 export const metadata: Metadata = pageMetadata({
   title: '24/7 Emergency Electrical Services',
-  description: `Emergency electrical response across ${company.serviceRegion} for outages, sparking, burning smells, and exposed wiring. Target response ${company.emergencyResponseTarget}.`,
+  description: `Emergency electrical response across Abuja and beyond for outages, sparking, burning smells, and exposed wiring. Target response ${company.emergencyResponseTarget}.`,
   path: '/emergency-electrical-services',
   image: '/images/photos/emergency-hero-switchboard.jpg',
 })

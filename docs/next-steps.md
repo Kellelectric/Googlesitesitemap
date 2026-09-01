@@ -1,5 +1,53 @@
 # Next Steps
 
+## Speed Insights, PWA manifest, structured data, favicon (this round)
+
+Continuing improvements while domain attachment stays on hold per the
+client's instruction ("leave domain set up for now").
+
+- **Vercel Speed Insights** — `@vercel/speed-insights` wired into
+  `layout.tsx`. No-op until the app is actually deployed to Vercel and
+  visited; gives real-user Core Web Vitals in the Vercel dashboard once
+  live, distinct from synthetic Lighthouse runs.
+- **`docs/local-seo-citations.md`** — a standardized NAP (Name/Address/
+  Phone) block plus a prioritized, individually-verified (via live web
+  search, not memory) list of real local-SEO directories: NEMSA's actual
+  public contractor directory, COREN's verification portal,
+  ConnectNigeria, Abuja Galleria. Off-site work — no submissions were
+  made, this just gives whoever manages listings a ready reference.
+  Deliberately excludes low-quality "SEO backlink package" directories.
+- **`src/app/manifest.ts`** — the site had no PWA manifest at all (no
+  add-to-homescreen support). Uses the existing `public/brand/icon-192.png`
+  /`icon-512.png` and the real brand colors (`#13322C` petrol, `#F7F5F0`
+  paper) — no new artwork.
+- **`src/app/favicon.ico`** — also entirely missing; some crawlers/older
+  browsers still request this path specifically regardless of the
+  `<link rel="icon">` tag. Generated a real 16/32/48px multi-resolution
+  `.ico` from the existing `icon-192.png` (no new artwork), verified it
+  coexists correctly with the existing PNG icon/apple-touch-icon link
+  tags rather than overriding them.
+- **`localServiceSchema()`** (new, in `lib/schema.ts`) — `/electrician/
+  [area]` and `/industries/[slug]` previously only emitted `BreadcrumbList`
+  JSON-LD despite both being genuinely service-focused pages; the existing
+  `serviceSchema()` is shaped for the 16 individual `/services/[slug]`
+  pages specifically (slug → URL), so a new function was added rather than
+  overloading that one. Area pages get a `Service` scoped to that single
+  area (`areaServed: [area.name]`); industry pages reuse the real,
+  already-written `industry.description` field verbatim — no new copy
+  invented anywhere. Verified all four JSON-LD blocks (Organization,
+  Breadcrumb, Service, FAQPage) parse correctly on both page types via a
+  production server + `curl`.
+
+Considered and deliberately skipped this round: adding `AggregateRating`
+to the new `Service` schema entries — duplicating the same org-level
+4.8★/192-review rating across dozens of area/industry pages reads as
+manipulative to Google, not additive; the single canonical rating on
+`organizationSchema()` is the correct pattern and already exists. Also
+held off on writing a new `/resources` article speculatively — the
+existing 9 already cover the site's core technical topics without
+overlap, and a 10th needs a genuine content gap identified, not just
+inventing one to hit a number.
+
 ## Fixed: hero content invisible on first load (this round)
 
 Client-reported bug: on a fresh page load, the homepage hero's headline,

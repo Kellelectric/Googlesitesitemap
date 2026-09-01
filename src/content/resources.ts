@@ -6,6 +6,13 @@ export type ArticleSection = {
 export type Article = {
   slug: string
   title: string
+  // Optional shorter title for the <title> tag / SERP snippet only — the
+  // on-page H1 always uses `title` above, unchanged. `title`'s descriptive,
+  // full-sentence style reads well as a heading but pushes the rendered
+  // <title> (title + " - Kell Electricals Ltd") past Google's ~60-character
+  // display budget for several articles; set this when that's the case
+  // rather than shortening the on-page heading itself.
+  seoTitle?: string
   summary: string
   category: 'Solar & Energy' | 'Compliance' | 'Maintenance' | 'Security & Automation' | 'Industrial'
   sections: ArticleSection[]
@@ -19,6 +26,7 @@ export const articles: Article[] = [
   {
     slug: 'sizing-a-hybrid-inverter-system',
     title: 'How to Size a Hybrid Inverter System in Nigeria',
+    seoTitle: 'Sizing a Hybrid Inverter System',
     summary:
       'Panel count and battery capacity mean nothing without a real load profile behind them. Here is the sizing logic we actually run.',
     category: 'Solar & Energy',
@@ -57,6 +65,7 @@ export const articles: Article[] = [
   {
     slug: 'nemsa-compliance-commercial-fitout',
     title: 'What NEMSA Compliance Actually Requires for a Commercial Fit-Out',
+    seoTitle: 'Commercial Fit-Out NEMSA Compliance',
     summary:
       'Compliance is not a certificate you buy at the end. It is a set of documented decisions made throughout the electrical scope.',
     category: 'Compliance',
@@ -97,6 +106,7 @@ export const articles: Article[] = [
   {
     slug: 'signs-your-panel-needs-upgrading',
     title: 'Signs Your Electrical Panel Needs Upgrading Before It Fails',
+    seoTitle: 'Signs Your Panel Needs Upgrading',
     summary:
       'A distribution panel rarely fails without warning. These are the signs worth acting on before it does.',
     category: 'Maintenance',
@@ -137,6 +147,7 @@ export const articles: Article[] = [
   {
     slug: 'generator-vs-solar-vs-hybrid',
     title: 'Generator vs. Solar vs. Hybrid: Choosing Backup Power',
+    seoTitle: 'Generator vs Solar vs Hybrid Power',
     summary:
       'The right backup system depends on your outage pattern and budget, not which option sounds most modern.',
     category: 'Solar & Energy',
@@ -175,6 +186,7 @@ export const articles: Article[] = [
   {
     slug: 'cctv-camera-placement-and-cabling-basics',
     title: 'CCTV System Planning: Camera Placement and Cabling Basics',
+    seoTitle: 'CCTV Camera Placement Basics',
     summary:
       'Camera count is the least important decision in a CCTV system. Placement and cabling are what actually determine whether it works.',
     category: 'Security & Automation',
@@ -209,6 +221,7 @@ export const articles: Article[] = [
   {
     slug: 'three-phase-power-basics-for-facility-managers',
     title: 'Three-Phase Power Basics for Facility Managers',
+    seoTitle: 'Three-Phase Power Basics',
     summary:
       'A working knowledge of three-phase power helps a facility manager ask the right questions before a fault becomes downtime.',
     category: 'Industrial',
@@ -243,6 +256,7 @@ export const articles: Article[] = [
   {
     slug: 'earthing-and-lightning-protection-what-to-know',
     title: 'Earthing and Lightning Protection: What Every Property Owner Should Know',
+    seoTitle: 'Earthing and Lightning Protection',
     summary:
       'Earthing is invisible when it works, which is exactly why it gets overlooked until equipment starts failing.',
     category: 'Compliance',
@@ -277,6 +291,7 @@ export const articles: Article[] = [
   {
     slug: 'ev-charger-installation-what-your-property-needs',
     title: 'EV Charger Installation: What Your Property Actually Needs First',
+    seoTitle: 'EV Charger Installation Requirements',
     summary:
       'An EV charger is a sustained, high-current load. The question that matters before installation is whether your panel already has room for it.',
     category: 'Solar & Energy',
@@ -313,6 +328,7 @@ export const articles: Article[] = [
   {
     slug: 'how-to-size-a-backup-generator',
     title: 'How to Size a Backup Generator: kVA, Running Load, and Fuel Type',
+    seoTitle: 'How to Size a Backup Generator',
     summary:
       'A generator sized from total connected wattage alone is usually wrong. Starting current and fuel logistics matter as much as running load.',
     category: 'Solar & Energy',

@@ -13,7 +13,7 @@ import { Reveal } from '@/components/ui/Reveal'
 export const metadata: Metadata = pageMetadata({
   title: 'Load & Solar Sizing Calculators',
   description:
-    'Free electrical load calculator and solar/battery sizing calculator for homes and businesses in Abuja. Indicative planning estimates, not a substitute for a real load assessment.',
+    'Free electrical load and solar/battery sizing calculators for homes and businesses in Abuja — indicative estimates, not a substitute for a real assessment.',
   path: '/calculators',
 })
 

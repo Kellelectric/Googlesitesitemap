@@ -42,9 +42,21 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'translateY(16px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          // Distance is set per-instance via the --marquee-distance CSS
+          // variable (measured in JS to exactly one set's width) — see
+          // PartnerLogos.tsx. The 50% fallback only matters for the one
+          // frame before that measurement effect runs.
+          '100%': { transform: 'translateX(calc(-1 * var(--marquee-distance, 50%)))' },
+        },
       },
       animation: {
         'reveal-up': 'reveal-up 0.6s ease-out forwards',
+        // Duration is overridden per-instance (scales with logo count) via
+        // an inline style — see PartnerLogos.tsx. This default only applies
+        // if that's ever omitted.
+        marquee: 'marquee 30s linear infinite',
       },
     },
   },

@@ -11,7 +11,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 export const metadata: Metadata = pageMetadata({
   title: 'Careers',
   description:
-    'Internship, industrial training, apprenticeship, and job opportunities at Kell Electricals Ltd, a COREN and NEMSA certified electrical engineering company in Abuja.',
+    'Internship, industrial training, apprenticeship, and job opportunities at Kell Electricals Ltd, a COREN and NEMSA certified engineering company in Abuja.',
   path: '/careers',
   image: '/images/photos/careers-hero-apprentice-training.jpg',
 })

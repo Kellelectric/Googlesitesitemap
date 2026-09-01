@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   ...pageMetadata({
     title: 'Google Reviews & Testimonials',
     description:
-      'Read real customer reviews and testimonials for Kell Electricals Ltd, a professional electrical, solar, inverter, CCTV and power solutions company in Abuja, Nigeria.',
+      'Read real customer reviews for Kell Electricals Ltd, a professional electrical, solar, inverter, CCTV, and power solutions company in Abuja, Nigeria.',
     path: '/testimonials',
     image: '/images/photos/testimonials-hero-handshake.jpg',
   }),

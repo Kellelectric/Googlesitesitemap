@@ -30,7 +30,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const service = getServiceBySlug(params.slug)
   if (!service) return {}
   return pageMetadata({
-    title: service.name,
+    title: service.seoTitle ?? service.name,
     description: service.summary,
     path: `/services/${service.slug}`,
     image: '/images/photos/service-detail-hero-wiring.jpg',

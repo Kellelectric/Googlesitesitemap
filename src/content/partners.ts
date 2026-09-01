@@ -124,4 +124,14 @@ export const partners: Partner[] = [
     logo: '/images/partners/hikvision.png',
     category: 'Equipment supplier',
   },
+  {
+    name: 'AKT',
+    logo: '/images/partners/akt.png',
+    category: 'Equipment supplier',
+  },
+  {
+    name: 'OBST',
+    logo: '/images/partners/obst.png',
+    category: 'Equipment supplier',
+  },
 ]

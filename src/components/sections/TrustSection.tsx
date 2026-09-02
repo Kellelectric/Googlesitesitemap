@@ -4,6 +4,7 @@ import { Reveal } from '@/components/ui/Reveal'
 export function TrustSection() {
   return (
     <section className="bg-paper py-24">
+      <h2 className="sr-only">Why clients trust us</h2>
       <div className="container-content grid grid-cols-1 gap-12 md:grid-cols-2">
         <Reveal className="border border-ink/10 p-8">
           <span className="eyebrow text-petrol/70">Verified track record</span>

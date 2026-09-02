@@ -10,6 +10,11 @@ const AUTOPLAY_INTERVAL_MS = 3000
 export function TestimonialCarousel({ items }: { items: Testimonial[] }) {
   const trackRef = useRef<HTMLDivElement>(null)
   const [paused, setPaused] = useState(false)
+  // Separate from the hover/focus-driven `paused` state above: touch-only
+  // visitors never trigger hover or focus just by looking at the carousel,
+  // so WCAG 2.2.2's "provide a way to pause moving content" needs an
+  // explicit control they can actually reach, not just a scroll-into-view.
+  const [userPaused, setUserPaused] = useState(false)
   const reduceMotion = useReducedMotion()
 
   // Doubled so autoplay/scroll can loop seamlessly: once we've scrolled past
@@ -29,10 +34,10 @@ export function TestimonialCarousel({ items }: { items: Testimonial[] }) {
   )
 
   useEffect(() => {
-    if (reduceMotion || paused) return
+    if (reduceMotion || paused || userPaused) return
     const id = setInterval(() => scrollByCards(1), AUTOPLAY_INTERVAL_MS)
     return () => clearInterval(id)
-  }, [paused, reduceMotion, scrollByCards])
+  }, [paused, userPaused, reduceMotion, scrollByCards])
 
   useEffect(() => {
     const track = trackRef.current
@@ -87,6 +92,17 @@ export function TestimonialCarousel({ items }: { items: Testimonial[] }) {
           </div>
         ))}
       </div>
+
+      {!reduceMotion && (
+        <button
+          type="button"
+          onClick={() => setUserPaused((v) => !v)}
+          aria-label={userPaused ? 'Play testimonial carousel' : 'Pause testimonial carousel'}
+          className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-ink/60 outline-offset-2 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-petrol"
+        >
+          {userPaused ? '▶ Play' : '⏸ Pause'}
+        </button>
+      )}
     </div>
   )
 }

@@ -94,7 +94,7 @@ export default function CareerTrackPage({ params }: Props) {
           <div className="container-content">
             <Reveal>
               <span className="eyebrow text-petrol/70">Programme details</span>
-              <p className="mt-2 max-w-2xl text-xs text-ink/50">
+              <p className="mt-2 max-w-2xl text-xs text-ink/60">
                 {track.programmeDetailsConfirmed
                   ? 'Confirmed programme terms.'
                   : 'Indicative - confirmed directly once we hear from you.'}

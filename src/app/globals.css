@@ -30,7 +30,7 @@
   }
 
   .link-underline {
-    @apply relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-yellow after:transition-[width] after:duration-300 hover:after:w-full;
+    @apply relative outline-offset-2 after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-yellow after:transition-[width] after:duration-300 hover:after:w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow;
   }
 }
 

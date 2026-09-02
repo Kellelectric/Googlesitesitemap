@@ -349,7 +349,7 @@ export function KellAssist() {
               </div>
             ))}
 
-            {sending && <p className="text-xs text-ink/50">Kell Assist is typing…</p>}
+            {sending && <p className="text-xs text-ink/60">Kell Assist is typing…</p>}
 
             {quickActions.length > 0 && (
               <div className="flex flex-wrap gap-2">
@@ -421,7 +421,7 @@ export function KellAssist() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type a message…"
-              className="flex-1 border border-ink/15 bg-paper px-3 py-2 text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-petrol"
+              className="flex-1 border border-ink/15 bg-paper px-3 py-2 text-sm text-ink placeholder:text-ink/60 focus:outline-none focus:ring-2 focus:ring-petrol"
             />
             <button
               type="submit"

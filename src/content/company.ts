@@ -81,7 +81,7 @@ export const company = {
   trust: {
     googleRating: 4.8,
     googleReviewCount: 192,
-    projectsCompleted: 100,
+    projectsCompleted: 1000,
   },
   domain: 'https://kellelectricals.com',
 } as const

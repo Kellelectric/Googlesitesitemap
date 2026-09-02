@@ -276,6 +276,45 @@ export function calculateBreakerSize({ loadCurrentAmps }: BreakerSizeInput): Bre
   }
 }
 
+// --- Generator running cost ----------------------------------------------
+//
+// Deliberately takes fuel consumption and price as direct user inputs
+// rather than an assumed constant — genset fuel burn varies significantly
+// by make, load factor, and maintenance condition, and fuel prices change
+// often, so neither belongs in this file as a fixed planning figure. This
+// is pure arithmetic on the numbers the user supplies (e.g. from their
+// generator's spec sheet and current local fuel price).
+
+export type GeneratorRunningCostInput = {
+  fuelConsumptionLitresPerHour: number
+  fuelPricePerLitre: number
+  hoursPerDay: number
+  daysPerMonth: number
+}
+
+export type GeneratorRunningCostResult = {
+  costPerHour: number
+  costPerDay: number
+  costPerMonth: number
+}
+
+export function calculateGeneratorRunningCost({
+  fuelConsumptionLitresPerHour,
+  fuelPricePerLitre,
+  hoursPerDay,
+  daysPerMonth,
+}: GeneratorRunningCostInput): GeneratorRunningCostResult {
+  const costPerHour = Math.max(0, fuelConsumptionLitresPerHour) * Math.max(0, fuelPricePerLitre)
+  const costPerDay = costPerHour * Math.max(0, hoursPerDay)
+  const costPerMonth = costPerDay * Math.max(0, daysPerMonth)
+
+  return {
+    costPerHour: Math.round(costPerHour),
+    costPerDay: Math.round(costPerDay),
+    costPerMonth: Math.round(costPerMonth),
+  }
+}
+
 // --- Battery runtime ----------------------------------------------------
 
 export type BatteryRuntimeInput = {

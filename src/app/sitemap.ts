@@ -28,6 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/faq`, lastModified: new Date(), priority: 0.6, changeFrequency: 'monthly' },
     { url: `${base}/testimonials`, lastModified: new Date(), priority: 0.6, changeFrequency: 'weekly' },
     { url: `${base}/calculators`, lastModified: new Date(), priority: 0.6, changeFrequency: 'monthly' },
+    { url: `${base}/book-appointment`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/careers`, lastModified: new Date(), priority: 0.5, changeFrequency: 'monthly' },
     { url: `${base}/contact`, lastModified: new Date(), priority: 0.8, changeFrequency: 'monthly' },
     { url: `${base}/site-map`, lastModified: new Date(), priority: 0.3, changeFrequency: 'monthly' },

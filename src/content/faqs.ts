@@ -79,7 +79,7 @@ export const faqCategories: FAQCategory[] = [
       {
         question: "Can I manage my project if I'm not in Nigeria?",
         answer:
-          'Yes. Every client gets access to a portal for electronic invoices and quotes, so you can review and approve them online and follow your project\'s progress from anywhere in the world, on your own schedule.',
+          'Yes. Existing clients can review and approve electronic invoices and quotes, and follow a project\'s progress from anywhere in the world, through our Zoho Books client portal.',
       },
     ],
   },

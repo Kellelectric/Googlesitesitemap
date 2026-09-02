@@ -8,6 +8,12 @@ export const company = {
   phone: '+234 814 020 5895',
   phoneHref: 'tel:+2348140205895',
   whatsappHref: 'https://wa.me/message/74H7FYXECPMXH1',
+  // The Zoho Books client portal login URL, set as NEXT_PUBLIC_CLIENT_PORTAL_URL
+  // in the deployment environment once the client supplies it. The website
+  // must never build its own client portal — this is a link out to the
+  // existing Zoho Books portal only. Left undefined (not a guessed URL)
+  // until configured; call sites fall back to a "contact us" CTA.
+  clientPortalUrl: process.env.NEXT_PUBLIC_CLIENT_PORTAL_URL || undefined,
   email: 'info@kellelectricals.com',
   emergencyEmail: 'emergency@kellelectricals.com',
   emergencyResponseTarget: 'within 30 minutes',
@@ -59,12 +65,21 @@ export const company = {
   // that reason.
   serviceAreas: [
     'Wuse 2',
+    'Wuse',
     'Gwarinpa',
     'Central Business District',
     'Guzape',
     'Asokoro',
     'Maitama',
     'Katampe',
+    'Garki',
+    'Jabi',
+    'Utako',
+    'Lokogoma',
+    'Apo',
+    'Life Camp',
+    'Kubwa',
+    'Lugbe',
   ],
   // What's covered beyond Abuja itself — confirmed directly by the
   // client: neighboring states, then project work nationwide. Does NOT
@@ -75,7 +90,7 @@ export const company = {
   trust: {
     googleRating: 4.8,
     googleReviewCount: 192,
-    projectsCompleted: 100,
+    projectsCompleted: 1000,
   },
   domain: 'https://kellelectricals.com',
 } as const

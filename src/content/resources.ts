@@ -442,6 +442,83 @@ export const articles: Article[] = [
     ],
     relatedServiceSlugs: ['solar-inverter-systems', 'energy-audits', 'preventive-maintenance-contracts'],
   },
+  {
+    slug: 'why-does-my-breaker-keep-tripping',
+    title: 'Why Does Your Circuit Breaker Keep Tripping?',
+    seoTitle: 'Why Does a Breaker Keep Tripping?',
+    summary:
+      'A breaker tripping is doing its job - the question is why it keeps having to. Here are the causes we actually find, from most to least common.',
+    category: 'Maintenance',
+    sections: [
+      {
+        heading: 'Overloaded circuit - too much running on one line',
+        body: [
+          'The most common cause by far: the combined load on a circuit exceeds what its breaker is rated to carry, so it trips as designed rather than letting the wiring overheat. This shows up most on circuits feeding several high-draw appliances at once - kitchens, workshops, or a room with an air conditioner and other loads sharing the same line.',
+          'The fix usually isn\'t a bigger breaker. A breaker sized above the circuit\'s actual wiring rating just removes the protection - the fix is redistributing load across circuits, or running a dedicated circuit for the heaviest appliance.',
+        ],
+      },
+      {
+        heading: 'Short circuit - a hot wire touching a neutral or ground',
+        body: [
+          'A short circuit trips a breaker immediately and often repeatedly, sometimes the instant a specific appliance is plugged in or switched on. This points to damaged insulation somewhere in that circuit\'s wiring, a faulty appliance internally shorting, or a loose connection inside a socket or junction box.',
+          'This isn\'t a load-balancing problem, and it isn\'t safe to keep resetting the breaker and hoping it stops - a short circuit is a fire risk that needs fault-finding, not a workaround.',
+        ],
+      },
+      {
+        heading: 'Ground fault - current leaking to earth',
+        body: [
+          'On circuits protected by a ground fault or earth leakage device, tripping usually means current is finding an unintended path to earth - commonly through moisture in an outdoor socket, a damaged appliance cord, or a fault inside an appliance itself. This is exactly the condition these devices exist to catch, since it\'s also a shock hazard.',
+          'Isolating which single appliance or socket is causing it (by unplugging everything on that circuit and reintroducing one at a time) narrows this down quickly - but the fault itself still needs fixing or the item replacing, not just identifying.',
+        ],
+      },
+      {
+        heading: 'A worn or ageing breaker itself',
+        body: [
+          'Breakers don\'t last forever. One that trips at well below its rated load, or that fails to reset cleanly, may simply have worn internal contacts after years of service - this becomes more common on an older panel that hasn\'t had any breakers replaced since original installation.',
+          'This is the one cause on this list that isn\'t about your wiring or appliances at all, and it\'s only distinguishable from the others with an actual panel inspection.',
+        ],
+      },
+    ],
+    relatedServiceSlugs: ['panel-repair-upgrades', 'fault-finding-diagnostics', 'emergency-electrical-response'],
+  },
+  {
+    slug: 'how-often-you-need-an-electrical-safety-inspection',
+    title: 'How Often You Actually Need an Electrical Safety Inspection',
+    seoTitle: 'Electrical Inspection Frequency',
+    summary:
+      'Waiting for something to visibly fail means the inspection happens after the risk, not before it. Here is how to think about timing instead.',
+    category: 'Maintenance',
+    sections: [
+      {
+        heading: 'Inspection frequency depends on property type and age, not a fixed number',
+        body: [
+          'A newly wired residential property, a commercial space with heavy daily equipment use, and an ageing industrial panel don\'t carry the same risk profile, so they don\'t belong on the same inspection interval. Higher load, higher occupancy, and older infrastructure all shift toward more frequent checks - a single blanket recommendation for every property type isn\'t a useful answer.',
+          'What matters more than hitting an exact interval is having a scheduled inspection at all, rather than relying on visible failure as the trigger.',
+        ],
+      },
+      {
+        heading: 'Specific events should trigger an inspection regardless of schedule',
+        body: [
+          'A change of property ownership or tenancy, a major renovation that added load without a corresponding review of the panel and circuits, any recent flooding or fire near electrical infrastructure, or the property changing to a higher-demand use than it was originally wired for - each of these is a reason to inspect immediately, independent of when the last scheduled check happened.',
+          'Recurring symptoms are the other trigger: breakers tripping repeatedly, warm switches or sockets, flickering lights, or a burning smell near the panel are signs worth an inspection now, not at the next scheduled interval.',
+        ],
+      },
+      {
+        heading: 'What a real inspection actually covers',
+        body: [
+          'A proper inspection goes beyond a visual look at the panel: it includes testing earthing and bonding, checking insulation resistance on circuits, verifying breaker and RCD/earth-leakage function actually trips at the right threshold, and checking for loose connections and thermal hotspots that a visual check alone misses.',
+          'A written report with findings and recommended actions, not just a verbal "looks fine," is what makes an inspection useful as a record - both for your own planning and, for commercial and industrial sites, as documentation for compliance purposes.',
+        ],
+      },
+      {
+        heading: 'A maintenance contract removes the guesswork on timing',
+        body: [
+          'For a commercial or industrial site in particular, a scheduled maintenance arrangement handles this timing question by design rather than leaving it to memory - inspections happen on a set schedule appropriate to that property\'s risk profile, with findings tracked over time so a developing issue shows up as a trend, not a surprise.',
+        ],
+      },
+    ],
+    relatedServiceSlugs: ['preventive-maintenance-contracts', 'fault-finding-diagnostics', 'earthing-lightning-protection'],
+  },
 ]
 
 export function getArticleBySlug(slug: string): Article | undefined {

@@ -9,7 +9,6 @@ import { IndustriesPreview } from '@/components/sections/IndustriesPreview'
 import { AreasPreview } from '@/components/sections/AreasPreview'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { TrustSection } from '@/components/sections/TrustSection'
-import { ClientPortalFeature } from '@/components/sections/ClientPortalFeature'
 import { TestimonialsPreview } from '@/components/sections/TestimonialsPreview'
 import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { partners } from '@/content/partners'
@@ -65,7 +64,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <ClientPortalFeature />
       <TestimonialsPreview />
       <PartnerLogos partners={partners} />
       <CTASection />

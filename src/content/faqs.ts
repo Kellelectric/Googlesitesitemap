@@ -76,11 +76,6 @@ export const faqCategories: FAQCategory[] = [
         question: 'How do I get a quote?',
         answer: `Submit the form on our Contact page, call ${company.phone}, or message us on WhatsApp. We respond with a scoped assessment rather than a rough estimate over the phone.`,
       },
-      {
-        question: "Can I manage my project if I'm not in Nigeria?",
-        answer:
-          'Yes. Existing clients can review and approve electronic invoices and quotes, and follow a project\'s progress from anywhere in the world, through our Zoho Books client portal.',
-      },
     ],
   },
   {

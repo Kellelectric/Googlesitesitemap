@@ -30,6 +30,7 @@ const groups: LinkGroup[] = [
     links: [
       { label: 'Home', href: '/' },
       { label: 'About Us', href: '/about' },
+      { label: 'Certifications & Compliance', href: '/certifications-compliance' },
       { label: 'FAQ', href: '/faq' },
       { label: 'Testimonials', href: '/testimonials' },
       { label: 'Load & Solar Calculators', href: '/calculators' },

@@ -42,6 +42,42 @@ const whatsCovered = [
   },
 ]
 
+const maintenanceTiers = [
+  {
+    name: 'Standard',
+    cadence: 'Quarterly visits',
+    description: 'Scheduled inspection and core system checks for dependable baseline coverage.',
+    features: [
+      'Quarterly electrical panel inspection',
+      'Circuit and earthing continuity checks',
+      'Visual thermal-risk assessment',
+      'Digital inspection report after each visit',
+    ],
+  },
+  {
+    name: 'Gold',
+    cadence: 'Bi-monthly visits',
+    description: 'Everything in Standard, plus air-conditioning servicing and faster response when issues arise.',
+    features: [
+      'Everything in Standard',
+      'Bi-monthly HVAC and AC servicing',
+      'Solar and inverter performance checks',
+      'Priority scheduling for repair callouts',
+    ],
+  },
+  {
+    name: 'Platinum',
+    cadence: 'Monthly visits',
+    description: 'Full-coverage plan for clients who need maintenance treated as a fixed, predictable cost.',
+    features: [
+      'Everything in Gold',
+      'Monthly full-system inspection',
+      'Repair costs covered up to plan threshold',
+      'Dedicated account engineer',
+    ],
+  },
+]
+
 const whoItsFor = [
   {
     title: 'Commercial and industrial sites',
@@ -144,6 +180,43 @@ export default function MaintenanceAmcPage() {
               </MotionDiv>
             ))}
           </StaggerGroup>
+        </div>
+      </section>
+
+      {/* Tiered plans */}
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">Three tiers of ongoing protection</span>
+            <h2 className="mt-3 max-w-2xl text-2xl font-semibold text-ink md:text-3xl">
+              Pick the cadence that matches your risk
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink/70">
+              Every plan replaces reactive, unplanned callouts with scheduled
+              inspection and servicing, so small issues are caught before
+              they become expensive failures.
+            </p>
+          </Reveal>
+          <StaggerGroup className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {maintenanceTiers.map((tier) => (
+              <MotionDiv key={tier.name} variants={staggerItem} className="border border-ink/10 p-6">
+                <span className="eyebrow text-petrol/70">{tier.cadence}</span>
+                <h3 className="mt-2 text-xl font-semibold text-ink">{tier.name}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-ink/65">{tier.description}</p>
+                <ul className="mt-5 space-y-2 border-t border-ink/10 pt-4">
+                  {tier.features.map((feature) => (
+                    <li key={feature} className="flex gap-2 text-sm text-ink/75">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-petrol" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
+          <p className="mt-6 text-xs text-ink/50">
+            Full plan inclusions, pricing, and response-time commitments are detailed in your individual proposal.
+          </p>
         </div>
       </section>
 

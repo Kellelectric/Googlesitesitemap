@@ -64,6 +64,44 @@ const values = [
   },
 ]
 
+const brandPhilosophy = [
+  {
+    title: 'Safety first',
+    description: 'Every design decision is filtered through risk to life and property, not schedule or cost.',
+  },
+  {
+    title: 'Engineered precision',
+    description: 'Systems sized and specified to calculation, never estimation - with margin for growth and fault conditions.',
+  },
+  {
+    title: 'Client partnership',
+    description: 'Long-term infrastructure relationships over one-off contracts, built on transparent pricing and honest timelines.',
+  },
+]
+
+const competitiveAdvantages = [
+  {
+    title: 'Single-partner integration',
+    description:
+      'Electrical, renewable, HVAC, security, and maintenance under one accountable contract, eliminating the coordination failures of multi-vendor projects.',
+  },
+  {
+    title: 'Certified technical governance',
+    description:
+      'Every project runs through COREN-certified design review and NEMSA-compliant execution as standard, not as an upsell.',
+  },
+  {
+    title: 'Documented field discipline',
+    description:
+      'Load assessments, protection coordination, and multi-stage testing are standard practice, not exceptions requested by clients.',
+  },
+  {
+    title: 'Local presence, national reach',
+    description:
+      'Abuja-based operational base with delivery capability across Nigeria for multi-site and institutional clients.',
+  },
+]
+
 const whyChooseUs = [
   `${company.teamExperienceYears}+ years of combined engineering experience across residential, commercial, and industrial sites`,
   `COREN and NEMSA certified`,
@@ -293,6 +331,44 @@ export default function AboutPage() {
                 <MotionDiv key={value.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
                   <h3 className="text-lg font-semibold text-ink">{value.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-ink/65">{value.description}</p>
+                </MotionDiv>
+              ))}
+            </StaggerGroup>
+
+            {/* Brand Philosophy */}
+            <Reveal delay={0.1} className="mt-14">
+              <span className="eyebrow text-petrol/70">Brand philosophy</span>
+              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+                Precision as a philosophy, not a promise
+              </h2>
+              <p className="mt-4 max-w-2xl leading-relaxed text-ink/75">
+                We treat engineering as a discipline of consequence - every
+                load calculation, every cable size, every point of earthing
+                exists to protect people and property over decades of use,
+                not just through commissioning day.
+              </p>
+            </Reveal>
+            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-3">
+              {brandPhilosophy.map((item) => (
+                <MotionDiv key={item.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
+                  <h3 className="text-base font-semibold text-ink">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{item.description}</p>
+                </MotionDiv>
+              ))}
+            </StaggerGroup>
+
+            {/* Competitive Advantages */}
+            <Reveal delay={0.1} className="mt-14">
+              <span className="eyebrow text-petrol/70">What sets us apart</span>
+              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+                Competitive advantages
+              </h2>
+            </Reveal>
+            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+              {competitiveAdvantages.map((item) => (
+                <MotionDiv key={item.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
+                  <h3 className="text-base font-semibold text-ink">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{item.description}</p>
                 </MotionDiv>
               ))}
             </StaggerGroup>

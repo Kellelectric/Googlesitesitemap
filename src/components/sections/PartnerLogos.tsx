@@ -170,8 +170,22 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
             className="flex w-max items-center gap-12 animate-marquee"
             style={{
               animationDuration: `${setSlotWidth > 0 ? setSlotWidth / 60 : partners.length * 4}s`,
-              animationPlayState: paused || setSlotWidth === 0 ? 'paused' : 'running',
-              ...({ '--marquee-distance': `${setSlotWidth}px` } as CSSProperties),
+              // Runs immediately on mount using the keyframe's built-in
+              // 50%-of-track CSS fallback distance (see tailwind.config.ts)
+              // rather than waiting on the ResizeObserver measurement below
+              // — pausing until setSlotWidth > 0 left the strip frozen on
+              // its very first frame whenever that measurement effect was
+              // slow or never fired, which read as "not moving at all"
+              // rather than as a brief snap-to-correct-distance moment.
+              animationPlayState: paused ? 'paused' : 'running',
+              // Only set once real measurement exists — an explicit "0px"
+              // here (even before measurement) would override the
+              // keyframe's own 50% fallback and give the animation zero
+              // distance to travel, which is indistinguishable from not
+              // animating at all.
+              ...(setSlotWidth > 0
+                ? ({ '--marquee-distance': `${setSlotWidth}px` } as CSSProperties)
+                : {}),
             }}
           >
             {Array.from({ length: repeat }, (_, setIndex) =>

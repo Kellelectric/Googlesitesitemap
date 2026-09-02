@@ -5,7 +5,6 @@ import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { MobileCallBar } from '@/components/layout/MobileCallBar'
-import { KellAssist } from '@/components/chatbot/KellAssist'
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 import { company } from '@/content/company'
 import { organizationSchema } from '@/lib/schema'
@@ -86,7 +85,10 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <MobileCallBar />
-        <KellAssist />
+        {/* The Anthropic-powered Kell Assist widget was replaced by a
+            Zoho SalesIQ Zobot (chat widget added via Zoho's own embed
+            script, not this codebase) - see docs/next-steps.md for the
+            SalesIQ widget code snippet once it's ready to paste in. */}
         <SpeedInsights />
       </body>
     </html>

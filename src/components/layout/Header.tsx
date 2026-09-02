@@ -34,7 +34,7 @@ export function Header() {
           <a
             href={company.phoneHref}
             onClick={() => trackEvent('contact', { channel: 'phone' })}
-            className="eyebrow inline-flex items-center px-1 py-2 text-paper/80 hover:text-paper"
+            className="eyebrow inline-flex items-center px-1 py-2 text-paper/80 outline-offset-2 hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow"
           >
             {company.phone}
           </a>
@@ -47,7 +47,8 @@ export function Header() {
           type="button"
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
-          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 lg:hidden"
+          aria-controls="mobile-nav"
+          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow lg:hidden"
           onClick={() => setOpen((v) => !v)}
         >
           <span
@@ -79,14 +80,14 @@ export function Header() {
       </nav>
 
       {open && (
-        <div className="border-t border-paper/10 bg-petrol lg:hidden">
+        <div id="mobile-nav" className="border-t border-paper/10 bg-petrol lg:hidden">
           <nav className="container-content flex flex-col gap-1 py-4">
             {primaryNav.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="eyebrow flex items-center py-3 text-paper/80"
+                className="eyebrow flex items-center py-3 text-paper/80 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow"
               >
                 {link.label}
               </Link>
@@ -94,7 +95,7 @@ export function Header() {
             <a
               href={company.phoneHref}
               onClick={() => trackEvent('contact', { channel: 'phone' })}
-              className="eyebrow flex items-center py-3 text-paper/80"
+              className="eyebrow flex items-center py-3 text-paper/80 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow"
             >
               {company.phone}
             </a>

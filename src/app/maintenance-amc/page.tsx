@@ -214,7 +214,7 @@ export default function MaintenanceAmcPage() {
               </MotionDiv>
             ))}
           </StaggerGroup>
-          <p className="mt-6 text-xs text-ink/50">
+          <p className="mt-6 text-xs text-ink/60">
             Full plan inclusions, pricing, and response-time commitments are detailed in your individual proposal.
           </p>
         </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { FormEvent, useState } from 'react'
+import { cloneElement, FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { services } from '@/content/services'
 import { company } from '@/content/company'
@@ -261,7 +261,7 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
 }
 
 function inputClass(hasError: boolean) {
-  return `w-full border bg-paper px-4 py-3 text-sm text-ink placeholder:text-ink/40 focus:outline-none focus:ring-2 focus:ring-petrol ${
+  return `w-full border bg-paper px-4 py-3 text-sm text-ink placeholder:text-ink/60 focus:outline-none focus:ring-2 focus:ring-petrol ${
     hasError ? 'border-orange' : 'border-ink/15'
   }`
 }
@@ -273,13 +273,26 @@ function Field({
 }: {
   label: string
   error?: string
-  children: React.ReactNode
+  children: React.ReactElement
 }) {
+  // Derived from the label rather than a new prop at every call site — every
+  // label here is a fixed, unique string, so this stays stable and unique
+  // without touching each Field usage individually.
+  const errorId = `${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-error`
   return (
     <label className="block">
       <span className="eyebrow text-ink/60">{label}</span>
-      <span className="mt-2 block">{children}</span>
-      {error && <span className="mt-1.5 block text-xs font-semibold text-ink">{error}</span>}
+      <span className="mt-2 block">
+        {cloneElement(children, {
+          'aria-invalid': !!error,
+          'aria-describedby': error ? errorId : undefined,
+        })}
+      </span>
+      {error && (
+        <span id={errorId} role="alert" className="mt-1.5 block text-xs font-semibold text-ink">
+          {error}
+        </span>
+      )}
     </label>
   )
 }

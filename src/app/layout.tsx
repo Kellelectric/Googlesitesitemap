@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Space_Grotesk, Inter } from 'next/font/google'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { MobileCallBar } from '@/components/layout/MobileCallBar'
-import { KellAssist } from '@/components/chatbot/KellAssist'
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
 import { company } from '@/content/company'
 import { organizationSchema } from '@/lib/schema'
@@ -86,7 +86,16 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <MobileCallBar />
-        <KellAssist />
+        {/* Trial embed: the Anthropic-powered Kell Assist widget was
+            replaced by one of two candidate chat widgets still being
+            evaluated (Zoho SalesIQ or this Botpress agent) - whichever
+            one the client keeps, remove the other's embed entirely
+            rather than leaving both loaded. */}
+        <Script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js" strategy="afterInteractive" />
+        <Script
+          src="https://files.bpcontent.cloud/2026/09/02/15/20260902152603-5BYI2T6Q.js"
+          strategy="afterInteractive"
+        />
         <SpeedInsights />
       </body>
     </html>

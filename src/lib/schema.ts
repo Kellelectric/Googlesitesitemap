@@ -1,6 +1,5 @@
 import { company } from '@/content/company'
 import { services } from '@/content/services'
-import { testimonials } from '@/content/testimonials'
 
 // Business hours are authored as free text ("Monday – Friday", "8:00 AM
 // – 5:00 PM") for human display; schema.org's openingHoursSpecification
@@ -49,39 +48,6 @@ function openingHoursSpecification() {
     })
 }
 
-// Genuine reviews (see testimonials.ts's own header comment on sourcing)
-// as schema.org Review entities, so Google can consider them for review
-// rich results alongside the aggregateRating above. Only the featured
-// subset is included, matching what's already shown on-site - this adds
-// structure to real, already-published content, it doesn't publish
-// anything new. datePublished is included only for entries whose `date`
-// field is an actual date ("January 25, 2026") rather than a relative
-// string ("1 month ago") - a relative string isn't valid ISO 8601, and
-// guessing a real date for it would misrepresent when the review was left.
-function absoluteDateToIso(date: string): string | null {
-  const parsed = new Date(date)
-  return Number.isNaN(parsed.getTime()) ? null : parsed.toISOString().slice(0, 10)
-}
-
-function reviewSchema() {
-  return testimonials
-    .filter((t) => t.featured)
-    .map((t) => {
-      const isoDate = absoluteDateToIso(t.date)
-      return {
-        '@type': 'Review',
-        author: { '@type': 'Person', name: t.customerName },
-        reviewRating: {
-          '@type': 'Rating',
-          ratingValue: t.rating,
-          bestRating: 5,
-        },
-        reviewBody: t.review,
-        ...(isoDate ? { datePublished: isoDate } : {}),
-      }
-    })
-}
-
 export function organizationSchema() {
   return {
     '@context': 'https://schema.org',
@@ -105,7 +71,6 @@ export function organizationSchema() {
       ratingValue: company.trust.googleRating,
       reviewCount: company.trust.googleReviewCount,
     },
-    review: reviewSchema(),
     areaServed: company.serviceAreas.map((area) => ({
       '@type': 'City',
       name: area,

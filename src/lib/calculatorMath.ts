@@ -50,6 +50,71 @@ export type SolarSizingResult = {
   recommendedInverterWatts: number
 }
 
+// Typical combined power factor for a mixed residential/commercial load
+// (lighting, electronics, and some motor loads together) — generators are
+// rated in kVA (apparent power), while connected load is normally
+// expressed in kW (real power); the two are only equal at a power factor
+// of 1.0, which real mixed loads rarely have.
+export const DEFAULT_POWER_FACTOR = 0.8
+
+export type MotorSurgeProfile = {
+  key: string
+  label: string
+  // Typical ratio of starting (surge) current to running current for this
+  // class of motor load — a widely-used planning range, applied only to
+  // the single largest such load on the property (motors don't all start
+  // simultaneously in a well-sequenced system).
+  multiplier: number
+}
+
+export const motorSurgeProfiles: MotorSurgeProfile[] = [
+  { key: 'none', label: 'No large motor load', multiplier: 1 },
+  { key: 'small-pump-fan', label: 'Small pump or fan motor', multiplier: 3 },
+  { key: 'ac-unit', label: 'Air conditioner compressor', multiplier: 4 },
+  { key: 'borehole-pump', label: 'Borehole / submersible pump', multiplier: 5 },
+  { key: 'large-motor', label: 'Large motor or industrial compressor', multiplier: 6 },
+]
+
+export type GeneratorSizingInput = {
+  totalRunningKw: number
+  // Running kW of the single largest motor load included in
+  // totalRunningKw — must not exceed it. 0 if none selected.
+  largestMotorKw: number
+  surgeMultiplier: number
+  powerFactor?: number
+}
+
+export type GeneratorSizingResult = {
+  runningKva: number
+  surgeKva: number
+  recommendedKva: number
+}
+
+// Generator sizing needs two checks, not one: does it carry the running
+// load, and does it clear the single largest starting surge on top of
+// everything else already running. The larger of the two, converted from
+// kW to kVA via power factor, sets the minimum size — see
+// /resources/how-to-size-a-backup-generator for the full reasoning.
+export function calculateGeneratorSizing({
+  totalRunningKw,
+  largestMotorKw,
+  surgeMultiplier,
+  powerFactor = DEFAULT_POWER_FACTOR,
+}: GeneratorSizingInput): GeneratorSizingResult {
+  const clampedMotorKw = Math.min(Math.max(largestMotorKw, 0), totalRunningKw)
+  const surgeLoadKw = totalRunningKw - clampedMotorKw + clampedMotorKw * surgeMultiplier
+
+  const runningKva = totalRunningKw / powerFactor
+  const surgeKva = surgeLoadKw / powerFactor
+  const recommendedKva = Math.ceil(Math.max(runningKva, surgeKva) * 2) / 2 // round up to nearest 0.5 kVA
+
+  return {
+    runningKva: Math.round(runningKva * 10) / 10,
+    surgeKva: Math.round(surgeKva * 10) / 10,
+    recommendedKva,
+  }
+}
+
 export function calculateSolarSizing({
   criticalLoadWatts,
   backupHours,

@@ -4,6 +4,7 @@ import { CTASection } from '@/components/sections/CTASection'
 import { FAQSection } from '@/components/sections/FAQSection'
 import { LoadCalculator } from '@/components/calculators/LoadCalculator'
 import { SolarSizingCalculator } from '@/components/calculators/SolarSizingCalculator'
+import { GeneratorSizingCalculator } from '@/components/calculators/GeneratorSizingCalculator'
 import { company } from '@/content/company'
 import { calculatorsFAQs } from '@/content/faqs'
 import { breadcrumbSchema } from '@/lib/schema'
@@ -11,9 +12,9 @@ import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Load & Solar Sizing Calculators',
+  title: 'Load, Solar & Generator Calculators',
   description:
-    'Free electrical load and solar/battery sizing calculators for homes and businesses in Abuja — indicative estimates, not a substitute for a real assessment.',
+    'Free electrical load, solar/battery, and generator sizing calculators for Abuja homes and businesses — indicative estimates, not a real assessment.',
   path: '/calculators',
 })
 
@@ -40,10 +41,11 @@ export default function CalculatorsPage() {
             Load &amp; Solar Sizing Calculators
           </h1>
           <p className="mt-5 max-w-xl text-paper/70">
-            Two quick planning tools: estimate your property&rsquo;s
-            connected electrical load, or get a rough starting point for a
-            solar and battery system size. Both are indicative estimates —
-            we still run a real load assessment before quoting any job.
+            Three quick planning tools: estimate your property&rsquo;s
+            connected electrical load, get a rough starting point for a
+            solar and battery system size, or size a backup generator.
+            All three are indicative estimates — we still run a real load
+            assessment before quoting any job.
           </p>
         </div>
       </section>
@@ -60,6 +62,14 @@ export default function CalculatorsPage() {
         <div className="container-content">
           <Reveal>
             <SolarSizingCalculator dark />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <GeneratorSizingCalculator />
           </Reveal>
         </div>
       </section>

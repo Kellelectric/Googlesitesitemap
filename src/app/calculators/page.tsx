@@ -9,6 +9,7 @@ import { GeneratorSizingCalculator } from '@/components/calculators/GeneratorSiz
 import { VoltageDropCalculator } from '@/components/calculators/VoltageDropCalculator'
 import { CableSizeCalculator } from '@/components/calculators/CableSizeCalculator'
 import { BatteryRuntimeCalculator } from '@/components/calculators/BatteryRuntimeCalculator'
+import { BreakerSizeCalculator } from '@/components/calculators/BreakerSizeCalculator'
 import { company } from '@/content/company'
 import { calculatorsFAQs } from '@/content/faqs'
 import { breadcrumbSchema } from '@/lib/schema'
@@ -18,7 +19,7 @@ import { Reveal } from '@/components/ui/Reveal'
 export const metadata: Metadata = pageMetadata({
   title: 'Electrical & Solar Sizing Calculators',
   description:
-    'Free load, solar/battery, generator, voltage drop, cable size, and battery runtime calculators for Abuja - indicative estimates, not a real assessment.',
+    'Free load, solar, generator, voltage drop, cable size, battery runtime, and breaker size calculators for Abuja - indicative estimates, not a real assessment.',
   path: '/calculators',
 })
 
@@ -55,10 +56,11 @@ export default function CalculatorsPage() {
             Electrical &amp; Solar Sizing Calculators
           </h1>
           <p className="mt-5 max-w-xl text-paper/70">
-            Six quick planning tools covering connected load, solar and
+            Seven quick planning tools covering connected load, solar and
             battery sizing, backup generators, voltage drop, cable sizing,
-            and battery runtime. All are indicative estimates - we still
-            run a real load assessment before quoting any job.
+            battery runtime, and breaker sizing. All are indicative
+            estimates - we still run a real load assessment before quoting
+            any job.
           </p>
         </div>
       </section>
@@ -107,6 +109,14 @@ export default function CalculatorsPage() {
         <div className="container-content">
           <Reveal>
             <BatteryRuntimeCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <BreakerSizeCalculator />
           </Reveal>
         </div>
       </section>

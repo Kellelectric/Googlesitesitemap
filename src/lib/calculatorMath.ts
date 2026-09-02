@@ -242,6 +242,40 @@ export function calculateMinimumCableSize({
   }
 }
 
+// --- Circuit breaker sizing ---------------------------------------------
+//
+// Standard IEC miniature circuit breaker (MCB) ratings, as commonly
+// stocked — a recommendation should land on one of these, not an
+// arbitrary computed value nobody sells.
+export const STANDARD_BREAKER_SIZES_A = [6, 10, 16, 20, 25, 32, 40, 50, 63, 80, 100, 125]
+
+// Standard continuous-load margin applied before rounding up to a breaker
+// size, so the breaker isn't sitting right at its trip threshold under
+// normal running current — the same 1.25x rule of thumb used elsewhere in
+// these calculators for inverter/generator margins.
+export const BREAKER_SAFETY_MARGIN = 1.25
+
+export type BreakerSizeInput = {
+  loadCurrentAmps: number
+}
+
+export type BreakerSizeResult = {
+  minimumRatingAmps: number
+  recommendedBreakerAmps: number
+}
+
+export function calculateBreakerSize({ loadCurrentAmps }: BreakerSizeInput): BreakerSizeResult {
+  const minimumRatingAmps = Math.max(0, loadCurrentAmps) * BREAKER_SAFETY_MARGIN
+  const recommendedBreakerAmps =
+    STANDARD_BREAKER_SIZES_A.find((size) => size >= minimumRatingAmps) ??
+    STANDARD_BREAKER_SIZES_A[STANDARD_BREAKER_SIZES_A.length - 1]
+
+  return {
+    minimumRatingAmps: Math.round(minimumRatingAmps * 100) / 100,
+    recommendedBreakerAmps,
+  }
+}
+
 // --- Battery runtime ----------------------------------------------------
 
 export type BatteryRuntimeInput = {

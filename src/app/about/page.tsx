@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { PartnerLogos } from '@/components/sections/PartnerLogos'
+import { CompanyTimeline } from '@/components/sections/CompanyTimeline'
 import { company } from '@/content/company'
 import { partners } from '@/content/partners'
 import { team } from '@/content/team'
@@ -22,13 +23,41 @@ export const metadata: Metadata = pageMetadata({
 })
 
 const milestones = [
-  { year: '2010', description: 'Company founded to provide reliable electrical services in Abuja.' },
-  { year: '2012', description: 'First major residential project: electrical installations for a 50-unit housing estate.' },
-  { year: '2015', description: 'Expansion into commercial services, with contracts for office and retail projects.' },
-  { year: '2018', description: 'Industry recognition and certification for quality and safety standards.' },
-  { year: '2020', description: 'Solar and smart home solutions launched.' },
-  { year: '2023', description: 'Expansion of project work beyond Abuja.' },
-  { year: '2024', description: 'Largest project to date completed: electrical work for a 200-home estate.' },
+  {
+    year: '2010',
+    title: 'Company founded',
+    description: 'Company founded to provide reliable electrical services in Abuja.',
+  },
+  {
+    year: '2012',
+    title: 'First major residential project',
+    description: 'Electrical installations for a 50-unit housing estate.',
+  },
+  {
+    year: '2015',
+    title: 'Commercial expansion',
+    description: 'Expansion into commercial services, with contracts for office and retail projects.',
+  },
+  {
+    year: '2018',
+    title: 'Industry recognition',
+    description: 'Recognition and certification for quality and safety standards.',
+  },
+  {
+    year: '2020',
+    title: 'Solar & smart home launch',
+    description: 'Solar and smart home solutions launched.',
+  },
+  {
+    year: '2023',
+    title: 'Beyond Abuja',
+    description: 'Expansion of project work beyond Abuja.',
+  },
+  {
+    year: '2024',
+    title: 'Largest project to date',
+    description: 'Electrical work completed for a 200-home estate.',
+  },
 ]
 
 const whatWeDo = [
@@ -169,6 +198,54 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/* Leadership - full-width, own section, not squeezed into the
+          narrow main column alongside the sidebar. team.length currently
+          gives an even 3-column grid (2 full rows of 6); the responsive
+          steps below (1 / 2 / 3-4 columns) keep it balanced whether the
+          roster is trimmed or grown later. */}
+      <section id="team" className="scroll-mt-24 bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">Leadership</span>
+            <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+              Who you&rsquo;ll be working with
+            </h2>
+          </Reveal>
+          <StaggerGroup
+            className={`mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 ${
+              team.length === 3 ? 'lg:mx-auto lg:max-w-3xl' : ''
+            }`}
+          >
+            {team.map((member) => (
+              <MotionDiv
+                key={member.name}
+                variants={staggerItem}
+                className="flex h-full flex-col border border-ink/10"
+              >
+                {member.photo && (
+                  <div className="relative aspect-square w-full overflow-hidden">
+                    <Image
+                      src={member.photo}
+                      alt={member.name}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col border-t-2 border-petrol p-5">
+                  <h3 className="text-lg font-semibold text-ink">{member.name}</h3>
+                  <p className="mt-1 text-sm font-semibold text-petrol/80">{member.title}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{member.bio}</p>
+                </div>
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <CompanyTimeline milestones={milestones} />
+
       <section className="bg-paper py-20">
         <div className="container-content grid grid-cols-1 gap-16 lg:grid-cols-[1fr,380px]">
           <div className="min-w-0">
@@ -224,65 +301,6 @@ export default function AboutPage() {
                 </span>
               </p>
             </Reveal>
-
-            {/* Leadership */}
-            <div id="team" className="scroll-mt-24">
-              <Reveal delay={0.1} className="mt-14">
-                <span className="eyebrow text-petrol/70">Leadership</span>
-                <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-                  Who you&rsquo;ll be working with
-                </h2>
-              </Reveal>
-            </div>
-            <StaggerGroup className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {team.map((member) => (
-                <MotionDiv key={member.name} variants={staggerItem} className="border border-ink/10">
-                  {member.photo && (
-                    <div className="relative aspect-square w-full overflow-hidden">
-                      <Image
-                        src={member.photo}
-                        alt={member.name}
-                        fill
-                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="border-t-2 border-petrol p-5">
-                    <h3 className="text-lg font-semibold text-ink">{member.name}</h3>
-                    <p className="mt-1 text-sm font-semibold text-petrol/80">{member.title}</p>
-                    <p className="mt-3 text-sm leading-relaxed text-ink/65">{member.bio}</p>
-                  </div>
-                </MotionDiv>
-              ))}
-            </StaggerGroup>
-
-            <Reveal delay={0.1} className="mt-14">
-              <span className="eyebrow text-petrol/70">Company history</span>
-              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-                From startup to Abuja&rsquo;s go-to electrical engineering team
-              </h2>
-            </Reveal>
-
-            <div className="relative mt-10">
-              <div className="absolute bottom-2 left-[7px] top-2 w-px bg-petrol/20" aria-hidden="true" />
-              <StaggerGroup className="space-y-9">
-                {milestones.map((milestone) => (
-                  <MotionDiv key={milestone.year} variants={staggerItem} className="relative pl-8">
-                    <span
-                      className="absolute left-0 top-1 h-3.5 w-3.5 rounded-full border-2 border-petrol bg-paper"
-                      aria-hidden="true"
-                    />
-                    <span className="font-display text-xl font-semibold text-petrol">
-                      {milestone.year}
-                    </span>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink/70">
-                      {milestone.description}
-                    </p>
-                  </MotionDiv>
-                ))}
-              </StaggerGroup>
-            </div>
 
             {/* What We Do */}
             <Reveal delay={0.1} className="mt-14">

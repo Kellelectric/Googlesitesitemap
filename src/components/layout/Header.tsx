@@ -65,7 +65,7 @@ export function Header() {
       {/* Row 2 (lg+ only): full-width nav on its own line below the logo
           row, instead of squeezed to one side of it. */}
       <nav className="hidden border-t border-paper/10 lg:block">
-        <div className="container-content flex h-14 items-center justify-center gap-8">
+        <div className="container-content flex h-14 items-center justify-center gap-4 xl:gap-8">
           {primaryNav.map((link) => (
             <Link
               key={link.href}

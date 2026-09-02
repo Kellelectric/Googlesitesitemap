@@ -19,9 +19,14 @@ export const metadata: Metadata = pageMetadata({
 export default function ThankYouPage({
   searchParams,
 }: {
-  searchParams: { urgency?: string }
+  searchParams: { urgency?: string; ref?: string }
 }) {
   const isEmergency = searchParams.urgency === 'emergency'
+  // Only accept a reference that matches our own generated format
+  // (KE-YYYY-XXXXXX) — this is a display value, not a security boundary,
+  // but there's no reason to render arbitrary query-string content.
+  const reference =
+    searchParams.ref && /^KE-\d{4}-[A-Z0-9]{6}$/.test(searchParams.ref) ? searchParams.ref : null
 
   return (
     <section className="relative overflow-hidden bg-petrol text-paper">
@@ -31,6 +36,11 @@ export default function ThankYouPage({
         <h1 className="mt-3 max-w-xl text-3xl font-semibold md:text-4xl">
           Thanks — our team will review the job details and get back to you.
         </h1>
+        {reference && (
+          <p className="mt-4 text-sm text-paper/60">
+            Your reference: <span className="font-semibold text-paper">{reference}</span>
+          </p>
+        )}
         <p className="mt-5 max-w-lg text-paper/70">
           We respond by phone or email with a scoped assessment. Have your
           phone nearby: we may call to confirm details before quoting.

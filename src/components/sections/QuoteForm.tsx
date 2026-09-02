@@ -83,9 +83,10 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
         body: JSON.stringify({ ...form, renderedAt }),
       })
 
+      const resBody = await res.json().catch(() => null)
+
       if (!res.ok) {
-        const body = await res.json().catch(() => null)
-        setStatus(body?.reason === 'not_configured' ? 'not_configured' : 'error')
+        setStatus(resBody?.reason === 'not_configured' ? 'not_configured' : 'error')
         return
       }
 
@@ -98,9 +99,9 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
         urgency: form.urgency || 'unspecified',
       })
       setForm(makeInitialState())
-      router.push(
-        `/contact/thank-you?urgency=${encodeURIComponent(form.urgency || '')}`,
-      )
+      const params = new URLSearchParams({ urgency: form.urgency || '' })
+      if (resBody?.reference) params.set('ref', resBody.reference)
+      router.push(`/contact/thank-you?${params.toString()}`)
     } catch {
       setStatus('error')
     }

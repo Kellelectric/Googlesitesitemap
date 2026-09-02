@@ -409,6 +409,23 @@ Assist" chatbot (new this round — see below), and a first draft of
   hCaptcha or similar on top of this if abuse becomes a real problem after
   launch — none is wired in since that needs a real site/secret key pair
   we don't have.
+  - **Webhook hardening (optional but recommended).** Set
+    `QUOTE_WEBHOOK_SECRET` in the deployment to have the route sign each
+    forwarded payload with an `x-webhook-signature` header (HMAC-SHA256 of
+    the raw JSON body, hex-encoded, using this secret as the key). Zoho
+    Flow (or whatever receives `QUOTE_WEBHOOK_URL`) can verify that header
+    to confirm a request genuinely came from this server, not from someone
+    who obtained the webhook URL. Left unsigned if this var isn't set, so
+    existing setups keep working unchanged.
+  - Each submission gets a short reference (`KE-YYYY-XXXXXX`) generated
+    server-side, included in the forwarded webhook payload and shown back
+    to the customer on `/contact/thank-you` — useful for matching a
+    phone/WhatsApp follow-up to the right lead in Zoho.
+  - A failed forward to `QUOTE_WEBHOOK_URL` is retried once (after a
+    500ms delay) before giving up, so a single transient network blip or
+    5xx from Zoho Flow doesn't silently drop a lead. A 4xx isn't retried
+    — that means the webhook itself rejected the payload, and retrying an
+    identical request would just fail the same way.
 - **WhatsApp click-to-chat.** Confirmed WhatsApp-enabled — `company.whatsappHref`
   now points at the real business short-link (`wa.me/message/74H7FYXECPMXH1`)
   pulled from the live site.

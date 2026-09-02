@@ -71,7 +71,6 @@ const whyChooseUs = [
   `Emergency response target of ${company.emergencyResponseTarget}`,
   `${company.trust.projectsCompleted}+ projects completed`,
   `Service coverage across all of Abuja, plus project work in ${company.serviceRegion}`,
-  'Electronic invoicing and project tracking from anywhere in the world, via our Zoho Books client portal',
 ]
 
 const teamRoles = [

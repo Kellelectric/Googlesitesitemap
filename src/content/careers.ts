@@ -24,8 +24,11 @@
 //   Supervisor, Solar & Inverter Installation Technician) are
 //   client-confirmed as genuinely open right now, not placeholder.
 //
-// Still placeholder/unconfirmed: `internship`'s `duration` and
-// `stipend`.
+// - `internship`: `duration` (6 months, matching Industrial Training's
+//   duration) and `stipend` (a tiered range by intern skill/experience
+//   level, ₦30,000-₦100,000/month) - client-confirmed.
+//
+// All career tracks are now confirmed real. No placeholder fields remain.
 export type CareerTrack = {
   slug: string
   name: string
@@ -40,9 +43,8 @@ export type CareerTrack = {
   intake?: string
   eligibility?: string[]
   applicationChecklist?: string[]
-  // True only when duration/fee/etc. below are confirmed real (currently
-  // just `apprenticeship`) — controls whether the detail page shows the
-  // "indicative, unconfirmed" caveat or not.
+  // True only when duration/fee/etc. below are confirmed real — controls
+  // whether the detail page shows the "indicative, unconfirmed" caveat.
   programmeDetailsConfirmed?: boolean
 }
 
@@ -66,8 +68,8 @@ export const careerTracks: CareerTrack[] = [
     ],
     applicationFormUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
-    duration: '8–12 weeks',
-    stipend: 'Modest stipend to cover transport and feeding',
+    duration: '6 months, same duration as our Industrial Training placements - no shorter placements accepted',
+    stipend: '₦30,000-₦40,000/month (beginner/student), ₦40,000-₦60,000 (technical intern), ₦60,000-₦80,000 (skilled, limited supervision), or ₦80,000-₦100,000/month (exceptional intern/graduate trainee) - based on experience and skill level',
     intake: 'Aligned to academic term/semester breaks (typically two intakes a year)',
     eligibility: [
       'Currently enrolled in an electrical/electronic engineering, technical, or vocational programme',
@@ -75,6 +77,7 @@ export const careerTracks: CareerTrack[] = [
       'Able to commit to full placement days on-site for the duration',
       'No prior professional experience required',
     ],
+    programmeDetailsConfirmed: true,
   },
   {
     slug: 'industrial-training',

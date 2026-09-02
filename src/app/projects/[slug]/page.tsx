@@ -17,8 +17,6 @@ export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }))
 }
 
-// See src/content/projects.ts: placeholder case study, invented at the
-// client's explicit request, pending their review — keep noIndex on.
 export function generateMetadata({ params }: Props): Metadata {
   const project = getProjectBySlug(params.slug)
   if (!project) return {}
@@ -27,7 +25,6 @@ export function generateMetadata({ params }: Props): Metadata {
     description: project.summary,
     path: `/projects/${project.slug}`,
     image: project.image,
-    noIndex: true,
   })
 }
 

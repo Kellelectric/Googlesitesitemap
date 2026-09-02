@@ -4,6 +4,7 @@ import { industries } from '@/content/industries'
 import { articles } from '@/content/resources'
 import { careerTracks } from '@/content/careers'
 import { areas } from '@/content/areas'
+import { projects } from '@/content/projects'
 import { company } from '@/content/company'
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -22,6 +23,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/hse`, lastModified: new Date(), priority: 0.6, changeFrequency: 'monthly' },
     { url: `${base}/developers-architects-contractors`, lastModified: new Date(), priority: 0.6, changeFrequency: 'monthly' },
     { url: `${base}/industries`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
+    { url: `${base}/projects`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/resources`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/faq`, lastModified: new Date(), priority: 0.6, changeFrequency: 'monthly' },
     { url: `${base}/testimonials`, lastModified: new Date(), priority: 0.6, changeFrequency: 'weekly' },
@@ -66,6 +68,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly',
   }))
 
+  const projectRoutes: MetadataRoute.Sitemap = projects.map((project) => ({
+    url: `${base}/projects/${project.slug}`,
+    lastModified: new Date(),
+    priority: 0.6,
+    changeFrequency: 'monthly',
+  }))
+
   return [
     ...staticRoutes,
     ...serviceRoutes,
@@ -73,5 +82,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...articleRoutes,
     ...careerRoutes,
     ...areaRoutes,
+    ...projectRoutes,
   ]
 }

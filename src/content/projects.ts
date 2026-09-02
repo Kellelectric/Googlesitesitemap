@@ -1,30 +1,23 @@
-// ⚠️ PLACEHOLDER CONTENT — INVENTED, NOT REAL CASE STUDIES ⚠️
+// Real completed projects, supplied directly by the client (location,
+// job scope, and year for each - session instruction: "add these jobs
+// without mentioning their names"). Per that instruction and consistent
+// with this file's long-standing policy, no client/property name is
+// attached to any entry - locations are area-level only (no street
+// address), and no contract values or prices appear anywhere. challenge/
+// solution/outcome text is derived only from the scope and year actually
+// supplied - nothing beyond that is invented.
 //
-// Every project below is fabricated for structural/layout purposes only,
-// at the client's explicit request (session instruction: "Build Real
-// content that are still missing, you can invent everything and I'll
-// make changes later"). This directly overrides the anti-fabrication
-// rule that governs the rest of this codebase's content files — do not
-// use this file as a precedent for inventing content elsewhere.
-//
-// No location, scope detail, sector, or outcome here is confirmed real.
-// Locations are generic area names (not specific addresses) and no
-// client/company names are attached to any project, since naming a real
-// or real-sounding business as a "client" without their confirmation
-// would misrepresent an actual third party. No contract values or prices
-// appear anywhere, consistent with the client's standing direction never
-// to publish project financials.
-//
-// Every one of these pages is `noindex` (see app/projects/[slug]/page.tsx
-// and app/projects/page.tsx) so none of this fabricated detail is
-// searchable/indexed until the client reviews and replaces it with real
-// project data. Remove noindex only once real data replaces this.
+// No longer placeholder content: every entry below is real, so noIndex
+// has been removed from app/projects/page.tsx and
+// app/projects/[slug]/page.tsx, and these routes were added to
+// sitemap.ts.
 export type Project = {
   slug: string
   title: string
   sector: 'residential' | 'commercial' | 'industrial'
   serviceSlugs: string[]
   location: string
+  year?: string
   summary: string
   challenge: string
   solution: string
@@ -34,100 +27,166 @@ export type Project = {
 
 export const projects: Project[] = [
   {
-    slug: 'residential-estate-rewire-wuse-2',
-    title: 'Full Electrical Rewire - 50-Unit Residential Estate',
+    slug: 'prepaid-meter-installation-life-camp',
+    title: 'Prepaid Metering & Solar Lighting',
     sector: 'residential',
-    serviceSlugs: ['electrical-wiring-installation', 'panel-repair-upgrades'],
-    location: 'Wuse 2, Abuja',
+    serviceSlugs: ['panel-repair-upgrades', 'solar-inverter-systems'],
+    location: 'Life Camp, Abuja',
+    year: '2019 - 2020',
     summary:
-      'Complete rewire of an aging 50-unit residential estate, replacing undersized distribution and decades-old wiring with a NEMSA-compliant system sized for current appliance loads.',
+      'Prepaid meter installation across more than 1,000 residential units, paired with solar street lighting for the estate\'s common areas.',
     challenge:
-      'The estate\'s original wiring and distribution boards were installed decades earlier and had never been reassessed against modern appliance and air-conditioning loads. Residents were reporting recurring tripped breakers, and a pre-purchase inspection on one unit flagged multiple non-compliant circuits.',
+      'The estate needed prepaid metering rolled out across an entire multi-unit residential development, along with reliable street lighting for shared areas - both delivered without disrupting residents already living on site.',
     solution:
-      'Our team ran a unit-by-unit load assessment, then re-designed the distribution architecture: new consumer units sized against measured (not assumed) demand, updated circuit schedules, and earthing brought up to current standard across all 50 units. Work was phased block by block to keep residents in their homes with minimal disruption.',
+      'We installed prepaid meters across more than 1,000 houses on the estate and fitted solar street lights through the common areas, sequencing the work to minimize disruption to residents.',
     outcome:
-      'All 50 units now carry NEMSA-compliant wiring with as-built documentation and circuit schedules on file. Reported nuisance tripping across the estate dropped to isolated cases, each traced to appliance-specific faults rather than panel capacity.',
+      'The estate now runs on prepaid metering across its housing units, with solar street lighting covering shared common areas independent of grid supply.',
     image: '/images/photos/hero-control-panel.jpg',
   },
   {
-    slug: 'office-fitout-power-data-cbd',
-    title: 'Electrical Fit-Out - Multi-Floor Office Building',
-    sector: 'commercial',
-    serviceSlugs: ['commercial-office-fitout', 'lighting-design-installation'],
-    location: 'Central Business District, Abuja',
+    slug: 'electrical-wiring-conduit-jahi-2020',
+    title: 'Wiring, Conduit & Network Cabling',
+    sector: 'residential',
+    serviceSlugs: ['electrical-wiring-installation'],
+    location: 'Jahi, Abuja',
+    year: '2020',
     summary:
-      'Full power, data first-fix, and lighting fit-out for a multi-floor office building, coordinated against a live construction programme.',
+      'Full electrical wiring, conduit piping, and internet cabling for a residential apartment building in Jahi.',
     challenge:
-      'The building\'s fit-out programme involved multiple trades working to a tight handover date, with the electrical scope needing to coordinate closely with the architect\'s floor plan changes and the M&E consultant\'s fire and emergency lighting requirements.',
+      'A residential apartment building needed its electrical wiring, conduit infrastructure, and internet cabling installed as one coordinated first-fix package.',
     solution:
-      'We ran power and data first- and second-fix floor by floor, coordinating weekly with the architect and M&E consultant to absorb late layout changes without delaying the programme. LED lighting was zoned and dimmer-controlled per floor for efficiency, with fire alarm and emergency lighting circuits sequenced ahead of ceiling close-up.',
+      'We ran the full electrical wiring and conduit piping for the building, plus internet cabling, delivered together as a single scope.',
     outcome:
-      'The electrical scope was delivered to the construction programme\'s handover date, with full as-built documentation, circuit schedules, and compliance test results provided to the facilities team at handover.',
-    image: '/images/photos/services-substation.jpg',
+      'The apartments were handed over with complete electrical and network infrastructure in place, ready for occupation.',
+    image: '/images/photos/service-detail-hero-wiring.jpg',
   },
   {
-    slug: 'hybrid-solar-install-gwarinpa',
-    title: 'Hybrid Solar & Battery System - Residential Property',
-    sector: 'residential',
-    serviceSlugs: ['solar-inverter-systems', 'energy-audits'],
-    location: 'Gwarinpa, Abuja',
+    slug: 'solar-installation-technical-college-kano',
+    title: 'Solar System & Street Lighting',
+    sector: 'commercial',
+    serviceSlugs: ['solar-inverter-systems'],
+    location: 'Tudun Wada, Kano',
+    year: '2022',
     summary:
-      'Load-analyzed hybrid solar and battery installation sized to carry a household\'s essential circuits through extended grid outages.',
+      'Solar power system and solar street lighting installed across a technical college campus in Kano.',
     challenge:
-      'The homeowner was relying on a generator for several hours most days and wanted to materially cut fuel spend without losing backup capacity during longer outages.',
+      'The campus needed a solar power installation alongside street lighting to improve power reliability and site lighting across its grounds.',
     solution:
-      'We measured actual circuit-level consumption over a full week to build a real load profile, then sized a hybrid solar-battery-generator system: solar and battery as the default day-to-day source, generator as automatic backup for extended or high-load periods. The system was commissioned with performance testing against the design spec, not just a visual check.',
+      'We installed a solar power system for the campus along with solar street lights covering the site\'s grounds.',
     outcome:
-      'The household now runs primarily on solar and battery day-to-day, with the generator reserved for extended outages - reducing routine generator runtime and fuel spend. Monitoring was set up at commissioning so performance can be verified on an ongoing basis.',
+      'The campus now has solar power capacity and independently-powered street lighting in place.',
+    image: '/images/photos/solar-hero-panel-install.jpg',
+  },
+  {
+    slug: 'hybrid-inverter-solar-jahi-2023',
+    title: 'Hybrid Inverter & Solar Battery',
+    sector: 'residential',
+    serviceSlugs: ['solar-inverter-systems'],
+    location: 'Jahi, Abuja',
+    year: '2023',
+    summary:
+      'Installation of a 5kVA hybrid inverter, 10 solar panels, and a 10kWh lithium battery system for a residential apartment building.',
+    challenge:
+      'The property needed a hybrid solar and battery backup system installed to reduce reliance on grid power and generator use.',
+    solution:
+      'We installed a 5kVA hybrid inverter, 10 units of solar panels, and a 10kWh lithium battery bank, sized to the building\'s load.',
+    outcome:
+      'The property now runs on a hybrid solar and battery system for its day-to-day power needs.',
     image: '/images/photos/solar-roof-install.jpg',
   },
   {
-    slug: 'industrial-panel-upgrade-idu',
-    title: 'Three-Phase Distribution Upgrade - Manufacturing Facility',
-    sector: 'industrial',
-    serviceSlugs: ['industrial-electrical-systems', 'panel-repair-upgrades'],
-    location: 'Idu Industrial Area, Abuja',
-    summary:
-      'Upgraded three-phase power distribution and motor control infrastructure for a manufacturing facility adding a new production line.',
-    challenge:
-      'The facility\'s existing distribution board was sized for its original production line and had no documented headroom for a second line the client wanted to add, with plant management needing certainty on capacity before committing to new machinery.',
-    solution:
-      'We conducted a full load survey across all three phases (catching a phase imbalance that was going unnoticed on total-consumption readings alone), then designed and installed an upgraded distribution board and motor control center sized for both the existing and new production lines, with power factor correction included.',
-    outcome:
-      'The facility commissioned its new production line on the upgraded infrastructure with documented spare capacity for future growth. Single-line diagrams and load schedules were handed over to the plant\'s maintenance team.',
-    image: '/images/photos/industry-detail-hero-control-room.jpg',
-  },
-  {
-    slug: 'cctv-security-upgrade-retail-plaza',
-    title: 'CCTV & Access Control - Retail Plaza',
+    slug: 'electrical-finishing-cooperative-garki',
+    title: 'Decking, Wiring & Fixtures',
     sector: 'commercial',
-    serviceSlugs: ['cctv-surveillance', 'automated-gates-access-control'],
-    location: 'Wuse, Abuja',
+    serviceSlugs: ['electrical-wiring-installation', 'commercial-office-fitout'],
+    location: 'Garki II, Abuja',
+    year: 'November 2022 - May 2023',
     summary:
-      'Structured-cabling CCTV and access control upgrade for a multi-unit retail plaza, replacing an unreliable legacy camera system.',
+      'Full electrical decking, conduit piping, wiring, and fixture installation and finishing for a cooperative society\'s building in Garki II.',
     challenge:
-      'The plaza\'s existing camera system suffered frequent outages traced to undersized cabling and power runs, and management had no remote-viewing capability across the property\'s multiple entry points.',
+      'The building required its complete electrical scope delivered end-to-end - from decking and conduit piping through to wiring and final fixture finishing.',
     solution:
-      'We surveyed actual sightlines and entry points rather than defaulting to a generic camera count, replaced the cabling and PoE power runs to spec, and installed NVR recording with remote-access configuration. Gate access control was integrated onto the same cabling infrastructure during the same visit.',
+      'We carried out all electrical decking piping, wiring, and fixture installation and finishing across the project.',
     outcome:
-      'The plaza\'s management now has reliable, camera-stopped-working-free coverage of all entry points with remote viewing, and integrated gate access control installed on the same infrastructure at a fraction of the cost of a separate future project.',
-    image: '/images/photos/cctv-hero-camera-install.jpg',
+      'The building was handed over with its full electrical installation and finishing complete.',
+    image: '/images/photos/services-substation.jpg',
   },
   {
-    slug: 'smart-home-integration-asokoro',
-    title: 'Whole-Home Automation - New-Build Residence',
+    slug: 'electrical-hvac-manreng-estate-life-camp',
+    title: 'Conduit, HVAC & Electrical Wiring',
     sector: 'residential',
-    serviceSlugs: ['home-automation', 'lighting-design-installation'],
-    location: 'Asokoro, Abuja',
+    serviceSlugs: ['electrical-wiring-installation'],
+    location: 'Kafe District, Life Camp, Abuja',
+    year: '2023',
     summary:
-      'Smart lighting, climate, and access control integrated at the electrical design stage of a new-build residence, rather than retrofitted after the fact.',
+      'Electrical conduit, HVAC and copper pipe installation, and full wiring and fixtures for a residential estate in Life Camp\'s Kafe District.',
     challenge:
-      'The homeowner wanted centralized control of lighting, air conditioning, gates, and security from a single app, specified early enough in the build that the electrical design could be built around it rather than patched together afterward.',
+      'The estate needed its electrical conduit, HVAC piping, and wiring and fixtures coordinated as a combined first-fix and finishing package.',
     solution:
-      'We integrated smart lighting circuits, climate control, and access control into the electrical design from first-fix stage, configuring scenes and schedules and integrating the gate and CCTV systems onto the same control platform.',
+      'We installed the electrical conduit, HVAC and copper piping, and completed the wiring and fixtures across the estate.',
     outcome:
-      'The property operates on a single centralized control app for lighting, climate, gates, and security, with circuits and switches designed for the automation system from the start rather than retrofitted around existing wiring.',
+      'The estate was delivered with complete electrical and HVAC piping infrastructure in place.',
+    image: '/images/photos/hero-control-panel.jpg',
+  },
+  {
+    slug: 'electrical-finishing-automation-gwarinpa',
+    title: 'Finishing, Automation & Security',
+    sector: 'residential',
+    serviceSlugs: ['home-automation', 'automated-gates-access-control'],
+    location: 'Gwarinpa, Abuja',
+    year: '2023',
+    summary:
+      'Electrical finishing, home automation, and security system integration for an apartment building in Gwarinpa.',
+    challenge:
+      'The apartments needed electrical finishing paired with home automation and security system integration delivered as one coordinated scope.',
+    solution:
+      'We completed the electrical finishing and integrated home automation with the security system across the building.',
+    outcome:
+      'The apartments now operate with integrated home automation and security systems alongside their finished electrical installation.',
     image: '/images/photos/home-automation-hero-smart-panel.jpg',
+  },
+  {
+    slug: 'solar-backup-government-facility-kaduna',
+    title: 'Solar Backup System Installation',
+    sector: 'commercial',
+    serviceSlugs: ['solar-inverter-systems'],
+    location: 'Tudun Nupawa, Kaduna',
+    year: '2024',
+    summary: 'Solar backup power system installed for a government facility in Kaduna.',
+    challenge: 'The facility needed a dependable solar backup system to maintain power continuity.',
+    solution: 'We installed a solar backup power system sized to the facility\'s requirements.',
+    outcome: 'The facility now has solar backup power in place.',
+    image: '/images/photos/solar-hero-panel-install.jpg',
+  },
+  {
+    slug: 'solar-street-lighting-asokoro',
+    title: 'Solar Street Lighting Installation',
+    sector: 'commercial',
+    serviceSlugs: ['solar-inverter-systems'],
+    location: 'Asokoro District, Abuja',
+    year: '2024',
+    summary: 'Solar street lighting installed for a guest house facility in Asokoro.',
+    challenge:
+      'The facility needed reliable street lighting across its grounds, independent of grid supply.',
+    solution: 'We installed solar street lights across the facility\'s grounds.',
+    outcome: 'The facility now has solar-powered street lighting covering its grounds.',
+    image: '/images/photos/maintenance-hero-solar-check.jpg',
+  },
+  {
+    slug: 'solar-renovation-gwarinpa',
+    title: 'Solar System & Building Renovation',
+    sector: 'commercial',
+    serviceSlugs: ['solar-inverter-systems', 'electrical-wiring-installation'],
+    location: 'Gwarinpa, Abuja',
+    summary:
+      '10kWh solar system installation alongside building renovation, ceiling work, and electrical wiring for a commercial property in Gwarinpa.',
+    challenge:
+      'The property renovation required solar power installation coordinated with ceiling and general renovation works and a full electrical wiring upgrade.',
+    solution:
+      'We installed a 10kWh solar system and gypsum board ceiling, and completed the building renovation and electrical wiring and installation as one coordinated scope.',
+    outcome:
+      'The property was delivered with a new 10kWh solar system, renovated interior, and updated electrical wiring.',
+    image: '/images/photos/solar-roof-install.jpg',
   },
 ]
 

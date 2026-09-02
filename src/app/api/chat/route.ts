@@ -106,6 +106,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
   }
 
+  const workspaceId = process.env.ANTHROPIC_WORKSPACE_ID
+
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -113,6 +115,10 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
+        // Required when the key is identity-linked across multiple Console
+        // workspaces rather than scoped to one - without this the Anthropic
+        // API rejects the request with a 400 asking for it explicitly.
+        ...(workspaceId ? { 'anthropic-workspace-id': workspaceId } : {}),
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',

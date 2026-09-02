@@ -121,6 +121,13 @@ export default function AboutPage() {
             Engineering Power. Building Trust.
           </h1>
           <p className="mt-5 max-w-xl text-paper/70">{company.positioning}</p>
+          <a
+            href="/downloads/kell-electricals-company-profile.pdf"
+            download
+            className="link-underline mt-6 inline-flex items-center gap-2 text-sm font-semibold text-yellow"
+          >
+            Download Company Profile (PDF)
+          </a>
         </div>
       </section>
 

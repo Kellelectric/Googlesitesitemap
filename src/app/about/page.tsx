@@ -264,18 +264,25 @@ export default function AboutPage() {
               </h2>
             </Reveal>
 
-            <StaggerGroup className="mt-8 space-y-6 border-l-2 border-petrol/20 pl-6">
-              {milestones.map((milestone) => (
-                <MotionDiv key={milestone.year} variants={staggerItem}>
-                  <span className="font-display text-sm font-semibold text-petrol">
-                    {milestone.year}
-                  </span>
-                  <p className="mt-1 text-sm leading-relaxed text-ink/70">
-                    {milestone.description}
-                  </p>
-                </MotionDiv>
-              ))}
-            </StaggerGroup>
+            <div className="relative mt-10">
+              <div className="absolute bottom-2 left-[7px] top-2 w-px bg-petrol/20" aria-hidden="true" />
+              <StaggerGroup className="space-y-9">
+                {milestones.map((milestone) => (
+                  <MotionDiv key={milestone.year} variants={staggerItem} className="relative pl-8">
+                    <span
+                      className="absolute left-0 top-1 h-3.5 w-3.5 rounded-full border-2 border-petrol bg-paper"
+                      aria-hidden="true"
+                    />
+                    <span className="font-display text-xl font-semibold text-petrol">
+                      {milestone.year}
+                    </span>
+                    <p className="mt-1.5 text-sm leading-relaxed text-ink/70">
+                      {milestone.description}
+                    </p>
+                  </MotionDiv>
+                ))}
+              </StaggerGroup>
+            </div>
 
             {/* What We Do */}
             <Reveal delay={0.1} className="mt-14">

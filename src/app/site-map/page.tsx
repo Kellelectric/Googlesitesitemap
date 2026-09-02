@@ -32,6 +32,7 @@ const groups: LinkGroup[] = [
       { label: 'About Us', href: '/about' },
       { label: 'Certifications & Compliance', href: '/certifications-compliance' },
       { label: 'Maintenance & AMC', href: '/maintenance-amc' },
+      { label: 'Health, Safety & Environment', href: '/hse' },
       { label: 'FAQ', href: '/faq' },
       { label: 'Testimonials', href: '/testimonials' },
       { label: 'Load & Solar Calculators', href: '/calculators' },

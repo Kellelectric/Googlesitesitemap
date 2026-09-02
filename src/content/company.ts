@@ -65,12 +65,21 @@ export const company = {
   // that reason.
   serviceAreas: [
     'Wuse 2',
+    'Wuse',
     'Gwarinpa',
     'Central Business District',
     'Guzape',
     'Asokoro',
     'Maitama',
     'Katampe',
+    'Garki',
+    'Jabi',
+    'Utako',
+    'Lokogoma',
+    'Apo',
+    'Life Camp',
+    'Kubwa',
+    'Lugbe',
   ],
   // What's covered beyond Abuja itself — confirmed directly by the
   // client: neighboring states, then project work nationwide. Does NOT

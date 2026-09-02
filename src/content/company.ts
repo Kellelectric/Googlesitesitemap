@@ -8,6 +8,12 @@ export const company = {
   phone: '+234 814 020 5895',
   phoneHref: 'tel:+2348140205895',
   whatsappHref: 'https://wa.me/message/74H7FYXECPMXH1',
+  // The Zoho Books client portal login URL, set as NEXT_PUBLIC_CLIENT_PORTAL_URL
+  // in the deployment environment once the client supplies it. The website
+  // must never build its own client portal — this is a link out to the
+  // existing Zoho Books portal only. Left undefined (not a guessed URL)
+  // until configured; call sites fall back to a "contact us" CTA.
+  clientPortalUrl: process.env.NEXT_PUBLIC_CLIENT_PORTAL_URL || undefined,
   email: 'info@kellelectricals.com',
   emergencyEmail: 'emergency@kellelectricals.com',
   emergencyResponseTarget: 'within 30 minutes',

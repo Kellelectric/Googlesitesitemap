@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { clientPortal } from '@/content/clientPortal'
+import { company } from '@/content/company'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export function ClientPortalFeature() {
@@ -15,9 +16,20 @@ export function ClientPortalFeature() {
           </h2>
           <p className="mt-5 max-w-xl leading-relaxed text-paper/70">{clientPortal.body}</p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Button href="/contact" variant="primary">
-              Get Set Up
-            </Button>
+            {company.clientPortalUrl ? (
+              <Button
+                href={company.clientPortalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="primary"
+              >
+                Client Login
+              </Button>
+            ) : (
+              <Button href="/contact" variant="primary">
+                Get Set Up
+              </Button>
+            )}
           </div>
         </Reveal>
 

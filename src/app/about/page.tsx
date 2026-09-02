@@ -172,12 +172,14 @@ export default function AboutPage() {
             </Reveal>
 
             {/* Leadership */}
-            <Reveal delay={0.1} className="mt-14">
-              <span className="eyebrow text-petrol/70">Leadership</span>
-              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-                Who you&rsquo;ll be working with
-              </h2>
-            </Reveal>
+            <div id="team" className="scroll-mt-24">
+              <Reveal delay={0.1} className="mt-14">
+                <span className="eyebrow text-petrol/70">Leadership</span>
+                <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+                  Who you&rsquo;ll be working with
+                </h2>
+              </Reveal>
+            </div>
             <StaggerGroup className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {team.map((member) => (
                 <MotionDiv key={member.name} variants={staggerItem} className="border border-ink/10">

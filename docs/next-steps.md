@@ -406,9 +406,11 @@ Assist" chatbot (new this round — see below), and a first draft of
   submissions completed faster than 3 seconds after the form renders),
   and a best-effort in-memory per-IP rate limit (5 requests / 10 minutes;
   resets on cold start, so it will not stop a distributed attack). Add
-  hCaptcha or similar on top of this if abuse becomes a real problem after
-  launch — none is wired in since that needs a real site/secret key pair
-  we don't have.
+  hCaptcha — wired in, gated on env vars. Set `NEXT_PUBLIC_HCAPTCHA_SITE_KEY`
+  (client-side, embedded in the page) and `HCAPTCHA_SECRET_KEY`
+  (server-side, verifies the token against hCaptcha's API in
+  `app/api/quote/route.ts`) to activate it — until both are set, the form
+  works exactly as before with no widget shown and no token required.
   - **Webhook hardening (optional but recommended).** Set
     `QUOTE_WEBHOOK_SECRET` in the deployment to have the route sign each
     forwarded payload with an `x-webhook-signature` header (HMAC-SHA256 of

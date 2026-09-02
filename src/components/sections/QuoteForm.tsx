@@ -2,9 +2,29 @@
 
 import { cloneElement, FormEvent, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Script from 'next/script'
 import { services } from '@/content/services'
 import { company } from '@/content/company'
 import { trackEvent } from '@/lib/analytics'
+
+// hCaptcha exposes itself as a global once its script loads, not an npm
+// package — matches this file's existing pattern of talking to gtag
+// (see lib/analytics.ts) the same way.
+declare global {
+  interface Window {
+    hcaptcha?: {
+      getResponse: (widgetId?: string) => string
+      reset: (widgetId?: string) => void
+    }
+  }
+}
+
+// Only set once a real hCaptcha site key exists in the deployment env —
+// see docs/next-steps.md. Undefined here means the widget doesn't render
+// and the server doesn't require a token either (see HCAPTCHA_SECRET_KEY
+// in app/api/quote/route.ts), so the form works exactly as before until
+// both are configured.
+const HCAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY
 
 // Set once on mount and sent back with the submission. The API rejects
 // submissions completed faster than a human plausibly could — see
@@ -49,6 +69,7 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
   const router = useRouter()
   const [form, setForm] = useState<FormState>(() => makeInitialState(initialServiceSlug))
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
+  const [captchaError, setCaptchaError] = useState<string | undefined>()
   const [status, setStatus] = useState<FormStatus>('idle')
   const renderedAt = useFormRenderedAt()
 
@@ -68,7 +89,15 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
     if (!form.location.trim()) next.location = 'Enter the job location'
     if (!form.details.trim()) next.details = 'Add a short description of the job'
     setErrors(next)
-    return Object.keys(next).length === 0
+
+    let captchaOk = true
+    if (HCAPTCHA_SITE_KEY) {
+      const token = window.hcaptcha?.getResponse()
+      captchaOk = !!token
+      setCaptchaError(captchaOk ? undefined : "Verify you're not a robot")
+    }
+
+    return Object.keys(next).length === 0 && captchaOk
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -77,16 +106,29 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
 
     setStatus('submitting')
     try {
+      const captchaToken = HCAPTCHA_SITE_KEY ? window.hcaptcha?.getResponse() : undefined
       const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, renderedAt }),
+        body: JSON.stringify({ ...form, renderedAt, captchaToken }),
       })
 
       const resBody = await res.json().catch(() => null)
 
       if (!res.ok) {
-        setStatus(resBody?.reason === 'not_configured' ? 'not_configured' : 'error')
+        // A used/expired token can't be resubmitted — reset so the next
+        // attempt (whatever the failure reason) gets a fresh one.
+        window.hcaptcha?.reset()
+        setStatus(
+          resBody?.reason === 'not_configured'
+            ? 'not_configured'
+            : resBody?.reason === 'captcha_failed'
+              ? 'idle'
+              : 'error',
+        )
+        if (resBody?.reason === 'captcha_failed') {
+          setCaptchaError('Verification failed - please try again')
+        }
         return
       }
 
@@ -241,6 +283,18 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
           live wiring), call {company.phone} directly rather than waiting
           for a form response.
         </p>
+      )}
+
+      {HCAPTCHA_SITE_KEY && (
+        <div>
+          <Script src="https://js.hcaptcha.com/1/api.js" strategy="afterInteractive" async defer />
+          <div className="h-captcha" data-sitekey={HCAPTCHA_SITE_KEY} />
+          {captchaError && (
+            <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">
+              {captchaError}
+            </span>
+          )}
+        </div>
       )}
 
       <button

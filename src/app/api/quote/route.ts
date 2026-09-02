@@ -23,6 +23,26 @@ function signPayload(payload: string, secret: string): string {
   return createHmac('sha256', secret).update(payload).digest('hex')
 }
 
+// Verifies a token against hCaptcha's server, same env-var-gated pattern as
+// QUOTE_WEBHOOK_URL/QUOTE_WEBHOOK_SECRET above — only called when
+// HCAPTCHA_SECRET_KEY is actually set, so this is a no-op until real
+// hCaptcha keys exist. See docs/next-steps.md for setup.
+async function verifyHCaptcha(token: string, secret: string): Promise<boolean> {
+  try {
+    const res = await fetch('https://hcaptcha.com/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ secret, response: token }),
+      signal: AbortSignal.timeout(8000),
+    })
+    const data = (await res.json()) as { success?: boolean }
+    return data.success === true
+  } catch (error) {
+    console.error('hCaptcha verification request failed', error)
+    return false
+  }
+}
+
 type QuotePayload = {
   name: string
   phone: string
@@ -34,6 +54,7 @@ type QuotePayload = {
   details: string
   website?: string // honeypot — real users never fill this in
   renderedAt?: number // client timestamp when the form mounted
+  captchaToken?: string // hCaptcha response token, only present when configured
 }
 
 function isValidPayload(body: unknown): body is QuotePayload {
@@ -94,6 +115,16 @@ export async function POST(request: NextRequest) {
     const elapsedSeconds = (Date.now() - body.renderedAt) / 1000
     if (elapsedSeconds < MIN_SUBMIT_SECONDS) {
       return NextResponse.json({ ok: true })
+    }
+  }
+
+  // hCaptcha: only enforced once a real secret key is configured, so this
+  // stays a no-op (form works exactly as before) until then.
+  const hcaptchaSecret = process.env.HCAPTCHA_SECRET_KEY
+  if (hcaptchaSecret) {
+    const token = typeof body.captchaToken === 'string' ? body.captchaToken : ''
+    if (!token || !(await verifyHCaptcha(token, hcaptchaSecret))) {
+      return NextResponse.json({ ok: false, reason: 'captcha_failed' }, { status: 422 })
     }
   }
 

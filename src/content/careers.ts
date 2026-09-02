@@ -15,10 +15,14 @@
 //   apprenticeship), and `applicationChecklist`.
 // - All tracks: applications are processed entirely online via the
 //   linked Google Form — no in-person/paper application step.
+// - `internship` and `industrial-training` `eligibility` lists and
+//   `intake` windows — client-approved recommendations (client signed
+//   off on Claude's suggested eligibility criteria and confirmed
+//   Internship intake is tied to academic term/semester breaks,
+//   matching Industrial Training's SIWES-calendar pattern).
 //
-// Still placeholder/unconfirmed: `internship`'s duration, stipend, and
-// intake window; `industrial-training`'s and `internship`'s `intake` and
-// `eligibility` lists; the `job-openings` role list.
+// Still placeholder/unconfirmed: `internship`'s `duration` and
+// `stipend`; the `job-openings` role list.
 export type CareerTrack = {
   slug: string
   name: string
@@ -61,11 +65,12 @@ export const careerTracks: CareerTrack[] = [
       'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
     duration: '8–12 weeks',
     stipend: 'Modest stipend to cover transport and feeding',
-    intake: 'Rolling intake, reviewed quarterly',
+    intake: 'Aligned to academic term/semester breaks (typically two intakes a year)',
     eligibility: [
-      'Currently enrolled in an engineering, technical, or vocational programme',
+      'Currently enrolled in an electrical/electronic engineering, technical, or vocational programme',
       'Basic understanding of electrical fundamentals (coursework or self-study)',
-      'Able to commit to full placement days on-site',
+      'Able to commit to full placement days on-site for the duration',
+      'No prior professional experience required',
     ],
   },
   {
@@ -91,8 +96,9 @@ export const careerTracks: CareerTrack[] = [
     intake: 'Aligned to the academic SIWES calendar (typically two intakes a year)',
     eligibility: [
       'Enrolled in a polytechnic or university programme with a mandatory SIWES/industrial-training requirement',
+      'Studying electrical/electronic engineering or a closely related technical discipline',
       'A letter of introduction from your institution',
-      'Electrical/electronic engineering or a closely related technical discipline',
+      'Able to attend on-site for the full 6-month placement - no partial or shortened placements',
     ],
     applicationChecklist: [
       'Updated CV',

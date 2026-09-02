@@ -46,10 +46,6 @@ export function Button({
       : href.includes('wa.me')
         ? 'whatsapp'
         : null
-    // Booking clicks are a distinct conversion type (like generate_lead),
-    // not a "contact" touchpoint, since the visitor picks a time rather
-    // than reaching out to be contacted.
-    const isBookingLink = href.includes('calendar.app.google')
 
     return (
       <Link
@@ -57,7 +53,6 @@ export function Button({
         className={classes}
         onClick={(e) => {
           if (conversionChannel) trackEvent('contact', { channel: conversionChannel })
-          if (isBookingLink) trackEvent('book_appointment_clicked')
           ;(rest as { onClick?: (e: React.MouseEvent) => void }).onClick?.(e)
         }}
         {...(rest as Omit<ComponentPropsWithoutRef<typeof Link>, 'href' | 'onClick'>)}

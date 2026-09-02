@@ -52,7 +52,7 @@ export default function ContactPage({
         </div>
       </section>
 
-      <section className="bg-paper py-20">
+      <section id="quote-form" className="scroll-mt-16 bg-paper py-20">
         <div className="container-content grid grid-cols-1 gap-16 lg:grid-cols-[1fr,380px]">
           <QuoteForm initialServiceSlug={prefillService} />
 

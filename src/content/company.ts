@@ -2,6 +2,8 @@ export const company = {
   name: 'Kell Electricals Ltd',
   legalName: 'Kell Electricals Limited',
   rcNumber: '1852579',
+  tinNumber: '24042535-0001',
+  smedanNumber: 'SUID-1632-5774-5650-6732',
   tagline: 'Engineering Trust. Powering Lives.',
   positioning:
     "The engineering partner Abuja's homes, businesses, and industrial sites call when electrical infrastructure has to work the first time and every time.",
@@ -49,6 +51,21 @@ export const company = {
     {
       name: 'NEMSA',
       fullName: 'Nigerian Electricity Management Services Agency',
+    },
+  ],
+  // Corporate registration, distinct from the professional/regulatory
+  // certifications above - these confirm Kell Electricals Ltd's legal
+  // standing as a registered business, not its engineering competence.
+  registrations: [
+    {
+      name: 'CAC',
+      fullName: 'Corporate Affairs Commission',
+      number: 'RC 1852579',
+    },
+    {
+      name: 'SMEDAN',
+      fullName: 'Small and Medium Enterprises Development Agency of Nigeria',
+      number: 'SUID-1632-5774-5650-6732',
     },
   ],
   // These are the featured districts with dedicated /electrician/[area]

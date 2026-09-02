@@ -116,6 +116,26 @@ export default function CertificationsCompliancePage() {
               </MotionDiv>
             ))}
           </StaggerGroup>
+
+          <Reveal delay={0.08} className="mt-14">
+            <span className="eyebrow text-petrol/70">Corporate registration</span>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/70">
+              Legal standing as a registered Nigerian business, separate from
+              the engineering-competence certifications above.
+            </p>
+          </Reveal>
+          <StaggerGroup className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {company.registrations.map((reg) => (
+              <MotionDiv key={reg.name} variants={staggerItem} className="border border-ink/10 p-6">
+                <span className="eyebrow text-petrol/70">{reg.name}</span>
+                <p className="mt-2 text-sm leading-relaxed text-ink/75">{reg.fullName}</p>
+                <p className="mt-3 text-xs font-semibold text-ink/60">{reg.number}</p>
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
+          <p className="mt-6 text-xs text-ink/50">
+            TIN {company.tinNumber}
+          </p>
         </div>
       </section>
 

@@ -7,15 +7,11 @@ import { projects, sectorLabels } from '@/content/projects'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-// See src/content/projects.ts: every case study on this page is placeholder
-// content invented at the client's explicit request, pending their review —
-// noIndex is intentional and should stay on until they confirm real data.
 export const metadata: Metadata = pageMetadata({
   title: 'Projects',
   description:
     'Recent electrical engineering projects across residential, commercial, and industrial properties in Abuja.',
   path: '/projects',
-  noIndex: true,
 })
 
 export default function ProjectsPage() {

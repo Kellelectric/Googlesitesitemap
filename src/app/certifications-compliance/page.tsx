@@ -129,13 +129,9 @@ export default function CertificationsCompliancePage() {
               <MotionDiv key={reg.name} variants={staggerItem} className="border border-ink/10 p-6">
                 <span className="eyebrow text-petrol/70">{reg.name}</span>
                 <p className="mt-2 text-sm leading-relaxed text-ink/75">{reg.fullName}</p>
-                <p className="mt-3 text-xs font-semibold text-ink/60">{reg.number}</p>
               </MotionDiv>
             ))}
           </StaggerGroup>
-          <p className="mt-6 text-xs text-ink/50">
-            TIN {company.tinNumber}
-          </p>
         </div>
       </section>
 

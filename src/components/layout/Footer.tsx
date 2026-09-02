@@ -83,7 +83,7 @@ export function Footer() {
             </p>
           </address>
 
-          <div className="mt-6 flex gap-4 text-sm text-paper/80">
+          <div className="mt-6 flex flex-wrap gap-4 text-sm text-paper/80">
             <a
               href={company.social.facebook}
               className="link-underline inline-flex -my-2 items-center py-2"

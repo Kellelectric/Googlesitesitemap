@@ -171,7 +171,7 @@ export default function AboutPage() {
 
       <section className="bg-paper py-20">
         <div className="container-content grid grid-cols-1 gap-16 lg:grid-cols-[1fr,380px]">
-          <div>
+          <div className="min-w-0">
             {/* Who We Are */}
             <Reveal>
               <span className="eyebrow text-petrol/70">Who we are</span>

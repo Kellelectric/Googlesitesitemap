@@ -16,7 +16,8 @@ function generateBookingReference(): string {
 type BookingPayload = {
   name: string
   phone: string
-  email?: string
+  email: string
+  address: string
   notes?: string
   date: string // YYYY-MM-DD, Africa/Lagos
   time: string // HH:mm, Africa/Lagos
@@ -27,6 +28,7 @@ type BookingPayload = {
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const TIME_RE = /^\d{2}:\d{2}$/
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function isValidPayload(body: unknown): body is BookingPayload {
   if (!body || typeof body !== 'object') return false
@@ -36,6 +38,10 @@ function isValidPayload(body: unknown): body is BookingPayload {
     b.name.trim().length > 0 &&
     typeof b.phone === 'string' &&
     /^[+0-9\s()-]{7,}$/.test(b.phone.trim()) &&
+    typeof b.email === 'string' &&
+    EMAIL_RE.test(b.email.trim()) &&
+    typeof b.address === 'string' &&
+    b.address.trim().length > 0 &&
     typeof b.date === 'string' &&
     DATE_RE.test(b.date) &&
     typeof b.time === 'string' &&
@@ -116,7 +122,8 @@ export async function POST(request: NextRequest) {
     const descriptionLines = [
       `Reference: ${reference}`,
       `Phone: ${body.phone}`,
-      body.email ? `Email: ${body.email}` : null,
+      `Email: ${body.email}`,
+      `Address: ${body.address}`,
       body.notes ? `Notes: ${body.notes}` : null,
       'Booked via kellelectricals.com',
     ].filter((line): line is string => line !== null)
@@ -145,6 +152,7 @@ export async function POST(request: NextRequest) {
           name: body.name,
           phone: body.phone,
           email: body.email,
+          address: body.address,
           notes: body.notes,
           appointmentDate: body.date,
           appointmentTime: body.time,

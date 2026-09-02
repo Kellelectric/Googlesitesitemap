@@ -5,11 +5,20 @@
 // note. Verify and correct every number, date, and eligibility rule before
 // treating this as final. Application form URLs are real and unchanged.
 //
-// Exception: the `apprenticeship` track's `duration` and `programmeFee`
-// (2-year/₦400,000 or 4-year/₦700,000), and `industrial-training`'s
-// `applicationChecklist`, are REAL — sourced from the client's June 2026
-// site audit report, not invented. Do not treat those two fields as
-// placeholder or "fix later."
+// Confirmed REAL fields (do not treat as placeholder or "fix later"):
+// - `apprenticeship`: `duration` (2-year/₦400,000 or 4-year/₦700,000
+//   `programmeFee`) and `stipend` (₦25,000/month) — sourced from the
+//   client's June 2026 site audit report and a direct client confirmation.
+// - `industrial-training`: `duration` (6 months only, aligned to the
+//   institution's SIWES calendar — the client explicitly does not accept
+//   a shorter 3-month placement), `stipend` (₦25,000/month, same as
+//   apprenticeship), and `applicationChecklist`.
+// - All tracks: applications are processed entirely online via the
+//   linked Google Form — no in-person/paper application step.
+//
+// Still placeholder/unconfirmed: `internship`'s duration, stipend, and
+// intake window; `industrial-training`'s and `internship`'s `intake` and
+// `eligibility` lists; the `job-openings` role list.
 export type CareerTrack = {
   slug: string
   name: string
@@ -77,8 +86,8 @@ export const careerTracks: CareerTrack[] = [
     ],
     applicationFormUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
-    duration: '6 months, aligned to your institution’s SIWES calendar',
-    stipend: 'Transport allowance per attendance day',
+    duration: '6 months, aligned to your institution’s SIWES calendar - we do not accept shorter 3-month placements',
+    stipend: '₦25,000/month',
     intake: 'Aligned to the academic SIWES calendar (typically two intakes a year)',
     eligibility: [
       'Enrolled in a polytechnic or university programme with a mandatory SIWES/industrial-training requirement',
@@ -111,6 +120,7 @@ export const careerTracks: CareerTrack[] = [
       'https://docs.google.com/forms/d/e/1FAIpQLScyQUddIgthC752dLwSulX9vRT8V4rPdvlz3Wr7EM0VTktE9A/viewform',
     duration: '2-year or 4-year track',
     programmeFee: '₦400,000 (2-year track) or ₦700,000 (4-year track)',
+    stipend: '₦25,000/month',
     intake: 'Rolling intake, reviewed quarterly',
     eligibility: [
       'WAEC/SSCE or equivalent, minimum age 18',

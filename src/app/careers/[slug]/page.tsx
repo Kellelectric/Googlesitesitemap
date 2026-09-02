@@ -189,9 +189,11 @@ export default function CareerTrackPage({ params }: Props) {
                 >
                   {track.name} application form
                 </a>{' '}
-                and our team will follow up. Programme specifics (duration,
-                schedule, and current availability) are confirmed directly
-                once we hear from you. You can also reach us by email at{' '}
+                and our team will follow up - the whole process, from
+                application to confirmation, is handled online. Programme
+                specifics (duration, schedule, and current availability) are
+                confirmed directly once we hear from you. You can also reach
+                us by email at{' '}
                 <a href={`mailto:${company.email}`} className="link-underline font-semibold text-ink">
                   {company.email}
                 </a>

@@ -188,6 +188,22 @@ export const projects: Project[] = [
       'The property was delivered with a new 10kWh solar system, renovated interior, and updated electrical wiring.',
     image: '/images/photos/solar-roof-install.jpg',
   },
+  {
+    slug: 'industrial-factory-electrical-conversion',
+    title: 'Industrial Electrical Conversion',
+    sector: 'industrial',
+    serviceSlugs: ['industrial-electrical-systems'],
+    location: 'Abuja',
+    summary:
+      'Full electrical conversion for a manufacturing facility, from site assessment through commissioning.',
+    challenge:
+      'The facility needed its electrical infrastructure converted to reach full production readiness, with a clear scope and formal sign-off at each stage of the work.',
+    solution:
+      'We carried out a site evaluation and electrical load assessment, developed a Service Level Agreement covering project execution, completed the full electrical conversion works (including variation orders as requirements evolved), and closed out with a final inspection and Certificate of Commissioning.',
+    outcome:
+      "The facility's electrical system was successfully converted and commissioned, bringing the site up to operational readiness for manufacturing use.",
+    image: '/images/photos/industry-detail-hero-control-room.jpg',
+  },
 ]
 
 export function getProjectBySlug(slug: string): Project | undefined {

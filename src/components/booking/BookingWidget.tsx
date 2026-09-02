@@ -62,6 +62,7 @@ export function BookingWidget() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [address, setAddress] = useState('')
   const [notes, setNotes] = useState('')
   const [website, setWebsite] = useState('') // honeypot
   const [renderedAt] = useState(() => Date.now())
@@ -124,9 +125,10 @@ export function BookingWidget() {
     const next: Record<string, string> = {}
     if (!name.trim()) next.name = 'Enter your name'
     if (!/^[+0-9\s()-]{7,}$/.test(phone.trim())) next.phone = 'Enter a valid phone number'
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       next.email = 'Enter a valid email address'
     }
+    if (!address.trim()) next.address = 'Enter the job location'
     setFieldErrors(next)
 
     let captchaOk = true
@@ -153,7 +155,8 @@ export function BookingWidget() {
         body: JSON.stringify({
           name,
           phone,
-          email: email || undefined,
+          email,
+          address,
           notes: notes || undefined,
           date: selectedDate,
           time: selectedTime,
@@ -245,9 +248,8 @@ export function BookingWidget() {
               <br />
             </>
           )}
-          We&rsquo;ve added this to our calendar
-          {email ? ' and sent you a confirmation email' : ''}. If anything needs to change, call
-          us at {company.phone}.
+          We&rsquo;ve added this to our calendar and sent you a confirmation email. If
+          anything needs to change, call us at {company.phone}.
         </p>
         {reference && <p className="mt-4 text-xs text-ink/50">Reference: {reference}</p>}
       </div>
@@ -348,13 +350,23 @@ export function BookingWidget() {
                 placeholder="+234"
               />
             </BookingField>
-            <BookingField label="Email (optional)" error={fieldErrors.email}>
+            <BookingField label="Email" error={fieldErrors.email}>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={fieldClass(!!fieldErrors.email)}
                 autoComplete="email"
+              />
+            </BookingField>
+            <BookingField label="Job address" error={fieldErrors.address}>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className={fieldClass(!!fieldErrors.address)}
+                autoComplete="street-address"
+                placeholder="e.g. Wuse 2, Abuja"
               />
             </BookingField>
           </div>

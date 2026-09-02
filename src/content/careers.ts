@@ -28,6 +28,8 @@
 //   duration) and `stipend` (a tiered range by intern skill/experience
 //   level, ₦30,000-₦100,000/month) - client-confirmed.
 //
+// - `nysc-placement`: real track, content supplied directly by the client.
+//
 // All career tracks are now confirmed real. No placeholder fields remain.
 export type CareerTrack = {
   slug: string
@@ -49,6 +51,44 @@ export type CareerTrack = {
 }
 
 export const careerTracks: CareerTrack[] = [
+  {
+    slug: 'nysc-placement',
+    name: 'NYSC Placement',
+    summary:
+      'For NYSC Corps Members seeking a Place of Primary Assignment (PPA) - real experience across engineering and business functions, subject to availability.',
+    description:
+      "Kell Electricals Ltd welcomes NYSC Corps Members seeking a Place of Primary Assignment (PPA) with our team in Abuja, alongside other motivated young professionals looking for real industry experience. Depending on available opportunities, placement can span Electrical Engineering, Solar & Renewable Energy, HVAC, CCTV & Security Systems, Home Automation, Project Management, Procurement, Administration, Customer Relations, and Marketing. Placement is matched to available departmental needs and is never automatic - it's subject to available positions, company requirements, and a successful assessment.",
+    whoItsFor: [
+      'Electrical & Electronics Engineering, Mechanical Engineering, Renewable Energy, or Mechatronics graduates',
+      'Computer Science & Information Technology graduates',
+      'Business Administration, Accounting & Finance, or Procurement & Supply Chain graduates',
+      'Marketing & Communications, Human Resources, Project Management, or Administration graduates',
+      'Other related disciplines - placement is matched to available departmental needs',
+    ],
+    whatToExpect: [
+      'Hands-on exposure across live projects, installations, inspections, and maintenance work - not just observation',
+      'Mentorship from experienced engineers, technicians, and business professionals across departments',
+      'Placement matched to your discipline where possible, across our technical and business functions',
+      'Practical experience and documentation that strengthens your CV for what comes after service year',
+    ],
+    applicationFormUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLScrGwqdcA3rzUVRhHl2kt7afhOGNB9InZsdAmZ7gsG5tXr3eQ/viewform',
+    duration: 'For the duration of your official NYSC service year, per your posting',
+    intake: 'Aligned to NYSC batch call-up and redeployment periods',
+    eligibility: [
+      'Currently serving NYSC Corps Member seeking a Place of Primary Assignment (PPA), or preparing for an upcoming posting',
+      'Willing to learn, professional, punctual, and team-oriented',
+      'Comfortable following workplace and safety procedures',
+      'Placement is subject to available positions, departmental requirements, and a successful assessment - not automatic',
+    ],
+    applicationChecklist: [
+      'CV',
+      'NYSC call-up/posting information, where applicable',
+      'Course of study and institution details',
+      'Short statement on why you’d like to join Kell Electricals',
+    ],
+    programmeDetailsConfirmed: true,
+  },
   {
     slug: 'internship',
     name: 'Internship',

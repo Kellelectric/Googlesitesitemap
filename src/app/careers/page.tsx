@@ -11,7 +11,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 export const metadata: Metadata = pageMetadata({
   title: 'Careers',
   description:
-    'Internship, industrial training, apprenticeship, and job opportunities at Kell Electricals Ltd, a COREN and NEMSA certified engineering company in Abuja.',
+    'NYSC placement, internship, industrial training, apprenticeship, and job opportunities at Kell Electricals Ltd, a COREN and NEMSA certified engineering company.',
   path: '/careers',
   image: '/images/photos/careers-hero-apprentice-training.jpg',
 })
@@ -37,8 +37,9 @@ export default function CareersPage() {
             Build your career with a certified engineering team
           </h1>
           <p className="mt-5 max-w-xl text-paper/70">
-            From student placements to skilled trade development, here&rsquo;s
-            how to get hands-on experience with Kell Electricals Ltd.
+            From NYSC placement and student programmes to skilled trade
+            development, here&rsquo;s how to get hands-on experience with
+            Kell Electricals Ltd.
           </p>
         </div>
       </section>

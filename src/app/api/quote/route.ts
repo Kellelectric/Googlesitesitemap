@@ -1,7 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 
 export const runtime = 'nodejs'
+
+// A short, human-readable reference shown to the customer and included in
+// the forwarded webhook payload, so a phone/WhatsApp follow-up can locate
+// the same enquiry Zoho Flow received. Not a database key — just a
+// display/reference string, safe to generate per-request.
+function generateEnquiryReference(): string {
+  const year = new Date().getFullYear()
+  const suffix = randomUUID().replace(/-/g, '').slice(0, 6).toUpperCase()
+  return `KE-${year}-${suffix}`
+}
+
+// Lets the receiving end (Zoho Flow, or whatever QUOTE_WEBHOOK_URL points
+// at) verify a forwarded request actually came from this server, not from
+// someone who obtained the webhook URL. Optional: only signs when
+// QUOTE_WEBHOOK_SECRET is configured, so this doesn't break an existing
+// webhook set up before this was added.
+function signPayload(payload: string, secret: string): string {
+  return createHmac('sha256', secret).update(payload).digest('hex')
+}
 
 type QuotePayload = {
   name: string
@@ -85,26 +105,56 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
   }
 
-  try {
-    const forwarded = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source: 'kellelectricals.com quote form',
-        submittedAt: new Date().toISOString(),
-        ...body,
-      }),
-      signal: AbortSignal.timeout(8000),
-    })
+  const reference = generateEnquiryReference()
+  const payload = JSON.stringify({
+    reference,
+    source: 'kellelectricals.com quote form',
+    submittedAt: new Date().toISOString(),
+    ...body,
+  })
+  const secret = process.env.QUOTE_WEBHOOK_SECRET
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (secret) {
+    headers['x-webhook-signature'] = signPayload(payload, secret)
+  }
 
-    if (!forwarded.ok) {
-      console.error('Quote webhook forward failed', forwarded.status, await forwarded.text())
-      return NextResponse.json({ ok: false, reason: 'forward_failed' }, { status: 502 })
+  // One retry on a transient failure (timeout, network error, or a 5xx from
+  // the receiving end) before giving up — a single dropped connection to
+  // Zoho Flow shouldn't lose a lead. A 4xx is not retried: that means the
+  // webhook itself rejected the payload, and retrying an identical request
+  // would just fail the same way.
+  const maxAttempts = 2
+  let lastError: unknown
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const forwarded = await fetch(webhookUrl, {
+        method: 'POST',
+        headers,
+        body: payload,
+        signal: AbortSignal.timeout(8000),
+      })
+
+      if (forwarded.ok) {
+        return NextResponse.json({ ok: true, reference })
+      }
+
+      const responseText = await forwarded.text()
+      console.error('Quote webhook forward failed', forwarded.status, responseText)
+      if (forwarded.status < 500 || attempt === maxAttempts) {
+        return NextResponse.json({ ok: false, reason: 'forward_failed' }, { status: 502 })
+      }
+    } catch (error) {
+      lastError = error
+      console.error(`Quote webhook forward errored (attempt ${attempt}/${maxAttempts})`, error)
     }
 
-    return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('Quote webhook forward errored', error)
+    if (attempt < maxAttempts) {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+    }
+  }
+
+  if (lastError) {
     return NextResponse.json({ ok: false, reason: 'forward_errored' }, { status: 502 })
   }
+  return NextResponse.json({ ok: false, reason: 'forward_failed' }, { status: 502 })
 }

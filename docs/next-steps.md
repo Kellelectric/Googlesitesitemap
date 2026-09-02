@@ -1,6 +1,53 @@
 # Next Steps
 
-## Sitewide title/meta-description length audit (this round)
+## On-site appointment booking, backed by Google Calendar (this round)
+
+`/book-appointment` now has a custom-built date/time picker
+(`src/components/booking/BookingWidget.tsx`) instead of an embedded
+Google-hosted calendar page — visitors never see or get redirected to
+Google's own UI. It reads real availability from, and writes real events
+to, the business's actual Google Calendar via a service account (no
+`googleapis` dependency — `src/lib/googleCalendar.ts` implements the
+JWT-bearer OAuth2 flow directly with `node:crypto` and `fetch`, matching
+this codebase's existing preference for hand-rolled REST over adding an
+SDK).
+
+**Inert until configured** — until then, the widget silently falls back
+to embedding the original Google-hosted booking page (`company.bookingUrl`
+in `content/company.ts`), so the page keeps working during setup:
+
+1. In Google Cloud Console, create a project (or reuse one), enable the
+   **Google Calendar API**, then create a **Service Account** under
+   IAM & Admin → Service Accounts.
+2. Open that service account → Keys → Add Key → Create new key → JSON.
+   Download it.
+3. In Google Calendar, open the calendar to book against → Settings and
+   sharing → "Share with specific people" → add the service account's
+   email (from the JSON, `client_email`) with **"Make changes to
+   events"** permission.
+4. Set these in the Vercel deployment environment, from that same JSON
+   file:
+   - `GOOGLE_CALENDAR_SERVICE_ACCOUNT_EMAIL` — the `client_email` field.
+   - `GOOGLE_CALENDAR_PRIVATE_KEY` — the `private_key` field, pasted as-is
+     (its literal `\n` sequences are unescaped in code, the standard
+     pattern for private keys in env vars).
+   - `GOOGLE_CALENDAR_ID` — the calendar's ID (usually just the Google
+     account's email address once shared as above).
+   - `GOOGLE_CALENDAR_TIMEZONE` (optional) — defaults to `Africa/Lagos`.
+
+Slots are generated from `company.businessHours` (`src/lib/bookingSlots.ts`,
+60-minute slots, 2-hour minimum lead time, bookable up to 21 days out —
+all adjustable constants in that file), narrowed against the calendar's
+real `freeBusy` response, and re-checked once more at booking time to
+close the race window between two visitors viewing the same open slot.
+Same spam protections as the quote form (honeypot, time-trap, per-IP
+rate limit, optional hCaptcha via the same `NEXT_PUBLIC_HCAPTCHA_SITE_KEY`
+/`HCAPTCHA_SECRET_KEY` pair). A successful booking is also best-effort
+forwarded to `QUOTE_WEBHOOK_URL` if set, so it shows up alongside quote
+leads in whatever CRM that points at — this never blocks or fails the
+booking itself.
+
+## Sitewide title/meta-description length audit (earlier round)
 
 Wrote `scripts/audit-seo.mjs` — a production-server crawl of every URL in
 `sitemap.xml` checking title/description length against Google's real

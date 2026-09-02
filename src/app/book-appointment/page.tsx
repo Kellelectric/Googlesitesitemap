@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { CircuitLines } from '@/components/ui/CircuitLines'
-import { Button } from '@/components/ui/Button'
 import { TrackedLink } from '@/components/ui/TrackedLink'
 import { Reveal } from '@/components/ui/Reveal'
+import { BookingWidget } from '@/components/booking/BookingWidget'
 import { company } from '@/content/company'
 import { pageMetadata } from '@/lib/metadata'
 import { breadcrumbSchema } from '@/lib/schema'
@@ -16,15 +16,13 @@ export const metadata: Metadata = pageMetadata({
   image: '/images/photos/contact-hero-consultation.jpg',
 })
 
-// Real Google Calendar Appointment Schedule, supplied directly by the
-// client (see company.ts's bookingUrl comment). The iframe uses Google's
-// documented embed pattern (appending ?gv=true) so the schedule shows
-// inline; the "Open booking page" button underneath is a real fallback,
-// not decoration - some visitors block third-party iframes, and this way
-// booking still works with one click either way.
+// The booking flow itself lives in BookingWidget.tsx: a custom on-site
+// date/time picker backed by the real Google Calendar API (see
+// lib/googleCalendar.ts), so visitors never see or get redirected to
+// Google's own booking page. That component falls back to embedding the
+// original Google-hosted calendar page only if GOOGLE_CALENDAR_* env vars
+// aren't configured yet, so the page still works during setup.
 export default function BookAppointmentPage() {
-  const embedUrl = `${company.bookingUrl}?gv=true`
-
   return (
     <>
       <script
@@ -61,37 +59,13 @@ export default function BookAppointmentPage() {
             You&rsquo;ll get a confirmation once it&rsquo;s booked - no back
             and forth over email.
           </p>
-          <div className="mt-8">
-            <Button href={company.bookingUrl} target="_blank" rel="noopener noreferrer">
-              Open booking page
-            </Button>
-          </div>
         </div>
       </section>
 
       <section className="bg-paper py-20">
         <div className="container-content grid grid-cols-1 gap-16 lg:grid-cols-[1fr,380px]">
           <Reveal>
-            <div className="border border-ink/10 bg-paper">
-              <iframe
-                src={embedUrl}
-                title="Book an appointment with Kell Electricals"
-                className="h-[720px] w-full"
-                loading="lazy"
-              />
-            </div>
-            <p className="mt-4 text-sm text-ink/60">
-              Having trouble with the calendar above?{' '}
-              <a
-                href={company.bookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="link-underline text-petrol"
-              >
-                Open the booking page in a new tab
-              </a>
-              .
-            </p>
+            <BookingWidget />
           </Reveal>
 
           <aside className="space-y-8">

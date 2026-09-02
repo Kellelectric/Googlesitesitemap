@@ -36,7 +36,11 @@ import { Reveal } from '@/components/ui/Reveal'
 //
 // Pauses on hover/focus (mouse or keyboard) and falls back to a static
 // wrapped row — no animation, no repetition — when the visitor has
-// prefers-reduced-motion set.
+// prefers-reduced-motion set, but only below the md breakpoint. On
+// wide/desktop screens the marquee always slides regardless of that
+// preference, per client direction. The two layouts are toggled with
+// CSS breakpoint classes (not a JS branch) so both are always mounted -
+// no reduced-motion/viewport-size hydration mismatch, no dead refs.
 //
 // Logos render in their real brand colors (no grayscale treatment) — per
 // client direction. 48px (~0.5in at 96dpi/CSS-px) keeps every logo-to-logo
@@ -122,55 +126,63 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
           </span>
         </Reveal>
 
-        {reduceMotion ? (
-          <div className="mt-8 flex flex-wrap items-center gap-x-12 gap-y-8">
+        {/* Static wrapped row — only shown below the md breakpoint, and only
+            when the visitor prefers reduced motion. On wide/desktop screens
+            the sliding marquee always runs regardless of that preference,
+            per client direction; reduced motion still applies on mobile. */}
+        <div
+          className={`mt-8 flex flex-wrap items-center gap-x-12 gap-y-8 ${
+            reduceMotion ? 'md:hidden' : 'hidden'
+          }`}
+        >
+          {partners.map((partner) => (
+            <div key={partner.name}>{renderLogo(partner)}</div>
+          ))}
+        </div>
+
+        <div
+          ref={containerRef}
+          role="region"
+          aria-label="Partner and supplier logos"
+          className={`relative mt-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] ${
+            reduceMotion ? 'hidden md:block' : ''
+          }`}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
+        >
+          {/* Invisible, unduplicated, non-animated — exists purely so
+              ResizeObserver can measure one true set's natural width. */}
+          <div
+            ref={measureRef}
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 top-0 flex w-max items-center gap-12 opacity-0"
+          >
             {partners.map((partner) => (
-              <div key={partner.name}>{renderLogo(partner)}</div>
+              <div key={partner.name} className="shrink-0">
+                {renderLogo(partner)}
+              </div>
             ))}
           </div>
-        ) : (
+
           <div
-            ref={containerRef}
-            role="region"
-            aria-label="Partner and supplier logos"
-            className="relative mt-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            onFocus={() => setPaused(true)}
-            onBlur={() => setPaused(false)}
+            className="flex w-max items-center gap-12 animate-marquee"
+            style={{
+              animationDuration: `${setSlotWidth > 0 ? setSlotWidth / 60 : partners.length * 4}s`,
+              animationPlayState: paused || setSlotWidth === 0 ? 'paused' : 'running',
+              ...({ '--marquee-distance': `${setSlotWidth}px` } as CSSProperties),
+            }}
           >
-            {/* Invisible, unduplicated, non-animated — exists purely so
-                ResizeObserver can measure one true set's natural width. */}
-            <div
-              ref={measureRef}
-              aria-hidden="true"
-              className="pointer-events-none absolute left-0 top-0 flex w-max items-center gap-12 opacity-0"
-            >
-              {partners.map((partner) => (
-                <div key={partner.name} className="shrink-0">
+            {Array.from({ length: repeat }, (_, setIndex) =>
+              partners.map((partner) => (
+                <div key={`${partner.name}-${setIndex}`} className="shrink-0">
                   {renderLogo(partner)}
                 </div>
-              ))}
-            </div>
-
-            <div
-              className="flex w-max items-center gap-12 animate-marquee"
-              style={{
-                animationDuration: `${setSlotWidth > 0 ? setSlotWidth / 60 : partners.length * 4}s`,
-                animationPlayState: paused || setSlotWidth === 0 ? 'paused' : 'running',
-                ...({ '--marquee-distance': `${setSlotWidth}px` } as CSSProperties),
-              }}
-            >
-              {Array.from({ length: repeat }, (_, setIndex) =>
-                partners.map((partner) => (
-                  <div key={`${partner.name}-${setIndex}`} className="shrink-0">
-                    {renderLogo(partner)}
-                  </div>
-                )),
-              )}
-            </div>
+              )),
+            )}
           </div>
-        )}
+        </div>
       </div>
     </section>
   )

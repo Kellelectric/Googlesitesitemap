@@ -62,7 +62,7 @@ export const faqCategories: FAQCategory[] = [
     items: [
       {
         question: 'What areas do you serve?',
-        answer: `We're based in ${company.address.district}, ${company.address.city}, and serve ${company.serviceAreas.slice(0, -1).join(', ')}, and ${company.serviceAreas[company.serviceAreas.length - 1]} directly, with project work extending across ${company.serviceRegion.replace('Abuja and ', '')} depending on scope.`,
+        answer: `We're based in ${company.address.district}, ${company.address.city}, and serve all of Abuja — including ${company.serviceAreas.slice(0, -1).join(', ')}, and ${company.serviceAreas[company.serviceAreas.length - 1]} — with project work extending to ${company.serviceRegion} depending on scope.`,
       },
       {
         question: 'Are you licensed and certified?',

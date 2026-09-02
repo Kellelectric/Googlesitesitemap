@@ -85,14 +85,20 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
     setSlotWidth > 0 ? Math.max(2, Math.ceil((containerWidth * 2) / setSlotWidth)) : 2
 
   function renderLogo(partner: Partner) {
+    // Fixed box so every logo occupies the same visual footprint —
+    // aspect ratio alone no longer decides rendered size (a wide
+    // wordmark vs. a compact/square mark previously looked wildly
+    // different in scale under plain h-10 w-auto).
     const image = (
-      <Image
-        src={partner.logo}
-        alt={partner.name}
-        width={140}
-        height={56}
-        className="h-10 w-auto object-contain"
-      />
+      <div className="flex h-10 w-28 items-center justify-center">
+        <Image
+          src={partner.logo}
+          alt={partner.name}
+          width={140}
+          height={56}
+          className="max-h-full max-w-full object-contain"
+        />
+      </div>
     )
     // On the dark section variant, logos get a small white card so real
     // brand colors (many of which are dark text/marks) stay legible

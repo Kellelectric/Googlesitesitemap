@@ -57,8 +57,8 @@ Company:
 - Combined team engineering experience: ${kb.company.teamExperienceYears}+ years
 - Certifications: ${kb.company.certifications.join(', ')}
 - Address: ${kb.company.address}
-- Service areas: ${kb.company.serviceAreas.join(', ')}
-- Service region: ${kb.company.serviceRegion}
+- Service areas: all of Abuja (featured districts with a dedicated page: ${kb.company.serviceAreas.join(', ')} — do not imply coverage is limited to these)
+- Also covers: ${kb.company.serviceRegion} (project work)
 - Business hours: ${kb.company.businessHours.map((h) => `${h.days}: ${h.hours}`).join('; ')}
 - Phone: ${kb.company.phone}
 - Email: ${kb.company.email} (emergencies: ${kb.company.emergencyEmail})

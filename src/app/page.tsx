@@ -10,7 +10,6 @@ import { AreasPreview } from '@/components/sections/AreasPreview'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { TrustSection } from '@/components/sections/TrustSection'
 import { ClientPortalFeature } from '@/components/sections/ClientPortalFeature'
-import { TeamPreview } from '@/components/sections/TeamPreview'
 import { TestimonialsPreview } from '@/components/sections/TestimonialsPreview'
 import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { partners } from '@/content/partners'
@@ -49,8 +48,24 @@ export default function HomePage() {
       <IndustriesPreview />
       <AreasPreview />
       <TrustSection />
+
+      <section className="bg-paper py-14">
+        <div className="container-content text-center">
+          <Reveal>
+            <p className="text-ink/70">
+              Real engineers, not a call center — see who&rsquo;s behind the work.
+            </p>
+            <Link
+              href="/about#team"
+              className="link-underline mt-3 inline-block font-semibold text-petrol"
+            >
+              View Our Team →
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
       <ClientPortalFeature />
-      <TeamPreview />
       <TestimonialsPreview />
       <PartnerLogos partners={partners} />
       <CTASection />

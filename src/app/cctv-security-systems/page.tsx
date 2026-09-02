@@ -17,7 +17,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 export const metadata: Metadata = pageMetadata({
   title: 'CCTV & Security Systems',
   description:
-    'Camera systems positioned and cabled by engineers, with power and network infrastructure built to last, across ' +
+    'Camera systems positioned and cabled by engineers, with power and network infrastructure built to last, across Abuja and ' +
     company.serviceRegion +
     '.',
   path: '/cctv-security-systems',

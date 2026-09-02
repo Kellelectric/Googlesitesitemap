@@ -66,7 +66,7 @@ export function Hero() {
           <span>
             {company.trust.googleRating}★ rating · {company.trust.googleReviewCount} Google reviews
           </span>
-          <span>{company.serviceAreas.length} service zones across Abuja</span>
+          <span>Serving all of Abuja</span>
           <span>24/7 emergency response</span>
         </motion.div>
       </motion.div>

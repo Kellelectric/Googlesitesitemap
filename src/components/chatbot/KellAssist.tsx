@@ -80,7 +80,7 @@ function findRelevantSummaries(topic: string): string {
     if (industrial) return industrial.summary
   }
 
-  return `We cover ${services.length} electrical service lines across residential, commercial, and industrial sites in ${company.serviceRegion}.`
+  return `We cover ${services.length} electrical service lines across residential, commercial, and industrial sites in Abuja and ${company.serviceRegion}.`
 }
 
 export function KellAssist() {

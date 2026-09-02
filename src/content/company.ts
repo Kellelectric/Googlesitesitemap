@@ -51,6 +51,12 @@ export const company = {
       fullName: 'Nigerian Electricity Management Services Agency',
     },
   ],
+  // These are the featured districts with dedicated /electrician/[area]
+  // pages, not an exhaustive list — the client confirmed directly that
+  // coverage is all of Abuja, not limited to these seven. Any copy using
+  // this array must not imply Abuja coverage stops here; pair it with
+  // serviceRegion (or a phrase like "and every other part of Abuja") for
+  // that reason.
   serviceAreas: [
     'Wuse 2',
     'Gwarinpa',
@@ -60,7 +66,12 @@ export const company = {
     'Maitama',
     'Katampe',
   ],
-  serviceRegion: 'Abuja and wider Nigeria',
+  // What's covered beyond Abuja itself — confirmed directly by the
+  // client: neighboring states, then project work nationwide. Does NOT
+  // include "Abuja" itself (that's covered by serviceAreas / the
+  // "all of Abuja" framing above) — use this value as-is, no leading
+  // "Abuja and " to strip.
+  serviceRegion: 'neighboring states and wider Nigeria',
   trust: {
     googleRating: 4.8,
     googleReviewCount: 192,

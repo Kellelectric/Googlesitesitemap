@@ -3,9 +3,11 @@ import Image from 'next/image'
 import { ServiceCard } from '@/components/ui/ServiceCard'
 import { CTASection } from '@/components/sections/CTASection'
 import { FAQSection } from '@/components/sections/FAQSection'
+import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { services, categoryLabels, ServiceCategory } from '@/content/services'
 import { servicesFAQs } from '@/content/faqs'
+import { partners } from '@/content/partners'
 import { company } from '@/content/company'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
@@ -123,6 +125,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      <PartnerLogos partners={partners} />
       <FAQSection items={servicesFAQs} viewAllHref="/faq" />
       <CTASection />
     </>

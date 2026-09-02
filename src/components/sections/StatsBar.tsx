@@ -12,7 +12,7 @@ export function StatsBar() {
           suffix="★"
           label={`Google rating from ${company.trust.googleReviewCount} reviews`}
         />
-        <StatCounter value={company.serviceAreas.length} label="Service zones across Abuja" />
+        <StatCounter value={company.trust.projectsCompleted} suffix="+" label="Projects completed across Abuja" />
         <StatCounter value={24} suffix="/7" label="Emergency response availability" />
       </div>
     </section>

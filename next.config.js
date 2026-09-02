@@ -25,6 +25,20 @@ const nextConfig = {
           },
         ],
       },
+      {
+        // Pinned explicitly rather than relying on Vercel's implicit
+        // default for public/ assets. Photos in public/images get
+        // swapped in place (same filename, new bytes) fairly often on
+        // this site — must-revalidate forces every client and the CDN
+        // edge to check back with the origin on every request via the
+        // ETag, so a swapped photo is never stuck showing stale bytes
+        // to a returning visitor. Do not change this to a positive
+        // max-age/immutable without also switching to content-hashed
+        // filenames, or photo swaps will silently not show up for
+        // anyone with a cached copy until their cache naturally expires.
+        source: '/images/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' }],
+      },
     ]
   },
   async redirects() {

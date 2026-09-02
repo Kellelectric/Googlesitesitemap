@@ -37,6 +37,7 @@ const groups: LinkGroup[] = [
       { label: 'FAQ', href: '/faq' },
       { label: 'Testimonials', href: '/testimonials' },
       { label: 'Load & Solar Calculators', href: '/calculators' },
+      { label: 'Book an Appointment', href: '/book-appointment' },
       { label: 'Contact & Request a Quote', href: '/contact' },
     ],
   },

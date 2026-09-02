@@ -10,6 +10,12 @@ export const company = {
   phone: '+234 814 020 5895',
   phoneHref: 'tel:+2348140205895',
   whatsappHref: 'https://wa.me/message/74H7FYXECPMXH1',
+  // Real Google Calendar Appointment Schedule booking page, supplied
+  // directly by the client - used on /book-appointment. Google's own
+  // embed pattern (append ?gv=true) shows the same page inline via
+  // iframe; the bare URL is used for the "open in a new tab" fallback
+  // and anywhere else a plain link is needed.
+  bookingUrl: 'https://calendar.app.google/xfG7u58pyNSd3mSq8',
   email: 'info@kellelectricals.com',
   emergencyEmail: 'emergency@kellelectricals.com',
   emergencyResponseTarget: 'within 30 minutes',

@@ -131,3 +131,133 @@ export function calculateSolarSizing({
     recommendedInverterWatts: recommendedInverterWatts(criticalLoadWatts),
   }
 }
+
+// --- Voltage drop & cable sizing --------------------------------------
+//
+// Standard resistivity figures used across electrical planning
+// references for sizing conductors, at typical operating temperature.
+// Copper's is the more commonly cited ~0.0175 Ω·mm²/m (17.5 Ω·mm²/km);
+// aluminium runs roughly 1.6x higher.
+export const COPPER_RESISTIVITY_OHM_MM2_PER_M = 0.0175
+export const ALUMINIUM_RESISTIVITY_OHM_MM2_PER_M = 0.0282
+
+export type ConductorMaterial = 'copper' | 'aluminium'
+export type CablePhase = 'single' | 'three'
+
+// Standard metric cable cross-sections (mm²) as commonly stocked —
+// a cable size recommendation should land on one of these, not an
+// arbitrary computed value nobody sells.
+export const STANDARD_CABLE_SIZES_MM2 = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150]
+
+function resistivityFor(material: ConductorMaterial): number {
+  return material === 'copper' ? COPPER_RESISTIVITY_OHM_MM2_PER_M : ALUMINIUM_RESISTIVITY_OHM_MM2_PER_M
+}
+
+// Phase factor: single-phase current travels out and back (2 conductors),
+// three-phase uses the standard √3 line-to-line factor.
+function phaseFactor(phase: CablePhase): number {
+  return phase === 'single' ? 2 : Math.sqrt(3)
+}
+
+export type VoltageDropInput = {
+  currentAmps: number
+  lengthMeters: number
+  csaMm2: number
+  material: ConductorMaterial
+  phase: CablePhase
+  systemVoltage: number
+}
+
+export type VoltageDropResult = {
+  voltageDropVolts: number
+  voltageDropPercent: number
+}
+
+export function calculateVoltageDrop({
+  currentAmps,
+  lengthMeters,
+  csaMm2,
+  material,
+  phase,
+  systemVoltage,
+}: VoltageDropInput): VoltageDropResult {
+  if (csaMm2 <= 0 || systemVoltage <= 0) {
+    return { voltageDropVolts: 0, voltageDropPercent: 0 }
+  }
+  const dropVolts =
+    (phaseFactor(phase) * currentAmps * lengthMeters * resistivityFor(material)) / csaMm2
+  return {
+    voltageDropVolts: Math.round(dropVolts * 100) / 100,
+    voltageDropPercent: Math.round((dropVolts / systemVoltage) * 1000) / 10,
+  }
+}
+
+export type CableSizeInput = {
+  currentAmps: number
+  lengthMeters: number
+  material: ConductorMaterial
+  phase: CablePhase
+  systemVoltage: number
+  // Maximum acceptable voltage drop, as a percentage of system voltage —
+  // 3% and 5% are both widely used planning thresholds depending on
+  // circuit type; this tool defaults to the more conservative 3%.
+  maxDropPercent: number
+}
+
+export type CableSizeResult = {
+  minimumCsaMm2: number
+  recommendedStandardSizeMm2: number
+  voltageDropAtRecommendedPercent: number
+}
+
+export function calculateMinimumCableSize({
+  currentAmps,
+  lengthMeters,
+  material,
+  phase,
+  systemVoltage,
+  maxDropPercent,
+}: CableSizeInput): CableSizeResult {
+  const allowedDropVolts = (maxDropPercent / 100) * systemVoltage
+  const minimumCsaMm2 =
+    allowedDropVolts > 0
+      ? (phaseFactor(phase) * currentAmps * lengthMeters * resistivityFor(material)) / allowedDropVolts
+      : 0
+  const recommendedStandardSizeMm2 =
+    STANDARD_CABLE_SIZES_MM2.find((size) => size >= minimumCsaMm2) ??
+    STANDARD_CABLE_SIZES_MM2[STANDARD_CABLE_SIZES_MM2.length - 1]
+  const { voltageDropPercent } = calculateVoltageDrop({
+    currentAmps,
+    lengthMeters,
+    csaMm2: recommendedStandardSizeMm2,
+    material,
+    phase,
+    systemVoltage,
+  })
+
+  return {
+    minimumCsaMm2: Math.round(minimumCsaMm2 * 100) / 100,
+    recommendedStandardSizeMm2,
+    voltageDropAtRecommendedPercent: voltageDropPercent,
+  }
+}
+
+// --- Battery runtime ----------------------------------------------------
+
+export type BatteryRuntimeInput = {
+  batteryCapacityKwh: number
+  loadWatts: number
+  depthOfDischarge?: number
+  roundTripEfficiency?: number
+}
+
+export function calculateBatteryRuntimeHours({
+  batteryCapacityKwh,
+  loadWatts,
+  depthOfDischarge = BATTERY_DEPTH_OF_DISCHARGE,
+  roundTripEfficiency = BATTERY_ROUND_TRIP_EFFICIENCY,
+}: BatteryRuntimeInput): number {
+  if (loadWatts <= 0) return 0
+  const usableWh = batteryCapacityKwh * 1000 * depthOfDischarge * roundTripEfficiency
+  return Math.round((usableWh / loadWatts) * 10) / 10
+}

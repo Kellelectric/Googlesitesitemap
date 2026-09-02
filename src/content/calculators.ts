@@ -57,7 +57,7 @@ export type BuildingType = {
 export const buildingTypes: BuildingType[] = [
   {
     slug: 'residential-apartment',
-    label: 'Residential — Apartment / Flat',
+    label: 'Residential - Apartment / Flat',
     defaults: [
       { key: 'led-bulb', quantity: 8 },
       { key: 'ceiling-fan', quantity: 2 },
@@ -71,7 +71,7 @@ export const buildingTypes: BuildingType[] = [
   },
   {
     slug: 'residential-house',
-    label: 'Residential — Family Home',
+    label: 'Residential - Family Home',
     defaults: [
       { key: 'led-bulb', quantity: 16 },
       { key: 'ceiling-fan', quantity: 4 },

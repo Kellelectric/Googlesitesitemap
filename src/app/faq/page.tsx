@@ -11,7 +11,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 export const metadata: Metadata = pageMetadata({
   title: 'Frequently Asked Questions',
   description:
-    'Answers on service areas, business hours, licensing, emergency response, and how we scope a job — from a COREN and NEMSA certified team in Abuja.',
+    'Answers on service areas, business hours, licensing, emergency response, and how we scope a job - from a COREN and NEMSA certified team in Abuja.',
   path: '/faq',
   image: '/images/photos/faq-hero-inspection.jpg',
 })

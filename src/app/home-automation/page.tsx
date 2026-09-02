@@ -17,7 +17,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 export const metadata: Metadata = pageMetadata({
   title: 'Home Automation Systems',
   description:
-    'Smart lighting, climate, and access control integrated at the electrical layer, not bolted on — for homes, offices, and new builds across Abuja.',
+    'Smart lighting, climate, and access control integrated at the electrical layer, not bolted on - for homes, offices, and new builds across Abuja.',
   path: '/home-automation',
   image: '/images/photos/home-automation-hero-smart-panel.jpg',
 })
@@ -54,7 +54,7 @@ const technicalConsiderations = [
   {
     title: 'Automation is only as good as the wiring behind it',
     description:
-      'A smart switch on a poorly designed circuit is still a poorly designed circuit. We integrate automation into the electrical design itself — circuit layout, load calculations, and control wiring — rather than treating it as an add-on to existing switches.',
+      'A smart switch on a poorly designed circuit is still a poorly designed circuit. We integrate automation into the electrical design itself - circuit layout, load calculations, and control wiring - rather than treating it as an add-on to existing switches.',
   },
   {
     title: 'Plan for the platform you actually want to use',
@@ -146,8 +146,8 @@ export default function HomeAutomationPage() {
             <p className="mt-5 max-w-2xl leading-relaxed text-ink/75">
               Automation systems installed after the fact tend to fight the
               existing wiring. We design smart lighting, climate, and access
-              control into the electrical layout itself — for new builds and
-              retrofits alike — so the system is reliable, not a patchwork of
+              control into the electrical layout itself - for new builds and
+              retrofits alike - so the system is reliable, not a patchwork of
               devices bolted onto circuits that weren&rsquo;t built for them.
             </p>
           </Reveal>

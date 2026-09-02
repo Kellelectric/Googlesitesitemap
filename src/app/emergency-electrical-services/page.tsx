@@ -48,7 +48,7 @@ const emergencyProcess = [
     step: '02',
     title: 'Safety triage',
     description:
-      'We walk you through immediate safety steps over the phone if needed — switching off the main supply, keeping clear of the affected area, not touching exposed conductors.',
+      'We walk you through immediate safety steps over the phone if needed - switching off the main supply, keeping clear of the affected area, not touching exposed conductors.',
   },
   {
     step: '03',
@@ -67,7 +67,7 @@ const technicalConsiderations = [
   {
     title: 'Why you should isolate power, not investigate it',
     description:
-      "A tripped breaker or blown fuse is a protective device doing its job — repeatedly resetting it without diagnosing the cause risks re-energizing a fault. Isolating the circuit (or the main supply, if the fault location isn't obvious) and waiting for a technician is safer than testing it yourself.",
+      "A tripped breaker or blown fuse is a protective device doing its job - repeatedly resetting it without diagnosing the cause risks re-energizing a fault. Isolating the circuit (or the main supply, if the fault location isn't obvious) and waiting for a technician is safer than testing it yourself.",
   },
   {
     title: 'Burning smells don’t always trace to the obvious source',
@@ -310,7 +310,7 @@ export default function EmergencyElectricalServicesPage() {
 
       <CTASection
         heading="Have an active electrical emergency?"
-        body="Don't wait for a scheduled visit — call or WhatsApp us now."
+        body="Don't wait for a scheduled visit - call or WhatsApp us now."
         primaryLabel="CALL NOW"
         primaryHref={company.phoneHref}
         secondaryLabel="WHATSAPP"

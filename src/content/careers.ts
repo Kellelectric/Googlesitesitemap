@@ -37,7 +37,7 @@ export const careerTracks: CareerTrack[] = [
     summary:
       'Short-term, supervised placements for students and early-career candidates to get hands-on exposure to electrical engineering work.',
     description:
-      "An internship at Kell Electricals puts you alongside our engineering and technical teams on real jobs — assessments, installations, testing, and documentation — under supervision. It's a way to see how a COREN and NEMSA certified electrical contractor actually operates day to day, not classroom theory.",
+      "An internship at Kell Electricals puts you alongside our engineering and technical teams on real jobs - assessments, installations, testing, and documentation - under supervision. It's a way to see how a COREN and NEMSA certified electrical contractor actually operates day to day, not classroom theory.",
     whoItsFor: [
       'Students currently enrolled in an engineering or technical programme',
       'Recent graduates exploring electrical engineering as a career path',
@@ -123,13 +123,13 @@ export const careerTracks: CareerTrack[] = [
     slug: 'job-openings',
     name: 'Job Openings',
     summary:
-      "Current openings and roles we're actively considering candidates for at Kell Electricals Ltd — apply even if your exact role isn't listed.",
+      "Current openings and roles we're actively considering candidates for at Kell Electricals Ltd - apply even if your exact role isn't listed.",
     description:
       "We don't currently maintain a live, self-updating job board on this site. Below are roles we're actively considering candidates for; if you'd like to be considered for a role not listed, or want to ask whether we're hiring for a specific position, fill out the application form below.",
     whoItsFor: [
-      'Licensed Electrician (Journeyman level) — residential & commercial installation and fault-finding',
-      'Site Supervisor — coordinating multi-trade electrical fit-outs on active construction sites',
-      'Solar & Inverter Installation Technician — hybrid solar/battery system installation and commissioning',
+      'Licensed Electrician (Journeyman level) - residential & commercial installation and fault-finding',
+      'Site Supervisor - coordinating multi-trade electrical fit-outs on active construction sites',
+      'Solar & Inverter Installation Technician - hybrid solar/battery system installation and commissioning',
     ],
     whatToExpect: [
       'Direct application review by our engineering team, not an automated filter',

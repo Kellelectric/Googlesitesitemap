@@ -52,7 +52,7 @@ export default function HomePage() {
         <div className="container-content text-center">
           <Reveal>
             <p className="text-ink/70">
-              Real engineers, not a call center — see who&rsquo;s behind the work.
+              Real engineers, not a call center - see who&rsquo;s behind the work.
             </p>
             <Link
               href="/about#team"

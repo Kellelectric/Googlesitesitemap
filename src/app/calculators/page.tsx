@@ -6,6 +6,9 @@ import { FAQSection } from '@/components/sections/FAQSection'
 import { LoadCalculator } from '@/components/calculators/LoadCalculator'
 import { SolarSizingCalculator } from '@/components/calculators/SolarSizingCalculator'
 import { GeneratorSizingCalculator } from '@/components/calculators/GeneratorSizingCalculator'
+import { VoltageDropCalculator } from '@/components/calculators/VoltageDropCalculator'
+import { CableSizeCalculator } from '@/components/calculators/CableSizeCalculator'
+import { BatteryRuntimeCalculator } from '@/components/calculators/BatteryRuntimeCalculator'
 import { company } from '@/content/company'
 import { calculatorsFAQs } from '@/content/faqs'
 import { breadcrumbSchema } from '@/lib/schema'
@@ -13,9 +16,9 @@ import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Load, Solar & Generator Calculators',
+  title: 'Electrical & Solar Sizing Calculators',
   description:
-    'Free electrical load, solar/battery, and generator sizing calculators for Abuja homes and businesses — indicative estimates, not a real assessment.',
+    'Free load, solar/battery, generator, voltage drop, cable size, and battery runtime calculators for Abuja - indicative estimates, not a real assessment.',
   path: '/calculators',
 })
 
@@ -49,14 +52,13 @@ export default function CalculatorsPage() {
         <div className="container-content relative py-20">
           <span className="eyebrow text-yellow">Free tools</span>
           <h1 className="mt-3 max-w-2xl text-4xl font-semibold md:text-5xl">
-            Load &amp; Solar Sizing Calculators
+            Electrical &amp; Solar Sizing Calculators
           </h1>
           <p className="mt-5 max-w-xl text-paper/70">
-            Three quick planning tools: estimate your property&rsquo;s
-            connected electrical load, get a rough starting point for a
-            solar and battery system size, or size a backup generator.
-            All three are indicative estimates — we still run a real load
-            assessment before quoting any job.
+            Six quick planning tools covering connected load, solar and
+            battery sizing, backup generators, voltage drop, cable sizing,
+            and battery runtime. All are indicative estimates - we still
+            run a real load assessment before quoting any job.
           </p>
         </div>
       </section>
@@ -81,6 +83,30 @@ export default function CalculatorsPage() {
         <div className="container-content">
           <Reveal>
             <GeneratorSizingCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <VoltageDropCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <CableSizeCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <BatteryRuntimeCalculator />
           </Reveal>
         </div>
       </section>

@@ -31,7 +31,7 @@ export function SolarSizingCalculator({ dark = false }: { dark?: boolean }) {
         Enter the load you want backed up and how many hours you need it to
         run, and this gives an indicative battery and panel size based on
         Abuja&rsquo;s average sun hours. Your actual system is sized from a
-        real consumption audit, not this estimate — see our{' '}
+        real consumption audit, not this estimate - see our{' '}
         <Link href="/solar-energy-systems" className="link-underline font-semibold">
           sizing methodology
         </Link>
@@ -50,7 +50,7 @@ export function SolarSizingCalculator({ dark = false }: { dark?: boolean }) {
             className={`${inputClass} mt-2`}
           />
           <span className={`mt-1 block text-xs ${labelClass}`}>
-            e.g. lighting, fridge, networking, security — the circuits that must stay on
+            e.g. lighting, fridge, networking, security - the circuits that must stay on
           </span>
         </label>
         <label className="block">
@@ -85,7 +85,7 @@ export function SolarSizingCalculator({ dark = false }: { dark?: boolean }) {
 
       <p className={`mt-6 text-xs leading-relaxed ${labelClass}`}>
         Assumes {ABUJA_AVERAGE_PEAK_SUN_HOURS} average peak sun hours/day, an 80% usable battery
-        depth-of-discharge, and typical system losses — a planning estimate,
+        depth-of-discharge, and typical system losses - a planning estimate,
         not a quote.{' '}
         <Link href="/contact" className="link-underline font-semibold text-yellow">
           Request a sizing consultation

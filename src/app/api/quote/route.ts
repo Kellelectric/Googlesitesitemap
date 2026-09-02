@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
   const webhookUrl = process.env.QUOTE_WEBHOOK_URL
   if (!webhookUrl) {
     console.error(
-      'QUOTE_WEBHOOK_URL is not configured — quote request was received but not forwarded anywhere.',
+      'QUOTE_WEBHOOK_URL is not configured - quote request was received but not forwarded anywhere.',
     )
     return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
   }

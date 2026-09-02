@@ -50,7 +50,7 @@ export function LoadCalculator() {
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/65">
         Pick a building type, adjust the quantities to match your property,
         and get an indicative connected load and recommended minimum
-        inverter/generator size. This is a planning estimate — a real load
+        inverter/generator size. This is a planning estimate - a real load
         assessment measures your actual consumption before we size anything.
       </p>
 
@@ -110,7 +110,7 @@ export function LoadCalculator() {
       </div>
 
       <p className="mt-6 text-xs leading-relaxed text-ink/60">
-        Indicative estimate only, based on typical appliance wattages — not
+        Indicative estimate only, based on typical appliance wattages - not
         a measured load assessment.{' '}
         <Link href="/contact" className="link-underline font-semibold text-petrol">
           Request a real load assessment

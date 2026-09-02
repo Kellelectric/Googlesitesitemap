@@ -358,7 +358,7 @@ export const articles: Article[] = [
         heading: 'Fuel type is a sizing input, not an afterthought',
         body: [
           'Diesel, petrol, and gas generators differ in run-time per fuel volume, refuelling logistics, and noise and emissions profile, which changes how practical a given capacity actually is for continuous or extended-outage use. A correctly sized generator on the wrong fuel type for the site\'s realistic refuelling access still fails the property during a long outage.',
-          'This is why generator sizing and selection is done together with the same load assessment used for solar and hybrid systems, not as a separate, simpler calculation — the underlying discipline (measure the real load, then size to it) is the same regardless of which backup technology is chosen.',
+          'This is why generator sizing and selection is done together with the same load assessment used for solar and hybrid systems, not as a separate, simpler calculation - the underlying discipline (measure the real load, then size to it) is the same regardless of which backup technology is chosen.',
         ],
       },
     ],
@@ -373,34 +373,34 @@ export const articles: Article[] = [
     title: 'Understanding Cable Sizes for Residential Electrical Installations',
     seoTitle: 'Understanding Residential Cable Sizes',
     summary:
-      'The right cable size depends on load, run length, and installation method together — not a single lookup number for "a socket circuit."',
+      'The right cable size depends on load, run length, and installation method together - not a single lookup number for "a socket circuit."',
     category: 'Compliance',
     sections: [
       {
         heading: 'Cable size is a function of current, not just circuit type',
         body: [
           'A cable rated for a given current-carrying capacity has to be sized to the actual load it will carry, with a safety margin, not chosen from habit because "that\'s what goes on a socket circuit." Two circuits that look identical on a drawing can need different cable sizes if one feeds a run of general sockets and the other feeds a fixed high-draw appliance like an air conditioner or an electric water heater.',
-          'Undersizing shows up as overheating under sustained load, well before it trips a correctly rated breaker — the breaker protects the cable from a fault current, not from a mismatch between cable size and normal operating load.',
+          'Undersizing shows up as overheating under sustained load, well before it trips a correctly rated breaker - the breaker protects the cable from a fault current, not from a mismatch between cable size and normal operating load.',
         ],
       },
       {
         heading: 'Run length and voltage drop change the calculation',
         body: [
           'The same load run over a longer cable length needs a larger cable to keep voltage drop within an acceptable range, particularly for outbuildings, boreholes, or a garage some distance from the main distribution board. A cable sized correctly for a short run can still cause dimming, sluggish motor starting, or unreliable operation of sensitive electronics if used unchanged over a much longer run.',
-          'This is why a cable schedule is a real engineering document, not a generic size list — it accounts for each circuit\'s actual length alongside its load.',
+          'This is why a cable schedule is a real engineering document, not a generic size list - it accounts for each circuit\'s actual length alongside its load.',
         ],
       },
       {
         heading: 'Installation method affects the derating',
         body: [
           'A cable bundled tightly with several others inside conduit, or buried underground, dissipates heat differently than one run singly in free air, which changes its safe current-carrying capacity for the same cross-sectional area. Sizing a cable schedule from a single generic table without accounting for how each run is actually installed is a common source of undersized circuits that look correct on paper.',
-          'Ambient temperature matters too — a roof space or an enclosed panel room that runs hot reduces a cable\'s safe capacity compared to the same cable in a cooler location.',
+          'Ambient temperature matters too - a roof space or an enclosed panel room that runs hot reduces a cable\'s safe capacity compared to the same cable in a cooler location.',
         ],
       },
       {
         heading: 'Protective device sizing follows the cable, not the other way round',
         body: [
-          'Once a cable is correctly sized for its load, run length, and installation method, the circuit breaker or fuse protecting it is selected to protect that specific cable from overload and fault current — an oversized breaker on an undersized cable defeats the protection it is meant to provide. This is one of the most common defects we find on inspection of existing installations: a cable that was adequate for its original load, with a breaker later upsized to stop nuisance tripping instead of correcting the underlying load mismatch.',
+          'Once a cable is correctly sized for its load, run length, and installation method, the circuit breaker or fuse protecting it is selected to protect that specific cable from overload and fault current - an oversized breaker on an undersized cable defeats the protection it is meant to provide. This is one of the most common defects we find on inspection of existing installations: a cable that was adequate for its original load, with a breaker later upsized to stop nuisance tripping instead of correcting the underlying load mismatch.',
         ],
       },
     ],
@@ -411,7 +411,7 @@ export const articles: Article[] = [
     title: 'Common Solar Installation Mistakes We See in Nigeria',
     seoTitle: 'Common Solar Installation Mistakes',
     summary:
-      "Most underperforming solar systems weren't built with bad equipment — they were built without an engineering process behind it.",
+      "Most underperforming solar systems weren't built with bad equipment - they were built without an engineering process behind it.",
     category: 'Solar & Energy',
     sections: [
       {
@@ -423,20 +423,20 @@ export const articles: Article[] = [
       {
         heading: 'Ignoring shading and roof orientation at design stage',
         body: [
-          'Partial shading on even a small portion of a panel string — from a water tank, a neighbouring structure, or a tree that grows over time — can drag down the output of an entire string, not just the shaded panels, depending on how the array is wired. A design that accounts for the site\'s actual shading pattern across the day, not just its condition at the moment of a single site visit, avoids this.',
+          'Partial shading on even a small portion of a panel string - from a water tank, a neighbouring structure, or a tree that grows over time - can drag down the output of an entire string, not just the shaded panels, depending on how the array is wired. A design that accounts for the site\'s actual shading pattern across the day, not just its condition at the moment of a single site visit, avoids this.',
           'Roof orientation and pitch affect realistic daily output too; a design that ignores this and applies a generic sun-hours assumption regardless of the specific roof tends to overpromise on performance.',
         ],
       },
       {
         heading: 'Under-specifying cabling and combiner protection for a DC array',
         body: [
-          'Solar DC wiring runs at different voltage and fault characteristics than the household AC wiring most general electrical work deals with, and needs cable sizing, combiner boxes, and DC-rated protective devices selected accordingly — not AC-rated components repurposed for a DC circuit. This is a common corner cut on installs that were priced to compete purely on panel count and battery capacity, since it\'s not visible without inspecting behind the panels.',
+          'Solar DC wiring runs at different voltage and fault characteristics than the household AC wiring most general electrical work deals with, and needs cable sizing, combiner boxes, and DC-rated protective devices selected accordingly - not AC-rated components repurposed for a DC circuit. This is a common corner cut on installs that were priced to compete purely on panel count and battery capacity, since it\'s not visible without inspecting behind the panels.',
         ],
       },
       {
         heading: 'No commissioning or monitoring at handover',
         body: [
-          'A system that powers on the day of installation isn\'t verified to actually deliver its designed backup duration or recharge on schedule unless it\'s tested against that design at commissioning. Without monitoring in place from day one, a slowly degrading string, an underperforming inverter, or a battery not reaching full charge can go unnoticed for months — the first sign is often a backup that runs out sooner than expected during an extended outage, by which point the underlying fault has usually gotten worse.',
+          'A system that powers on the day of installation isn\'t verified to actually deliver its designed backup duration or recharge on schedule unless it\'s tested against that design at commissioning. Without monitoring in place from day one, a slowly degrading string, an underperforming inverter, or a battery not reaching full charge can go unnoticed for months - the first sign is often a backup that runs out sooner than expected during an extended outage, by which point the underlying fault has usually gotten worse.',
         ],
       },
     ],

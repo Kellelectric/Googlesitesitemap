@@ -21,7 +21,7 @@ export function AreasPreview() {
         </Reveal>
 
         <p className="mt-6 max-w-2xl text-sm text-ink/70">
-          Featured districts with a dedicated page below — every other part
+          Featured districts with a dedicated page below - every other part
           of Abuja is covered too.
         </p>
         <StaggerGroup className="mt-6 flex flex-wrap gap-3">

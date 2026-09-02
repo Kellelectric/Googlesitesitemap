@@ -16,8 +16,7 @@ export default function ContactPage() {
       <section className="relative overflow-hidden bg-petrol text-paper">
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">
-          <span className="eyebrow text-yellow">Contact</span>
-          <h1 className="mt-3 max-w-2xl text-4xl font-semibold md:text-5xl">
+          <h1 className="max-w-2xl text-4xl font-semibold [text-wrap:balance] md:text-5xl">
             Scope your job with our team
           </h1>
           <p className="mt-5 max-w-xl text-paper/70">

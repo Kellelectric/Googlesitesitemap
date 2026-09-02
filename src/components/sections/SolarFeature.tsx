@@ -12,8 +12,7 @@ export function SolarFeature() {
       <CircuitLines className="pointer-events-none absolute -left-32 -top-16 h-[140%] w-[70%] text-paper/5" />
       <div className="container-content relative grid grid-cols-1 gap-12 py-24 md:grid-cols-2 md:items-center">
         <Reveal>
-          <span className="eyebrow text-yellow">Featured capability</span>
-          <h2 className="mt-3 text-3xl font-semibold md:text-4xl">
+          <h2 className="text-3xl font-semibold md:text-4xl [text-wrap:balance]">
             {solar.name}
           </h2>
           <p className="mt-5 text-paper/70 leading-relaxed">
@@ -29,8 +28,10 @@ export function SolarFeature() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.12} className="border border-paper/15 p-8">
-          <span className="eyebrow text-paper/50">System design covers</span>
+        <Reveal delay={0.12} className="border border-copper/25 bg-petrol-700/40 p-8">
+          <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-copper">
+            System design covers
+          </span>
           <ul className="mt-5 space-y-4">
             {solar.scope.map((item) => (
               <li key={item} className="flex gap-3 text-sm text-paper/80">

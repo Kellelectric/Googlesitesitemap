@@ -44,7 +44,8 @@
     "typographyMeta": {
       "display": { "displayName": "Display", "purpose": "Hero H1 only — Space Grotesk 700, balanced, 0.98 line-height." },
       "body": { "displayName": "Body", "purpose": "Paragraph copy — Inter 400, 65-75ch measure." },
-      "label": { "displayName": "Instrument Label", "purpose": "Data readouts only — JetBrains Mono, tabular-nums for digits. Never a headline or sentence." }
+      "label": { "displayName": "Instrument Label", "purpose": "Data readouts only — JetBrains Mono, tabular-nums for digits. Never a headline or sentence." },
+      "microLabel": { "displayName": "Micro-label", "purpose": "0.7rem uppercase mono — fieldset legends, ticket-row labels, compact captions. One step below Instrument Label." }
     },
     "shadows": [
       { "name": "panel", "value": "0 10px 30px -16px rgba(0,0,0,0.7)", "purpose": "The instrument-panel bezel (StatsBar) — one shadow per cluster, not per item." },

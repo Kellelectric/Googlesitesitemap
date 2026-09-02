@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/about`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/services`, lastModified: new Date(), priority: 0.9, changeFrequency: 'weekly' },
     { url: `${base}/solar-energy-systems`, lastModified: new Date(), priority: 0.9, changeFrequency: 'monthly' },
+    { url: `${base}/book`, lastModified: new Date(), priority: 0.8, changeFrequency: 'monthly' },
     { url: `${base}/contact`, lastModified: new Date(), priority: 0.8, changeFrequency: 'monthly' },
   ]
 

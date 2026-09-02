@@ -15,13 +15,16 @@ export function CTASection() {
             respond with a scoped assessment, not a guess.
           </p>
         </div>
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap items-center gap-4">
           <Button href="/contact" variant="primary">
             Request a Quote
           </Button>
-          <Button href={company.phoneHref} variant="secondary">
-            Call {company.phone}
+          <Button href="/book" variant="secondary">
+            Book a Site Assessment
           </Button>
+          <a href={company.phoneHref} className="link-underline text-sm text-paper/70">
+            or call {company.phone}
+          </a>
         </div>
       </Reveal>
     </section>

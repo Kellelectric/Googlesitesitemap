@@ -6,8 +6,7 @@ export function ProcessSection() {
     <section className="bg-paper py-24">
       <div className="container-content">
         <Reveal>
-          <span className="eyebrow text-petrol/60">How we work</span>
-          <h2 className="mt-3 max-w-xl text-3xl font-semibold text-ink md:text-4xl">
+          <h2 className="max-w-xl text-3xl font-semibold text-ink md:text-4xl [text-wrap:balance]">
             The same engineering process, every job
           </h2>
         </Reveal>
@@ -15,7 +14,7 @@ export function ProcessSection() {
         <StaggerGroup className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {process.map((step) => (
             <MotionDiv key={step.step} variants={staggerItem} className="border-t-2 border-petrol pt-5">
-              <span className="font-display text-sm text-petrol/50">
+              <span className="font-mono text-sm text-petrol/50">
                 {step.step}
               </span>
               <h3 className="mt-2 text-lg font-semibold text-ink">

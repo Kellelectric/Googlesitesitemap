@@ -101,6 +101,7 @@ Closed palette — five hues plus two neutrals. No sixth hue without a documente
 - **Title** (500, 1.375rem, 1.25): Card/component H3s.
 - **Body** (400, 1rem, 1.6): Paragraph copy, 65–75ch measure.
 - **Label/Mono** (400–500, 0.8125rem, 0.06em tracking): Instrument and credential readouts (RC number, certification strip, meter-plate digits, HUD coordinates). Digits set `tabular-nums`.
+- **Micro-label** (400, 0.7rem, 0.08–0.1em tracking, uppercase): Fieldset legends and compact instrument captions where 0.8125rem reads too heavy — form-step legends ("01 · What's this appointment for"), ticket-row labels, date-chip weekday/month. Same mono/uppercase treatment as Label, one step down; never used for anything a visitor reads as prose.
 
 ### Named Rules
 **The Instrument-Only Mono Rule.** JetBrains Mono renders data — numbers, IDs, coordinates, certifications — never a headline, a button label, or a sentence of body copy. The moment mono type carries prose, it has become a costume instead of a readout.

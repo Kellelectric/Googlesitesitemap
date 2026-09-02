@@ -14,7 +14,7 @@ export const ceoMessage = {
   heading: 'A note from our founder',
   message: [
     "I started Kell Electricals in 2010 because I kept seeing the same problem on job after job: work that looked finished but wasn't done properly underneath. Wiring that passed a glance but not a real inspection. Panels sized by guesswork instead of measurement.",
-    "Every job we take on today still gets held to that same standard — COREN and NEMSA compliant, documented, and tested before we call it done. That's not a slogan for us. It's the reason clients call us back, and the reason our own name is on every job we complete.",
+    "Every job we take on today still gets held to that same standard - COREN and NEMSA compliant, documented, and tested before we call it done. That's not a slogan for us. It's the reason clients call us back, and the reason our own name is on every job we complete.",
   ],
   signOff: 'Gabriel Ioryem',
   signOffTitle: 'Founder & CEO',

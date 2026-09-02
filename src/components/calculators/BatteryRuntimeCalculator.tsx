@@ -67,8 +67,8 @@ export function BatteryRuntimeCalculator() {
 
       <p className="mt-6 text-xs leading-relaxed text-ink/60">
         Assumes a {Math.round(BATTERY_DEPTH_OF_DISCHARGE * 100)}% usable depth-of-discharge (typical for a
-        lithium battery bank — lead-acid systems are usually derated
-        further) and {Math.round(BATTERY_ROUND_TRIP_EFFICIENCY * 100)}% round-trip efficiency — a planning
+        lithium battery bank - lead-acid systems are usually derated
+        further) and {Math.round(BATTERY_ROUND_TRIP_EFFICIENCY * 100)}% round-trip efficiency - a planning
         estimate, not a measurement of your actual battery bank.{' '}
         <Link href="/contact" className="link-underline font-semibold text-petrol">
           Request a sizing consultation

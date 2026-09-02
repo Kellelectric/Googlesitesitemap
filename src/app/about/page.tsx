@@ -16,7 +16,7 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 
 export const metadata: Metadata = pageMetadata({
   title: 'About Us',
-  description: `COREN and NEMSA certified electrical engineering in Wuse 2, Abuja — ${company.teamExperienceYears}+ years of combined experience in residential, commercial, and industrial work.`,
+  description: `COREN and NEMSA certified electrical engineering in Wuse 2, Abuja - ${company.teamExperienceYears}+ years of combined experience in residential, commercial, and industrial work.`,
   path: '/about',
   image: '/images/photos/about-blueprint-review.jpg',
 })
@@ -50,7 +50,7 @@ const values = [
   {
     title: 'Documented, not just done',
     description:
-      'A specified design, commissioning tests, and as-built documentation on handover — so the client has a record, not just a memory.',
+      'A specified design, commissioning tests, and as-built documentation on handover - so the client has a record, not just a memory.',
   },
   {
     title: 'Engineered for real conditions',
@@ -248,7 +248,7 @@ export default function AboutPage() {
                 <span className="eyebrow text-petrol/70">Our mission</span>
                 <p className="mt-3 leading-relaxed text-ink/75">
                   To engineer electrical infrastructure for the grid
-                  conditions that actually exist in Nigeria — with load
+                  conditions that actually exist in Nigeria - with load
                   analysis before design, documented specifications before
                   installation, and compliance testing before handover, on
                   every job regardless of size.
@@ -258,7 +258,7 @@ export default function AboutPage() {
                 <span className="eyebrow text-petrol/70">Our vision</span>
                 <p className="mt-3 leading-relaxed text-ink/75">
                   To be the electrical engineering partner Nigerian homes,
-                  businesses, and industrial sites trust by default — known
+                  businesses, and industrial sites trust by default - known
                   for work that is engineered, documented, and built to last.
                 </p>
               </div>

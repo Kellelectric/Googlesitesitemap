@@ -120,7 +120,7 @@ export function VoltageDropCalculator() {
           </p>
           <p className="mt-1 text-xs text-ink/60">
             {isHigh
-              ? 'Above the 5% figure widely used as an upper planning limit — a larger cable is worth checking.'
+              ? 'Above the 5% figure widely used as an upper planning limit - a larger cable is worth checking.'
               : isBorderline
                 ? 'Above the more conservative 3% planning threshold, though within the wider 5% figure some references allow.'
                 : 'Within the 3% figure commonly used as a conservative planning threshold.'}

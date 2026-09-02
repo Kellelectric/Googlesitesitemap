@@ -60,7 +60,7 @@ const technicalConsiderations = [
   {
     title: 'Coverage is a design problem, not a camera count',
     description:
-      'More cameras positioned badly still leave blind spots. We survey the site and design placement for actual coverage of entry points, perimeter, and specific assets — then size the cabling and power to match.',
+      'More cameras positioned badly still leave blind spots. We survey the site and design placement for actual coverage of entry points, perimeter, and specific assets - then size the cabling and power to match.',
   },
   {
     title: 'PoE power and structured cabling matter as much as the camera',
@@ -70,7 +70,7 @@ const technicalConsiderations = [
   {
     title: 'Plan integration up front, not after installation',
     description:
-      "If you want CCTV working with gate automation, access control, or alarms, that's easier to design in from the start than to bolt on afterward — worth flagging during the site survey.",
+      "If you want CCTV working with gate automation, access control, or alarms, that's easier to design in from the start than to bolt on afterward - worth flagging during the site survey.",
   },
 ]
 

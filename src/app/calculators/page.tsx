@@ -18,7 +18,7 @@ import { Reveal } from '@/components/ui/Reveal'
 export const metadata: Metadata = pageMetadata({
   title: 'Electrical & Solar Sizing Calculators',
   description:
-    'Free load, solar/battery, generator, voltage drop, cable size, and battery runtime calculators for Abuja — indicative estimates, not a real assessment.',
+    'Free load, solar/battery, generator, voltage drop, cable size, and battery runtime calculators for Abuja - indicative estimates, not a real assessment.',
   path: '/calculators',
 })
 
@@ -57,7 +57,7 @@ export default function CalculatorsPage() {
           <p className="mt-5 max-w-xl text-paper/70">
             Six quick planning tools covering connected load, solar and
             battery sizing, backup generators, voltage drop, cable sizing,
-            and battery runtime. All are indicative estimates — we still
+            and battery runtime. All are indicative estimates - we still
             run a real load assessment before quoting any job.
           </p>
         </div>

@@ -37,7 +37,7 @@ export function CableSizeCalculator() {
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/65">
         Works out the smallest standard cable cross-section that keeps
         voltage drop within your chosen limit for this specific current
-        and run length — not a generic size picked from habit.
+        and run length - not a generic size picked from habit.
       </p>
 
       <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -126,7 +126,7 @@ export function CableSizeCalculator() {
       </div>
 
       <p className="mt-6 text-xs leading-relaxed text-ink/60">
-        Sized on current-carrying and voltage-drop math only — the real
+        Sized on current-carrying and voltage-drop math only - the real
         cable schedule also accounts for installation method (conduit,
         bundling, buried) and ambient temperature, which can call for a
         larger size than this alone suggests.{' '}

@@ -35,7 +35,7 @@ export function GeneratorSizingCalculator() {
       </h2>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/65">
         Enter your total running load and the single largest motor load on
-        the property (a borehole pump or AC compressor, for example) — this
+        the property (a borehole pump or AC compressor, for example) - this
         checks both the steady running load and the starting surge that
         load draws, and sizes to whichever needs more. See{' '}
         <Link href="/resources/how-to-size-a-backup-generator" className="link-underline font-semibold">
@@ -56,7 +56,7 @@ export function GeneratorSizingCalculator() {
             className={`${inputClass} mt-2`}
           />
           <span className="mt-1 block text-xs text-ink/60">
-            Sum of everything running at once — use the load calculator above if you need this.
+            Sum of everything running at once - use the load calculator above if you need this.
           </span>
         </label>
         <label className="block">
@@ -109,7 +109,7 @@ export function GeneratorSizingCalculator() {
 
       <p className="mt-6 text-xs leading-relaxed text-ink/60">
         Assumes a {Math.round(DEFAULT_POWER_FACTOR * 100)}% power factor, a typical planning figure
-        for a mixed load — a real load assessment measures your actual
+        for a mixed load - a real load assessment measures your actual
         power factor and running load before we size anything.{' '}
         <Link href="/contact" className="link-underline font-semibold text-petrol">
           Request a real load assessment

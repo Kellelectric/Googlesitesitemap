@@ -42,7 +42,7 @@ export const calculatorsFAQs: FAQ[] = [
   {
     question: 'What assumptions does the solar sizing calculator use?',
     answer:
-      "It assumes a lithium battery bank at 80% usable depth-of-discharge, 90% round-trip efficiency, roughly 75% combined system losses (inverter conversion, wiring, temperature derating, dust), and Abuja's widely cited average of about 5 peak sun hours a day. None of these are guarantees for your specific site or season — a real design uses your measured load and a site-specific irradiance and shading assessment.",
+      "It assumes a lithium battery bank at 80% usable depth-of-discharge, 90% round-trip efficiency, roughly 75% combined system losses (inverter conversion, wiring, temperature derating, dust), and Abuja's widely cited average of about 5 peak sun hours a day. None of these are guarantees for your specific site or season - a real design uses your measured load and a site-specific irradiance and shading assessment.",
   },
   {
     question: 'Why does the load calculator add 25% to my connected wattage?',
@@ -50,9 +50,9 @@ export const calculatorsFAQs: FAQ[] = [
       'That 25% safety margin covers the starting/surge current that motors and compressors (air conditioners, pumps, fridges) draw briefly when they switch on, which is higher than their steady running wattage. Sizing an inverter or generator to only the running total risks nuisance tripping the moment one of those loads starts.',
   },
   {
-    question: "The appliance list doesn't match what I actually have — is that a problem?",
+    question: "The appliance list doesn't match what I actually have - is that a problem?",
     answer:
-      "Not for the tool's purpose. The wattages are generic, publicly known typical figures for each appliance category, not measurements of your specific units, and every quantity and item is editable. Treat the result as a starting point for a conversation, not a spec sheet — a real load assessment measures your actual equipment.",
+      "Not for the tool's purpose. The wattages are generic, publicly known typical figures for each appliance category, not measurements of your specific units, and every quantity and item is editable. Treat the result as a starting point for a conversation, not a spec sheet - a real load assessment measures your actual equipment.",
   },
 ]
 
@@ -62,7 +62,7 @@ export const faqCategories: FAQCategory[] = [
     items: [
       {
         question: 'What areas do you serve?',
-        answer: `We're based in ${company.address.district}, ${company.address.city}, and serve all of Abuja — including ${company.serviceAreas.slice(0, -1).join(', ')}, and ${company.serviceAreas[company.serviceAreas.length - 1]} — with project work extending to ${company.serviceRegion} depending on scope.`,
+        answer: `We're based in ${company.address.district}, ${company.address.city}, and serve all of Abuja - including ${company.serviceAreas.slice(0, -1).join(', ')}, and ${company.serviceAreas[company.serviceAreas.length - 1]} - with project work extending to ${company.serviceRegion} depending on scope.`,
       },
       {
         question: 'Are you licensed and certified?',
@@ -127,7 +127,7 @@ export const faqCategories: FAQCategory[] = [
       {
         question: 'Can automation be added to an existing property, or only new builds?',
         answer:
-          'Both. New builds let us design the wiring and control layout together from the start, which is cleaner, but retrofitting smart lighting, climate, and access control into an existing property is a regular part of our scope too — it just needs a site assessment first to plan around the existing circuits.',
+          'Both. New builds let us design the wiring and control layout together from the start, which is cleaner, but retrofitting smart lighting, climate, and access control into an existing property is a regular part of our scope too - it just needs a site assessment first to plan around the existing circuits.',
       },
       {
         question: 'Will a power outage disable the automation system?',
@@ -137,7 +137,7 @@ export const faqCategories: FAQCategory[] = [
       {
         question: 'Do you work with a specific smart home platform?',
         answer:
-          "We design the electrical and control-panel infrastructure to work with your chosen app/platform rather than locking you into one — tell us what you're trying to control (lighting, climate, access, scenes) and we scope the electrical side accordingly.",
+          "We design the electrical and control-panel infrastructure to work with your chosen app/platform rather than locking you into one - tell us what you're trying to control (lighting, climate, access, scenes) and we scope the electrical side accordingly.",
       },
     ],
   },
@@ -152,12 +152,12 @@ export const faqCategories: FAQCategory[] = [
       {
         question: 'Can I view footage remotely?',
         answer:
-          'Yes — remote viewing and alert setup on your phone or computer is part of a standard installation, alongside the NVR/DVR recording setup on site.',
+          'Yes - remote viewing and alert setup on your phone or computer is part of a standard installation, alongside the NVR/DVR recording setup on site.',
       },
       {
         question: 'Can CCTV be integrated with gates or access control?',
         answer:
-          'Yes, integration with automated gates and access control is a regular part of our security and automation scope — worth mentioning upfront if you want them working together rather than as separate systems.',
+          'Yes, integration with automated gates and access control is a regular part of our security and automation scope - worth mentioning upfront if you want them working together rather than as separate systems.',
       },
     ],
   },

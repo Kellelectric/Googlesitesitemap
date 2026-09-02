@@ -35,7 +35,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: 'residential-estate-rewire-wuse-2',
-    title: 'Full Electrical Rewire — 50-Unit Residential Estate',
+    title: 'Full Electrical Rewire - 50-Unit Residential Estate',
     sector: 'residential',
     serviceSlugs: ['electrical-wiring-installation', 'panel-repair-upgrades'],
     location: 'Wuse 2, Abuja',
@@ -51,7 +51,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'office-fitout-power-data-cbd',
-    title: 'Electrical Fit-Out — Multi-Floor Office Building',
+    title: 'Electrical Fit-Out - Multi-Floor Office Building',
     sector: 'commercial',
     serviceSlugs: ['commercial-office-fitout', 'lighting-design-installation'],
     location: 'Central Business District, Abuja',
@@ -67,7 +67,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'hybrid-solar-install-gwarinpa',
-    title: 'Hybrid Solar & Battery System — Residential Property',
+    title: 'Hybrid Solar & Battery System - Residential Property',
     sector: 'residential',
     serviceSlugs: ['solar-inverter-systems', 'energy-audits'],
     location: 'Gwarinpa, Abuja',
@@ -78,12 +78,12 @@ export const projects: Project[] = [
     solution:
       'We measured actual circuit-level consumption over a full week to build a real load profile, then sized a hybrid solar-battery-generator system: solar and battery as the default day-to-day source, generator as automatic backup for extended or high-load periods. The system was commissioned with performance testing against the design spec, not just a visual check.',
     outcome:
-      'The household now runs primarily on solar and battery day-to-day, with the generator reserved for extended outages — reducing routine generator runtime and fuel spend. Monitoring was set up at commissioning so performance can be verified on an ongoing basis.',
+      'The household now runs primarily on solar and battery day-to-day, with the generator reserved for extended outages - reducing routine generator runtime and fuel spend. Monitoring was set up at commissioning so performance can be verified on an ongoing basis.',
     image: '/images/photos/solar-roof-install.jpg',
   },
   {
     slug: 'industrial-panel-upgrade-idu',
-    title: 'Three-Phase Distribution Upgrade — Manufacturing Facility',
+    title: 'Three-Phase Distribution Upgrade - Manufacturing Facility',
     sector: 'industrial',
     serviceSlugs: ['industrial-electrical-systems', 'panel-repair-upgrades'],
     location: 'Idu Industrial Area, Abuja',
@@ -99,7 +99,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'cctv-security-upgrade-retail-plaza',
-    title: 'CCTV & Access Control — Retail Plaza',
+    title: 'CCTV & Access Control - Retail Plaza',
     sector: 'commercial',
     serviceSlugs: ['cctv-surveillance', 'automated-gates-access-control'],
     location: 'Wuse, Abuja',
@@ -115,7 +115,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'smart-home-integration-asokoro',
-    title: 'Whole-Home Automation — New-Build Residence',
+    title: 'Whole-Home Automation - New-Build Residence',
     sector: 'residential',
     serviceSlugs: ['home-automation', 'lighting-design-installation'],
     location: 'Asokoro, Abuja',

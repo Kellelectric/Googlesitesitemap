@@ -21,7 +21,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const track = getCareerTrackBySlug(params.slug)
   if (!track) return {}
   return pageMetadata({
-    title: `${track.name} — Careers`,
+    title: `${track.name} - Careers`,
     description: track.summary,
     path: `/careers/${track.slug}`,
     image: '/images/photos/career-detail-hero-vocational-training.jpg',
@@ -97,7 +97,7 @@ export default function CareerTrackPage({ params }: Props) {
               <p className="mt-2 max-w-2xl text-xs text-ink/50">
                 {track.programmeDetailsConfirmed
                   ? 'Confirmed programme terms.'
-                  : 'Indicative — confirmed directly once we hear from you.'}
+                  : 'Indicative - confirmed directly once we hear from you.'}
               </p>
             </Reveal>
             <StaggerGroup className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

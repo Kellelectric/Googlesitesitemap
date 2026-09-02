@@ -34,7 +34,7 @@ export default function ThankYouPage({
       <div className="container-content relative py-24">
         <span className="eyebrow text-yellow">Request received</span>
         <h1 className="mt-3 max-w-xl text-3xl font-semibold md:text-4xl">
-          Thanks — our team will review the job details and get back to you.
+          Thanks - our team will review the job details and get back to you.
         </h1>
         {reference && (
           <p className="mt-4 text-sm text-paper/60">
@@ -52,7 +52,7 @@ export default function ThankYouPage({
               You flagged this as an emergency.
             </p>
             <p className="mt-2 text-sm leading-relaxed text-paper/75">
-              Don&rsquo;t wait on the form response — call{' '}
+              Don&rsquo;t wait on the form response - call{' '}
               <TrackedLink channel="phone" href={company.phoneHref} className="link-underline font-semibold text-paper">
                 {company.phone}
               </TrackedLink>{' '}

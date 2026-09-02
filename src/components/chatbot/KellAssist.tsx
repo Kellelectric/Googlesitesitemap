@@ -34,7 +34,7 @@ type LeadContext = {
 }
 
 const WELCOME_MESSAGE =
-  "Hi, I'm Kell Assist — how can I help with your electrical, solar, security, or automation needs today?"
+  "Hi, I'm Kell Assist - how can I help with your electrical, solar, security, or automation needs today?"
 
 let idCounter = 0
 function nextId() {
@@ -200,7 +200,7 @@ export function KellAssist() {
     if (starter === 'Request a Quote') {
       trackEvent('quote_requested', { source: 'kell_assist' })
       pushUser('Request a Quote')
-      pushBot('Happy to help — tell me a bit about the job and how to reach you.')
+      pushBot('Happy to help - tell me a bit about the job and how to reach you.')
       openLeadForm({ afterSubmit: 'none' })
       return
     }
@@ -379,7 +379,7 @@ export function KellAssist() {
                   setLeadCaptured(true)
                   trackEvent('lead_submitted', { source: 'kell_assist' })
                   pushBot(
-                    `Thanks — our team will follow up shortly. For anything urgent, call ${company.phone} directly.`,
+                    `Thanks - our team will follow up shortly. For anything urgent, call ${company.phone} directly.`,
                   )
                   if (leadFormContext.afterSubmit === 'whatsapp') {
                     trackEvent('whatsapp_clicked', { source: 'kell_assist' })
@@ -575,7 +575,7 @@ function LeadCaptureForm({
       )}
       {status === 'not_configured' && (
         <p className="text-xs text-orange">
-          Online submission isn&rsquo;t connected yet — please call {company.phone} or WhatsApp us directly.
+          Online submission isn&rsquo;t connected yet - please call {company.phone} or WhatsApp us directly.
         </p>
       )}
 

@@ -14,6 +14,8 @@ import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { partners } from '@/content/partners'
 import { CTASection } from '@/components/sections/CTASection'
 import { Reveal } from '@/components/ui/Reveal'
+import { team } from '@/content/team'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Certified Electrical Engineering in Abuja',
@@ -49,9 +51,27 @@ export default function HomePage() {
       <TrustSection />
 
       <section className="bg-paper py-14">
-        <div className="container-content text-center">
+        <div className="container-content flex flex-col items-center text-center">
           <Reveal>
-            <p className="text-ink/70">
+            <div className="flex justify-center -space-x-3">
+              {team.map((member) =>
+                member.photo ? (
+                  <div
+                    key={member.name}
+                    className="relative h-14 w-14 overflow-hidden rounded-full border-2 border-paper shadow-sm"
+                  >
+                    <Image
+                      src={member.photo}
+                      alt={member.name}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  </div>
+                ) : null
+              )}
+            </div>
+            <p className="mt-5 text-ink/70">
               Real engineers, not a call center - see who&rsquo;s behind the work.
             </p>
             <Link

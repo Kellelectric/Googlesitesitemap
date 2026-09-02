@@ -28,6 +28,7 @@ export const footerNav: NavLink[] = [
   { label: 'Home Automation', href: '/home-automation' },
   { label: 'CCTV & Security Systems', href: '/cctv-security-systems' },
   { label: 'Certifications & Compliance', href: '/certifications-compliance' },
+  { label: 'Maintenance & AMC', href: '/maintenance-amc' },
   { label: 'Industries', href: '/industries' },
   { label: 'Projects', href: '/projects' },
   { label: 'Load & Solar Calculators', href: '/calculators' },

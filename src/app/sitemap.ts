@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/home-automation`, lastModified: new Date(), priority: 0.8, changeFrequency: 'monthly' },
     { url: `${base}/cctv-security-systems`, lastModified: new Date(), priority: 0.8, changeFrequency: 'monthly' },
     { url: `${base}/certifications-compliance`, lastModified: new Date(), priority: 0.6, changeFrequency: 'monthly' },
+    { url: `${base}/maintenance-amc`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/industries`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/resources`, lastModified: new Date(), priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/faq`, lastModified: new Date(), priority: 0.6, changeFrequency: 'monthly' },

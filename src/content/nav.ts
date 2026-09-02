@@ -30,6 +30,7 @@ export const footerNav: NavLink[] = [
   { label: 'Certifications & Compliance', href: '/certifications-compliance' },
   { label: 'Maintenance & AMC', href: '/maintenance-amc' },
   { label: 'Health, Safety & Environment', href: '/hse' },
+  { label: 'For Developers, Architects & Contractors', href: '/developers-architects-contractors' },
   { label: 'Industries', href: '/industries' },
   { label: 'Projects', href: '/projects' },
   { label: 'Load & Solar Calculators', href: '/calculators' },

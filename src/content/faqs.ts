@@ -101,6 +101,11 @@ export const faqCategories: FAQCategory[] = [
         answer:
           'Yes. Commercial and office fit-out electrical work is a regular part of our scope, coordinated with architects, M&E consultants, and the wider construction timeline rather than run as an isolated trade.',
       },
+      {
+        question: 'Do you have examples of completed commercial electrical work?',
+        answer:
+          "Yes - for example, we delivered the complete electrical decking, conduit piping, wiring, and fixture installation and finishing for a cooperative society's building in Garki II, Abuja. See our Projects page for more recent work across residential, commercial, and industrial properties.",
+      },
     ],
   },
   {

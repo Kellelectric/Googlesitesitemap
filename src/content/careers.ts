@@ -20,9 +20,12 @@
 //   off on Claude's suggested eligibility criteria and confirmed
 //   Internship intake is tied to academic term/semester breaks,
 //   matching Industrial Training's SIWES-calendar pattern).
+// - `job-openings`: the 3 listed roles (Licensed Electrician, Site
+//   Supervisor, Solar & Inverter Installation Technician) are
+//   client-confirmed as genuinely open right now, not placeholder.
 //
 // Still placeholder/unconfirmed: `internship`'s `duration` and
-// `stipend`; the `job-openings` role list.
+// `stipend`.
 export type CareerTrack = {
   slug: string
   name: string

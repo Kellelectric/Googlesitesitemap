@@ -90,11 +90,18 @@ export default function RootLayout({
             replaced by one of two candidate chat widgets still being
             evaluated (Zoho SalesIQ or this Botpress agent) - whichever
             one the client keeps, remove the other's embed entirely
-            rather than leaving both loaded. */}
-        <Script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js" strategy="afterInteractive" />
+            rather than leaving both loaded.
+            strategy="lazyOnload" (rather than afterInteractive) defers
+            fetching and running this ~large third-party widget bundle
+            until the browser is idle after the rest of the page has
+            loaded - it was the single biggest driver of a 55/100 mobile
+            PageSpeed Performance score despite 96-100 on every other
+            category, since a chat widget isn't needed for the initial
+            render or first interaction. */}
+        <Script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js" strategy="lazyOnload" />
         <Script
           src="https://files.bpcontent.cloud/2026/09/02/15/20260902152603-5BYI2T6Q.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
         <SpeedInsights />
       </body>

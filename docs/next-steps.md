@@ -1,5 +1,43 @@
 # Next Steps
 
+## `/about` page rewritten with the client's real copy (this round)
+
+The client supplied a full rewrite of `/about`'s body content in the
+company's real voice, replacing the earlier generic descriptions.
+Mapped onto the existing page structure (`src/app/about/page.tsx`) -
+same components/layout, new text:
+
+- **Who we are** - now states the real registration framing ("RC
+  1852579... accountable to a body that can actually check our work")
+  in place of the earlier generic paragraph.
+- **The problem we solve** - new section, didn't exist before.
+- **Our mission** - shortened to the client's real one-line mission
+  ("Do the job once, do it right, and don't make you think about it
+  again."). Our Vision (in the same tinted box) is unchanged - no
+  replacement text was supplied for it.
+- **What we stand for** (was "Our values") - replaced the earlier
+  5-item list with the client's real 4-point list (`whatWeStandFor` in
+  page.tsx).
+- **What makes us different** (was "Competitive advantages") -
+  replaced the earlier 4-card grid with the client's real narrative
+  copy, rendered as paragraphs rather than forced into a card format
+  so the wording stays exactly as given.
+- **Why clients trust us** - new section, didn't exist before.
+
+**Additional named clients**: this rewrite's "What makes us different"
+section names **Manreng Estate** and **Navy Holdings**, alongside
+**CBN Headquarters** and **Kaduna State Government House** already
+named in `ceoMessage.ts` (see that entry below). All four are now
+public-facing on `/about` - same flag as before: confirm Kell has
+clearance to publicly reference these four clients, since `projects.ts`'s
+case studies deliberately avoid naming any client anywhere else on the
+site.
+
+Untouched (no replacement copy was supplied): Our Vision, Our
+Expertise ("Four functions, one process"), Our Process, the team
+roster, the milestone timeline, Service Coverage, and Credentials
+sidebar.
+
 ## Production hardening audit: two open items resolved by the client (this round)
 
 - **Team experience figure: 15+ years is correct, not 20+.** A prior

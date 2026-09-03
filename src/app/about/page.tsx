@@ -70,55 +70,34 @@ const whatWeDo = [
   'Preventive and emergency electrical maintenance',
 ]
 
-const values = [
+// Real copy, supplied directly by the client, replacing the earlier
+// generic descriptions - names CBN Headquarters, Kaduna State Government
+// House, Manreng Estate, and Navy Holdings as past clients (see the
+// header note on ceoMessage.ts for the same naming pattern there).
+const whatWeStandFor = [
   {
-    title: 'Safety first',
-    description:
-      'Every design decision and every job on site is filtered through risk to life and property, not schedule or cost - documented safety isolation and site protocols, not shortcuts, regardless of how routine the work looks.',
+    title: "Safety isn't negotiable.",
+    description: 'Earthing, protection, load sizing, done correctly every time, not when it’s convenient.',
   },
   {
-    title: 'Documented, not just done',
-    description:
-      'A specified design, commissioning tests, and as-built documentation on handover - so the client has a record, not just a memory.',
+    title: 'We work from calculations, not guesses.',
+    description: 'If a job needs a load audit or a proper design before we touch anything, that happens first.',
   },
   {
-    title: 'Engineered for real conditions',
-    description:
-      "Systems sized and specified to calculation, never estimation, based on Nigeria's actual grid conditions - with margin for growth and fault conditions, not textbook assumptions.",
+    title: 'We own what we install.',
+    description: 'If something needs revisiting, we revisit it. No disappearing act.',
   },
   {
-    title: 'One standard, every crew',
-    description:
-      "The same documented process on every job, so the quality of the work doesn't depend on which technician shows up.",
-  },
-  {
-    title: 'Client partnership',
-    description:
-      'Long-term infrastructure relationships over one-off contracts, built on transparent pricing and honest timelines.',
+    title: "We tell you what's actually going on.",
+    description: 'Real costs, real timelines, no inflated promises to close the job.',
   },
 ]
 
-const competitiveAdvantages = [
-  {
-    title: 'Single-partner integration',
-    description:
-      'Electrical, renewable, HVAC, security, and maintenance under one accountable contract, eliminating the coordination failures of multi-vendor projects.',
-  },
-  {
-    title: 'Certified technical governance',
-    description:
-      'Every project runs through COREN-certified design review and NEMSA-compliant execution as standard, not as an upsell.',
-  },
-  {
-    title: 'Documented field discipline',
-    description:
-      'Load assessments, protection coordination, and multi-stage testing are standard practice, not exceptions requested by clients.',
-  },
-  {
-    title: 'Local presence, national reach',
-    description:
-      'Abuja-based operational base with delivery capability across Nigeria for multi-site and institutional clients.',
-  },
+const whatMakesUsDifferent = [
+  "We've kept the team small on purpose. No large subcontractor network diluting who actually shows up to your site. The people who plan the job are often the people executing it.",
+  'Certification isn’t something we say about ourselves, COREN and NEMSA hold us to it.',
+  'We do the technical groundwork others skip past, load audits before a solar install, proper sizing before a panel upgrade, not just fitting equipment and hoping.',
+  'Our work speaks for itself: CBN Headquarters, Kaduna State Government House, Manreng Estate, Navy Holdings, plus residential and commercial clients across Wuse 2, Gwarinpa, Maitama, Asokoro, Guzape, and Katampe.',
 ]
 
 const whyChooseUs = [
@@ -247,19 +226,34 @@ export default function AboutPage() {
                 company, based in Abuja
               </h2>
               <p className="mt-5 leading-relaxed text-ink/75">
-                {company.name} ({company.legalName}, RC {company.rcNumber}) is
-                a COREN and NEMSA certified electrical engineering company
-                serving homes, businesses, and industrial sites across Abuja
-                and wider Nigeria. Our team brings {company.teamExperienceYears}+
-                years of combined engineering experience to every job, from a
-                single socket repair to a full industrial power distribution
-                build-out.
+                {company.name} is a COREN and NEMSA certified electrical
+                company based in {company.address.district}, Abuja. For over{' '}
+                {company.teamExperienceYears} years, we&rsquo;ve handled
+                installations, repairs, solar systems, and technical
+                consulting for homes and businesses across Abuja and beyond.
               </p>
               <p className="mt-4 leading-relaxed text-ink/75">
-                We don&rsquo;t put a name on the door. The team behind every
-                job (engineers, technicians, and project coordinators) works
-                to the same documented process, so the standard of work
-                doesn&rsquo;t depend on which crew shows up.
+                We&rsquo;re registered under RC {company.rcNumber}. That&rsquo;s
+                not decoration, it means we&rsquo;re accountable to a body
+                that can actually check our work.
+              </p>
+            </Reveal>
+
+            {/* The Problem We Solve */}
+            <Reveal delay={0.08} className="mt-14">
+              <span className="eyebrow text-petrol/70">The problem we solve</span>
+              <p className="mt-4 leading-relaxed text-ink/75">
+                Anyone can call themselves an electrician. Fewer people can
+                size a cable correctly, earth a panel the way it&rsquo;s
+                supposed to be earthed, or finish a job without leaving
+                something behind that turns into a fire risk a year later.
+              </p>
+              <p className="mt-4 leading-relaxed text-ink/75">
+                That&rsquo;s the gap we work in. Between &ldquo;can wire a
+                socket&rdquo; and &ldquo;you&rsquo;d trust this person with
+                your building.&rdquo; We do the parts most electricians skip:
+                load calculations, voltage drop checks, proper protection,
+                work you can still explain to the next person who touches it.
               </p>
             </Reveal>
 
@@ -320,11 +314,8 @@ export default function AboutPage() {
                 <div>
                   <span className="eyebrow text-petrol/70">Our mission</span>
                   <p className="mt-3 leading-relaxed text-ink/75">
-                    To engineer electrical infrastructure for the grid
-                    conditions that actually exist in Nigeria - with load
-                    analysis before design, documented specifications before
-                    installation, and compliance testing before handover, on
-                    every job regardless of size.
+                    Do the job once, do it right, and don&rsquo;t make you
+                    think about it again.
                   </p>
                 </div>
                 <div className="border-t border-ink/10 pt-8 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0">
@@ -339,21 +330,15 @@ export default function AboutPage() {
               </div>
             </Reveal>
 
-            {/* Our Values */}
+            {/* What We Stand For */}
             <Reveal delay={0.1} className="mt-14">
-              <span className="eyebrow text-petrol/70">Our values</span>
+              <span className="eyebrow text-petrol/70">What we stand for</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
                 What every job is held to
               </h2>
-              <p className="mt-4 max-w-2xl leading-relaxed text-ink/75">
-                We treat engineering as a discipline of consequence - every
-                load calculation, every cable size, every point of earthing
-                exists to protect people and property over decades of use,
-                not just through commissioning day.
-              </p>
             </Reveal>
-            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {values.map((value) => (
+            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+              {whatWeStandFor.map((value) => (
                 <MotionDiv key={value.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
                   <h3 className="text-lg font-semibold text-ink">{value.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-ink/65">{value.description}</p>
@@ -361,23 +346,39 @@ export default function AboutPage() {
               ))}
             </StaggerGroup>
 
-            {/* Competitive Advantages - boxed cards instead of top-bordered,
-                alternating the section rhythm against Our Values above and
-                Our Expertise below. */}
+            {/* What Makes Us Different - narrative paragraphs rather than
+                title/description cards, since the client's real copy here
+                is continuous prose (small team, certification, technical
+                rigor, named clients) rather than four discrete points. */}
             <Reveal delay={0.1} className="mt-14">
-              <span className="eyebrow text-petrol/70">What sets us apart</span>
-              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-                Competitive advantages
-              </h2>
+              <span className="eyebrow text-petrol/70">What makes us different</span>
             </Reveal>
-            <StaggerGroup className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {competitiveAdvantages.map((item) => (
-                <MotionDiv key={item.title} variants={staggerItem} className="border border-ink/10 p-6">
-                  <h3 className="text-base font-semibold text-ink">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{item.description}</p>
+            <StaggerGroup className="mt-6 space-y-4">
+              {whatMakesUsDifferent.map((paragraph, i) => (
+                <MotionDiv key={i} variants={staggerItem}>
+                  <p className="leading-relaxed text-ink/75">{paragraph}</p>
                 </MotionDiv>
               ))}
             </StaggerGroup>
+
+            {/* Why Clients Trust Us */}
+            <Reveal delay={0.1} className="mt-14 border border-ink/10 bg-petrol/[0.04] p-6 md:p-8">
+              <span className="eyebrow text-petrol/70">Why clients trust us</span>
+              <p className="mt-4 leading-relaxed text-ink/75">
+                If you&rsquo;re wondering whether to hand us your project,
+                here&rsquo;s the honest answer: fifteen years of clients
+                calling us back is the proof. Someone who books a small
+                repair today is often the same person calling two years
+                later for a solar installation or a full commercial build.
+                That doesn&rsquo;t happen by accident. It happens because
+                the first job held up.
+              </p>
+              <p className="mt-4 leading-relaxed text-ink/75">
+                Whether it&rsquo;s one outlet or a full commercial design and
+                build, we treat your electrical system the way we&rsquo;d
+                treat our own.
+              </p>
+            </Reveal>
 
             {/* Our Expertise - the FAQSection-style numeral + split layout,
                 reinforcing the numbering device used sitewide instead of

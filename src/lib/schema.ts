@@ -34,11 +34,15 @@ export function organizationSchema() {
       addressRegion: company.address.city,
       addressCountry: 'NG',
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: company.trust.googleRating,
-      reviewCount: company.trust.googleReviewCount,
-    },
+    // No aggregateRating here on purpose: Google removed LocalBusiness/
+    // Organization eligibility for the star-rating rich result entirely -
+    // a business can no longer publish its own review data about itself
+    // and have it produce review snippets. Search Console was flagging
+    // this as an actual structured-data error ("Invalid object type for
+    // field 'parent_node'" under Review snippets), not just ignoring it.
+    // The 4.8★/192-review figure is still shown visually across the site
+    // (StatsBar, WhyChooseUs, TrustSection) - that's the channel Google
+    // actually supports for it now.
     areaServed: company.serviceAreas.map((area) => ({
       '@type': 'City',
       name: area,

@@ -29,8 +29,9 @@ export function CTASection({
   const resolvedSecondaryHref = secondaryHref ?? company.phoneHref
 
   return (
-    <section className="bg-petrol-700 text-paper">
-      <Reveal className="container-content flex flex-col items-start gap-8 py-20 md:flex-row md:items-center md:justify-between">
+    <section className="relative overflow-hidden border-t border-paper/10 bg-petrol-700 text-paper">
+      <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-10" />
+      <Reveal className="container-content relative flex flex-col items-start gap-8 py-20 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="max-w-lg text-3xl font-semibold md:text-4xl">{heading}</h2>
           <p className="mt-4 max-w-md text-paper/65">{body}</p>

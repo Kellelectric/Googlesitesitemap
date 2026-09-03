@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
+import { WhyChooseUs } from '@/components/sections/WhyChooseUs'
 import { FAQSection } from '@/components/sections/FAQSection'
 import { getIndustryBySlug, industries } from '@/content/industries'
 import { getServiceBySlug } from '@/content/services'
@@ -190,26 +191,7 @@ export default function IndustryDetailPage({ params }: Props) {
       </section>
 
       {/* Why choose us */}
-      <section className="bg-petrol-700 py-20 text-paper">
-        <div className="container-content">
-          <Reveal>
-            <span className="eyebrow text-yellow">Why choose Kell Electricals</span>
-          </Reveal>
-          <StaggerGroup className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {[
-              'COREN and NEMSA certified',
-              `${company.teamExperienceYears}+ years of combined engineering experience`,
-              `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ reviews`,
-              `${company.trust.projectsCompleted}+ projects completed`,
-            ].map((item) => (
-              <MotionDiv key={item} variants={staggerItem} className="flex gap-3 border-b border-paper/15 pb-3 text-sm text-paper/80">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-yellow" />
-                {item}
-              </MotionDiv>
-            ))}
-          </StaggerGroup>
-        </div>
-      </section>
+      <WhyChooseUs layout="compact" />
 
       {/* FAQ */}
       <FAQSection items={faqs} viewAllHref="/faq" />

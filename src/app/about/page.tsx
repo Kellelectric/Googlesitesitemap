@@ -441,12 +441,12 @@ export default function AboutPage() {
 
           <aside className="space-y-8">
             {/* Why Choose Us */}
-            <Reveal delay={0.16} className="border border-orange/30 bg-orange/5 p-6">
-              <span className="eyebrow text-ink">Why choose us</span>
+            <Reveal delay={0.16} className="border border-ink/10 p-6">
+              <span className="eyebrow text-petrol/70">Why choose us</span>
               <ul className="mt-4 space-y-3">
                 {whyChooseUs.map((item) => (
                   <li key={item} className="flex gap-3 text-sm leading-relaxed text-ink/75">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-orange" />
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-petrol" />
                     {item}
                   </li>
                 ))}

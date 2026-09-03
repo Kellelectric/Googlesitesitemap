@@ -1,12 +1,22 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { CircuitLines } from '@/components/ui/CircuitLines'
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { CTASection } from '@/components/sections/CTASection'
+import { WhyChooseUs } from '@/components/sections/WhyChooseUs'
 import { company } from '@/content/company'
 import { team } from '@/content/team'
 import { pageMetadata } from '@/lib/metadata'
 import { breadcrumbSchema, teamSchema } from '@/lib/schema'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
+
+// Same items feed both the visible Breadcrumbs component below and the
+// BreadcrumbList JSON-LD, so they can't drift apart.
+const breadcrumbItems = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Leadership' },
+]
 
 export const metadata: Metadata = pageMetadata({
   title: 'Leadership',
@@ -35,6 +45,9 @@ export default function LeadershipPage() {
               { name: 'About', url: `${company.domain}/about` },
               { name: 'Leadership', url: `${company.domain}/leadership` },
             ]),
+            // Kept in sync with breadcrumbItems above by hand - the schema
+            // needs full URLs, the visible component needs relative hrefs,
+            // so they aren't the exact same array, just the same trail.
           ),
         }}
       />
@@ -57,7 +70,8 @@ export default function LeadershipPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">
-          <span className="eyebrow text-yellow">Leadership</span>
+          <Breadcrumbs items={breadcrumbItems} />
+          <span className="mt-6 block eyebrow text-yellow">Leadership</span>
           <h1 className="mt-3 max-w-2xl text-4xl font-semibold md:text-5xl">
             The people behind every job
           </h1>
@@ -145,6 +159,8 @@ export default function LeadershipPage() {
           </StaggerGroup>
         </div>
       </section>
+
+      <WhyChooseUs heading="One team, held to one standard" />
 
       <CTASection
         heading="Interested in working with us?"

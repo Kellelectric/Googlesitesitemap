@@ -19,7 +19,14 @@ function openingHoursSpecification() {
 export function organizationSchema() {
   return {
     '@context': 'https://schema.org',
-    '@type': 'ElectricalContractor',
+    // 'Electrician' is the real schema.org type for this business -
+    // Thing > Organization > LocalBusiness > HomeAndConstructionBusiness >
+    // Electrician. The previous 'ElectricalContractor' isn't a type
+    // schema.org defines at all, so Google's parser had nothing to map it
+    // to and likely wasn't treating this as a LocalBusiness/Electrician
+    // entity for Knowledge Graph purposes despite every property below
+    // being present and valid.
+    '@type': 'Electrician',
     name: company.name,
     legalName: company.legalName,
     image: `${company.domain}/og-image.jpg`,
@@ -34,6 +41,18 @@ export function organizationSchema() {
       addressRegion: company.address.city,
       addressCountry: 'NG',
     },
+    // Real, confirmed professional/regulatory certifications from
+    // company.ts (COREN, NEMSA) - not previously wired into this schema at
+    // all, despite being genuine, displayed facts elsewhere on the site.
+    hasCredential: company.certifications.map((cert) => ({
+      '@type': 'EducationalOccupationalCredential',
+      credentialCategory: 'certification',
+      name: cert.fullName,
+      recognizedBy: {
+        '@type': 'Organization',
+        name: cert.fullName,
+      },
+    })),
     // No aggregateRating here on purpose: Google removed LocalBusiness/
     // Organization eligibility for the star-rating rich result entirely -
     // a business can no longer publish its own review data about itself
@@ -84,7 +103,7 @@ export function serviceSchema(params: {
     name: params.name,
     description: params.description,
     provider: {
-      '@type': 'ElectricalContractor',
+      '@type': 'Electrician',
       name: company.name,
       telephone: company.phone,
       address: company.address.full,
@@ -155,7 +174,7 @@ export function localServiceSchema(params: {
     name: params.name,
     description: params.description,
     provider: {
-      '@type': 'ElectricalContractor',
+      '@type': 'Electrician',
       name: company.name,
       telephone: company.phone,
       address: company.address.full,

@@ -89,10 +89,17 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Fails open, not closed, when no token is present at all: the client
+  // only omits one when its hCaptcha script never loaded (ad blocker,
+  // privacy extension, a network that blocks hcaptcha.com outright — all
+  // observed in the field), and rejecting those bookings would lock real
+  // customers out entirely. A token that *is* present but invalid/expired
+  // is still rejected - this only softens the "script never loaded" case,
+  // which the honeypot/time-trap/rate-limit checks above still guard.
   const hcaptchaSecret = process.env.HCAPTCHA_SECRET_KEY
   if (hcaptchaSecret) {
     const token = typeof body.captchaToken === 'string' ? body.captchaToken : ''
-    if (!token || !(await verifyHCaptcha(token, hcaptchaSecret))) {
+    if (token && !(await verifyHCaptcha(token, hcaptchaSecret))) {
       return NextResponse.json({ ok: false, reason: 'captcha_failed' }, { status: 422 })
     }
   }

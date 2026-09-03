@@ -8,7 +8,6 @@ export const metadata: Metadata = pageMetadata({
   title: 'Privacy Policy',
   description: 'How Kell Electricals Ltd collects, uses, and protects personal data, in line with the Nigeria Data Protection Act 2023.',
   path: '/legal/privacy',
-  noIndex: true,
 })
 
 export default function PrivacyPage() {

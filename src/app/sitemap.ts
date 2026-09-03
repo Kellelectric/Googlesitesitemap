@@ -32,6 +32,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/careers`, lastModified: new Date(), priority: 0.5, changeFrequency: 'monthly' },
     { url: `${base}/contact`, lastModified: new Date(), priority: 0.8, changeFrequency: 'monthly' },
     { url: `${base}/site-map`, lastModified: new Date(), priority: 0.3, changeFrequency: 'monthly' },
+    { url: `${base}/legal/terms`, lastModified: new Date(), priority: 0.3, changeFrequency: 'yearly' },
+    { url: `${base}/legal/privacy`, lastModified: new Date(), priority: 0.3, changeFrequency: 'yearly' },
   ]
 
   const serviceRoutes: MetadataRoute.Sitemap = services.map((service) => ({

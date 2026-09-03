@@ -8,7 +8,6 @@ export const metadata: Metadata = pageMetadata({
   title: 'Terms & Conditions',
   description: 'Terms and conditions for use of the Kell Electricals Ltd website.',
   path: '/legal/terms',
-  noIndex: true,
 })
 
 export default function TermsPage() {

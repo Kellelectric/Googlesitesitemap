@@ -8,6 +8,10 @@ type StatCounterProps = {
   prefix?: string
   decimals?: number
   label: string
+  // Renders at a larger display size — used to give one stat real type-scale
+  // hierarchy in a row instead of four visually equal boxes (StatsBar uses
+  // this on exactly one of its four stats).
+  featured?: boolean
 }
 
 export function StatCounter({
@@ -16,6 +20,7 @@ export function StatCounter({
   prefix = '',
   decimals = 0,
   label,
+  featured = false,
 }: StatCounterProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [display, setDisplay] = useState(0)
@@ -53,12 +58,18 @@ export function StatCounter({
 
   return (
     <div ref={ref}>
-      <div className="font-display text-4xl font-semibold text-yellow md:text-5xl">
+      <div
+        className={
+          featured
+            ? 'font-display text-6xl font-semibold text-yellow md:text-7xl'
+            : 'font-display text-4xl font-semibold text-yellow md:text-5xl'
+        }
+      >
         {prefix}
         {display.toFixed(decimals)}
         {suffix}
       </div>
-      <div className="mt-2 text-sm text-paper/70">{label}</div>
+      <div className={`mt-2 text-sm text-paper/70 ${featured ? 'max-w-[16ch]' : ''}`}>{label}</div>
     </div>
   )
 }

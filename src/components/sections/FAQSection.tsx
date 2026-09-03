@@ -14,7 +14,7 @@ export function FAQSection({ items, viewAllHref }: { items: FAQ[]; viewAllHref?:
           ),
         }}
       />
-      <div className="container-content max-w-3xl">
+      <div className="container-content max-w-4xl">
         <Reveal className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <span className="eyebrow text-petrol/70">FAQ</span>
@@ -29,11 +29,24 @@ export function FAQSection({ items, viewAllHref }: { items: FAQ[]; viewAllHref?:
           )}
         </Reveal>
 
+        {/* Question in a fixed left column, answer in the wider right column -
+            a "spec sheet" split instead of a stacked accordion list, with a
+            ghost numeral echoing the numbering device ServiceCard/ProcessSection
+            already use elsewhere on the site. */}
         <StaggerGroup className="mt-10 divide-y divide-ink/10 border-t border-ink/10">
-          {items.map((item) => (
-            <MotionDiv key={item.question} variants={staggerItem} className="py-6">
-              <h3 className="text-lg font-semibold text-ink">{item.question}</h3>
-              <p className="mt-3 leading-relaxed text-ink/70">{item.answer}</p>
+          {items.map((item, i) => (
+            <MotionDiv
+              key={item.question}
+              variants={staggerItem}
+              className="grid grid-cols-1 gap-x-8 gap-y-3 py-8 md:grid-cols-[minmax(0,320px)_1fr]"
+            >
+              <div className="flex items-baseline gap-4">
+                <span className="font-display text-2xl font-semibold leading-none text-petrol/15">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="text-lg font-semibold text-ink">{item.question}</h3>
+              </div>
+              <p className="leading-relaxed text-ink/70">{item.answer}</p>
             </MotionDiv>
           ))}
         </StaggerGroup>

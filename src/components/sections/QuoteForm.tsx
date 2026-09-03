@@ -1,6 +1,6 @@
 'use client'
 
-import { cloneElement, FormEvent, useState } from 'react'
+import { cloneElement, FormEvent, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Script from 'next/script'
 import { services } from '@/content/services'
@@ -70,8 +70,24 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
   const [form, setForm] = useState<FormState>(() => makeInitialState(initialServiceSlug))
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
   const [captchaError, setCaptchaError] = useState<string | undefined>()
+  const [captchaLoadFailed, setCaptchaLoadFailed] = useState(false)
   const [status, setStatus] = useState<FormStatus>('idle')
   const renderedAt = useFormRenderedAt()
+
+  // Fail open, not closed: if the hCaptcha script never loads (ad blocker,
+  // privacy extension, a network that blocks hcaptcha.com outright — all
+  // observed in the field), window.hcaptcha stays undefined forever and a
+  // real customer would be stuck unable to submit at all. Losing bot
+  // protection to an infrastructure hiccup is a far smaller cost than
+  // losing a real lead, and the honeypot/time-trap/rate-limit checks still
+  // apply either way.
+  useEffect(() => {
+    if (!HCAPTCHA_SITE_KEY) return
+    const timer = setTimeout(() => {
+      if (!window.hcaptcha) setCaptchaLoadFailed(true)
+    }, 6000)
+    return () => clearTimeout(timer)
+  }, [])
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -91,7 +107,7 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
     setErrors(next)
 
     let captchaOk = true
-    if (HCAPTCHA_SITE_KEY) {
+    if (HCAPTCHA_SITE_KEY && !captchaLoadFailed) {
       const token = window.hcaptcha?.getResponse()
       captchaOk = !!token
       setCaptchaError(captchaOk ? undefined : "Verify you're not a robot")
@@ -285,9 +301,15 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
         </p>
       )}
 
-      {HCAPTCHA_SITE_KEY && (
+      {HCAPTCHA_SITE_KEY && !captchaLoadFailed && (
         <div>
-          <Script src="https://js.hcaptcha.com/1/api.js" strategy="afterInteractive" async defer />
+          <Script
+            src="https://js.hcaptcha.com/1/api.js"
+            strategy="afterInteractive"
+            async
+            defer
+            onError={() => setCaptchaLoadFailed(true)}
+          />
           <div className="h-captcha" data-sitekey={HCAPTCHA_SITE_KEY} />
           {captchaError && (
             <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">

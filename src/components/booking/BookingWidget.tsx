@@ -68,11 +68,27 @@ export function BookingWidget() {
   const [renderedAt] = useState(() => Date.now())
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [captchaError, setCaptchaError] = useState<string | undefined>()
+  const [captchaLoadFailed, setCaptchaLoadFailed] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [reference, setReference] = useState<string | null>(null)
 
   const days = nextDays(10)
+
+  // Fail open, not closed: if the hCaptcha script never loads (ad blocker,
+  // privacy extension, a network that blocks hcaptcha.com outright — all
+  // observed in the field), window.hcaptcha stays undefined forever and a
+  // real customer would be stuck unable to book at all. Losing bot
+  // protection to an infrastructure hiccup is a far smaller cost than
+  // losing a real booking, and the honeypot/time-trap/rate-limit checks
+  // still apply either way. Mirrors QuoteForm.tsx's same fix.
+  useEffect(() => {
+    if (!HCAPTCHA_SITE_KEY) return
+    const timer = setTimeout(() => {
+      if (!window.hcaptcha) setCaptchaLoadFailed(true)
+    }, 6000)
+    return () => clearTimeout(timer)
+  }, [])
 
   // Probe availability for the first bookable day to learn whether the
   // calendar backend is configured at all, before showing any UI that
@@ -132,7 +148,7 @@ export function BookingWidget() {
     setFieldErrors(next)
 
     let captchaOk = true
-    if (HCAPTCHA_SITE_KEY) {
+    if (HCAPTCHA_SITE_KEY && !captchaLoadFailed) {
       const token = window.hcaptcha?.getResponse()
       captchaOk = !!token
       setCaptchaError(captchaOk ? undefined : "Verify you're not a robot")
@@ -381,9 +397,15 @@ export function BookingWidget() {
             />
           </BookingField>
 
-          {HCAPTCHA_SITE_KEY && (
+          {HCAPTCHA_SITE_KEY && !captchaLoadFailed && (
             <div>
-              <Script src="https://js.hcaptcha.com/1/api.js" strategy="afterInteractive" async defer />
+              <Script
+                src="https://js.hcaptcha.com/1/api.js"
+                strategy="afterInteractive"
+                async
+                defer
+                onError={() => setCaptchaLoadFailed(true)}
+              />
               <div className="h-captcha" data-sitekey={HCAPTCHA_SITE_KEY} />
               {captchaError && (
                 <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">

@@ -1,21 +1,17 @@
-// ⚠️ DRAFT — NOT GABRIEL'S ACTUAL WORDS ⚠️
-//
-// This is a placeholder founder's message, drafted at the client's explicit
-// request ("draft a placeholder for review") so there is something to show
-// Gabriel rather than an empty section. It uses only facts already
-// established elsewhere in this codebase (founding year, certifications,
-// values already on /about) and invents no new claims — but the specific
-// phrasing and sentiment are written by an AI, not spoken by Gabriel.
-//
-// Do not treat this as final or let it stay live indefinitely without his
-// sign-off. Replace `message` below with his actual words once supplied,
-// and remove this disclaimer at that point.
+// Gabriel's real message, supplied directly by the client - replaces the
+// earlier AI-drafted placeholder. Names CBN Headquarters and Kaduna State
+// Government House as past projects; these aren't listed anywhere else in
+// this codebase (projects.ts deliberately avoids naming clients elsewhere),
+// so this is the one place on the site that names them - supplied here
+// directly by Gabriel/the client, not invented.
 export const ceoMessage = {
-  heading: 'A note from our founder',
+  heading: 'A Message from Our CEO',
   message: [
-    "I started Kell Electricals in 2010 because I kept seeing the same problem on job after job: work that looked finished but wasn't done properly underneath. Wiring that passed a glance but not a real inspection. Panels sized by guesswork instead of measurement.",
-    "Every job we take on today still gets held to that same standard - COREN and NEMSA compliant, documented, and tested before we call it done. That's not a slogan for us. It's the reason clients call us back, and the reason our own name is on every job we complete.",
+    "Electrical work is not something you can afford to get wrong. A wrongly sized cable, a panel that was never properly earthed, a connection left loose behind a wall. These are not small mistakes. They put people's homes and safety at risk. I started Kell Electricals to build a company that treats every job with that seriousness, whether it's a family rewiring a living room or a full commercial fit-out.",
+    "That standard has held for over 15 years. We've worked on homes across Wuse 2, Gwarinpa, Maitama, and Asokoro, alongside commercial and industrial projects including CBN Headquarters and Kaduna State Government House. Every job, regardless of size, is planned properly, built with the right materials, and delivered in line with COREN and NEMSA requirements.",
+    "We're a small team by design. It means every project gets real oversight, not a name on a subcontractor list. It's also why clients who call us for a small repair today often call us back years later for a solar installation or a commercial build. They know what to expect.",
+    "We're not trying to be the biggest electrical company in Abuja. We're trying to be the one you call when you want the job done right the first time, by people who stand behind their work.",
   ],
   signOff: 'Gabriel Ioryem',
-  signOffTitle: 'Founder & CEO',
+  signOffTitle: 'Founder & CEO, Kell Electricals Ltd',
 }

@@ -1,5 +1,20 @@
 # Next Steps
 
+## Zoho SalesIQ Zobot replaces the Botpress trial (this round)
+
+The client decided: Zoho SalesIQ wins over the Botpress trial embed.
+`src/app/layout.tsx` now renders `<ZohoSalesIQ />`
+(`src/components/chat/ZohoSalesIQ.tsx`) instead of the Botpress `<Script>`
+tags - inert until `NEXT_PUBLIC_ZOHOSALESIQ_WIDGET_CODE` is set, same
+pattern as every other integration here. The full bot design (conversation
+flow for website visitors/customers, job applicants across all 5 careers
+tracks, and general inquiries), a complete copy-paste Deluge script with
+buttons at every step, real Zoho CRM `Leads` field mappings (verified via
+the CRM's own field metadata, not guessed), and the step-by-step Zoho
+SalesIQ dashboard setup are all in **`docs/zoho-salesiq-zobot.md`** - I
+can't configure SalesIQ itself from here (no API access to it, unlike Zoho
+CRM), so that doc is the complete handoff.
+
 ## On-site appointment booking, backed by Google Calendar (this round)
 
 `/book-appointment` now has a custom-built date/time picker

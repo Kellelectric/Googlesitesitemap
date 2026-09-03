@@ -27,7 +27,7 @@ function signPayload(payload: string, secret: string): string {
 type QuotePayload = {
   name: string
   phone: string
-  email?: string
+  email: string
   serviceSlug: string
   propertyType: string
   urgency?: string
@@ -38,6 +38,8 @@ type QuotePayload = {
   captchaToken?: string // hCaptcha response token, only present when configured
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 function isValidPayload(body: unknown): body is QuotePayload {
   if (!body || typeof body !== 'object') return false
   const b = body as Record<string, unknown>
@@ -46,6 +48,8 @@ function isValidPayload(body: unknown): body is QuotePayload {
     b.name.trim().length > 0 &&
     typeof b.phone === 'string' &&
     /^[+0-9\s()-]{7,}$/.test(b.phone.trim()) &&
+    typeof b.email === 'string' &&
+    EMAIL_RE.test(b.email.trim()) &&
     typeof b.serviceSlug === 'string' &&
     b.serviceSlug.trim().length > 0 &&
     typeof b.propertyType === 'string' &&

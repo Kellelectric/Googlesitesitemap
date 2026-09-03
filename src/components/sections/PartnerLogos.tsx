@@ -88,6 +88,8 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
   const repeat =
     setSlotWidth > 0 ? Math.max(2, Math.ceil((containerWidth * 2) / setSlotWidth)) : 2
 
+  const marqueeDuration = `${setSlotWidth > 0 ? setSlotWidth / 60 : partners.length * 4}s`
+
   function renderLogo(partner: Partner) {
     // Fixed box so every logo occupies the same visual footprint —
     // aspect ratio alone no longer decides rendered size (a wide
@@ -165,7 +167,7 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
           <div
             className="flex w-max items-center gap-12 animate-marquee"
             style={{
-              animationDuration: `${setSlotWidth > 0 ? setSlotWidth / 60 : partners.length * 4}s`,
+              animationDuration: marqueeDuration,
               // Runs immediately on mount using the keyframe's built-in
               // 50%-of-track CSS fallback distance (see tailwind.config.ts)
               // rather than waiting on the ResizeObserver measurement below
@@ -183,6 +185,11 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
               ...(setSlotWidth > 0
                 ? ({ '--marquee-distance': `${setSlotWidth}px` } as CSSProperties)
                 : {}),
+              // Duplicated into a CSS custom property so globals.css's
+              // reduced-motion override (which must win via !important, and
+              // so can't just read the inline animationDuration above) can
+              // restore this exact same value on desktop - see its comment.
+              ...({ '--marquee-duration': marqueeDuration } as CSSProperties),
             }}
           >
             {Array.from({ length: repeat }, (_, setIndex) =>

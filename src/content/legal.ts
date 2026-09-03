@@ -3,8 +3,8 @@ export type LegalSection = {
   body: string[]
 }
 
-export const termsLastUpdated = 'This version has not yet been dated for publication.'
-export const privacyLastUpdated = 'This version has not yet been dated for publication.'
+export const termsLastUpdated = 'Last updated: September 2026'
+export const privacyLastUpdated = 'Last updated: September 2026'
 
 export const termsSections: LegalSection[] = [
   {

@@ -571,15 +571,16 @@ Assist" chatbot (new this round — see below), and a first draft of
    Note: Internship and Industrial Training were given the identical
    form URL by the client — this is intentional, not a deduplication
    bug, and must not be "corrected."
-3. **`/legal/terms`** and **`/legal/privacy`** — drafted (see
-   `src/content/legal.ts`), covering standard site terms and an NDPA 2023
-   structure (lawful basis, data subject rights, breach notification). This
-   is a first pass only, not reviewed by counsel, and both pages are
-   currently `robots: noindex` and excluded from `sitemap.xml` for that
-   reason. **Do not remove noindex or publish this as final** until a
-   lawyer has reviewed it, particularly the Privacy Policy given NDPA
-   enforcement risk. No DPO is named (none has been designated); add one
-   once appointed.
+3. **`/legal/terms`** and **`/legal/privacy`** — **lawyer-reviewed and
+   approved (client-confirmed).** `noIndex` removed from both pages' metadata
+   and both added to `sitemap.xml`; `termsLastUpdated`/`privacyLastUpdated`
+   in `src/content/legal.ts` now read "Last updated: September 2026" instead
+   of the unpublished placeholder. No DPO is named in the Privacy Policy
+   (none has been designated); add one to section 8 once appointed. If
+   `NEXT_PUBLIC_GA_MEASUREMENT_ID` is ever set, revisit privacy section 2's
+   "We do not currently use third-party analytics" line — it needs to
+   change to disclose GA4 before that goes live, per the policy's own
+   wording.
 
 ## Functional work
 
@@ -987,16 +988,14 @@ facts from it are now wired into the codebase:
 - Additional Google or Trustpilot reviews beyond the 23 already added to
   `src/content/testimonials.ts`, if more should be featured — add them
   verbatim to that file, following the same no-rewrite rule.
-- **Partner/supplier logos.** `src/content/partners.ts` and the reusable
-  `PartnerLogos` component (wired into both `/` and `/about`, immediately
-  after "Our expertise") are built and ready, but the `partners` array is
-  intentionally empty — no partnerships were confirmed, so nothing is
-  rendered (the component returns `null` on an empty array; this is by
-  design, not a bug). Once the client supplies real partner/supplier
-  names, logo files, and (optionally) their website URLs and written
-  permission to display the logo, drop the logo under
-  `public/images/partners/` and add an entry to the `partners` array per
-  the file's header comment. Do not add placeholder or invented entries.
+- **Partner/supplier logos — done, client-confirmed real and permitted.**
+  `src/content/partners.ts` holds 24 real supplier/platform names (Schneider
+  Electric, Hager, ABB, Siemens, JinkoSolar, Starlink, Hikvision, etc.), each
+  with a logo file under `public/images/partners/`, rendered via the
+  `PartnerLogos` marquee on both `/` and `/about`. To add another, drop the
+  logo file under `public/images/partners/` and add an entry to the
+  `partners` array per the file's header comment — still real names/logos
+  only, never placeholder or invented entries.
 
 ## Dependency note
 

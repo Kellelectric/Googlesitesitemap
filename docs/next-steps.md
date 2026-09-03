@@ -10,14 +10,17 @@
   it was corrected from 20 to 15 per their own site audit, now again
   here) - do not change this figure again without a new, explicit
   client instruction.
-- **CEO message on `/about`: keep using the current placeholder.** The
-  client said to continue using it. `src/content/ceoMessage.ts` is
-  unchanged - still explicitly flagged in its own header comment as an
-  AI-drafted placeholder, not Gabriel's actual words. "Continue using
-  it" is read here as "keep it live for now," not as sign-off that the
-  specific phrasing is now his real words - if that changes, update
-  `ceoMessage.ts`'s `message` field directly and remove the disclaimer
-  comment at that point.
+- **CEO message on `/about`: now finalized with Gabriel's real words,
+  supplied directly by the client.** `src/content/ceoMessage.ts` no
+  longer holds the AI-drafted placeholder - it's Gabriel's actual
+  message as given, disclaimer comment removed. Worth flagging: this
+  message names **CBN Headquarters** and **Kaduna State Government
+  House** as past projects - the only place on the site that names
+  specific institutional clients (`projects.ts`'s case studies
+  deliberately avoid naming any client, per that file's own stated
+  policy). Confirm this naming is intentional and Kell has clearance
+  to publicly reference these two clients before this goes live, if
+  that hasn't already been considered.
 
 ## Pricing moved into the booking flow + Paystack payment gate (this round)
 

@@ -34,13 +34,14 @@ import { Reveal } from '@/components/ui/Reveal'
 // omitting it left the translate distance ~64px short of where the next
 // set actually starts, which is exactly what produced the gap above.
 //
-// Pauses on hover/focus (mouse or keyboard) and falls back to a static
-// wrapped row — no animation, no repetition — when the visitor has
-// prefers-reduced-motion set, but only below the md breakpoint. On
-// wide/desktop screens the marquee always slides regardless of that
-// preference, per client direction. The two layouts are toggled with
-// CSS breakpoint classes (not a JS branch) so both are always mounted -
-// no reduced-motion/viewport-size hydration mismatch, no dead refs.
+// Never pauses on hover/focus, per client direction (keeps sliding even
+// while hovering a logo) — falls back to a static wrapped row only when
+// the visitor has prefers-reduced-motion set, and only below the md
+// breakpoint. On wide/desktop screens the marquee always slides
+// regardless of that preference, per client direction. The two layouts
+// are toggled with CSS breakpoint classes (not a JS branch) so both are
+// always mounted - no reduced-motion/viewport-size hydration mismatch,
+// no dead refs.
 //
 // Logos render in their real brand colors (no grayscale treatment) — per
 // client direction. 48px (~0.5in at 96dpi/CSS-px) keeps every logo-to-logo
@@ -50,7 +51,6 @@ import { Reveal } from '@/components/ui/Reveal'
 const GAP_PX = 48 // must match the gap-12 class used on both rows below
 export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; dark?: boolean }) {
   const reduceMotion = useReducedMotion()
-  const [paused, setPaused] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const measureRef = useRef<HTMLDivElement>(null)
   const [containerWidth, setContainerWidth] = useState(0)
@@ -147,10 +147,6 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
           className={`relative mt-8 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] ${
             reduceMotion ? 'hidden md:block' : ''
           }`}
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onFocus={() => setPaused(true)}
-          onBlur={() => setPaused(false)}
         >
           {/* Invisible, unduplicated, non-animated — exists purely so
               ResizeObserver can measure one true set's natural width. */}
@@ -177,7 +173,8 @@ export function PartnerLogos({ partners, dark = false }: { partners: Partner[]; 
               // its very first frame whenever that measurement effect was
               // slow or never fired, which read as "not moving at all"
               // rather than as a brief snap-to-correct-distance moment.
-              animationPlayState: paused ? 'paused' : 'running',
+              // Never paused (including on hover) - per client direction.
+              animationPlayState: 'running',
               // Only set once real measurement exists — an explicit "0px"
               // here (even before measurement) would override the
               // keyframe's own 50% fallback and give the animation zero

@@ -7,7 +7,6 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { MobileCallBar } from '@/components/layout/MobileCallBar'
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
-import { ZohoSalesIQ } from '@/components/chat/ZohoSalesIQ'
 import { company } from '@/content/company'
 import { organizationSchema } from '@/lib/schema'
 
@@ -87,7 +86,23 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <MobileCallBar />
-        <ZohoSalesIQ />
+        {/* Back on Botpress for now - Zoho SalesIQ needs a paid subscription
+            the client hasn't taken out yet. The Zobot conversation design
+            and Deluge script (docs/zoho-salesiq-zobot.md) and the
+            ZohoSalesIQ component (src/components/chat/ZohoSalesIQ.tsx) are
+            still in the repo, ready to swap back in once that subscription
+            exists - don't delete either.
+            strategy="lazyOnload" defers fetching and running this ~large
+            third-party widget bundle until the browser is idle after the
+            rest of the page has loaded - it was the single biggest driver
+            of a 55/100 mobile PageSpeed Performance score despite 96-100 on
+            every other category, since a chat widget isn't needed for the
+            initial render or first interaction. */}
+        <Script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js" strategy="lazyOnload" />
+        <Script
+          src="https://files.bpcontent.cloud/2026/09/02/15/20260902152603-5BYI2T6Q.js"
+          strategy="lazyOnload"
+        />
         <SpeedInsights />
       </body>
     </html>

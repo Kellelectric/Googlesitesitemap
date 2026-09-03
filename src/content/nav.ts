@@ -19,6 +19,7 @@ export const footerNav: NavLink[] = [
   { label: 'About', href: '/about' },
   { label: 'Services', href: '/services' },
   { label: 'Solar & Energy Systems', href: '/solar-energy-systems' },
+  { label: 'Field Engineering Tools', href: '/field-tools' },
   { label: 'Book a Site Assessment', href: '/book' },
   { label: 'Contact', href: '/contact' },
 ]

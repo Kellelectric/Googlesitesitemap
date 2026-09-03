@@ -1,19 +1,30 @@
 # Next Steps
 
-## Inspection pricing by area + on-site career applications (this round)
+## Real inspection pricing filled in (this round)
 
-**Inspection pricing** (`/book-appointment`) — a new "Inspection pricing"
-section lists all 16 service areas as a click-to-expand accordion
-(`src/components/booking/InspectionPricing.tsx`), plus a separate note
-that a full building audit is priced per property, not a fixed fee. Every
-area's fee in `src/content/inspectionPricing.ts` is currently `null` - the
-client said the real per-area prices would be sent separately, so nothing
-was invented. Until real numbers are filled in, each area shows "We're
-finalizing the standard fee... call us" instead of a price. **To finish
-this**: fill in the `fee` field for each of the 16 areas in
-`inspectionPricing.ts` with the real figures (in Naira, as a plain
-number - e.g. `15000`), and update `buildingAuditNote` if the wording
-needs adjusting.
+**Inspection pricing** (`/book-appointment`) — the "Inspection pricing"
+section (`src/components/booking/InspectionPricing.tsx`,
+`src/content/inspectionPricing.ts`) now uses real, client-confirmed
+figures instead of the earlier placeholder "TBD" state:
+
+- **Residential** (per area, click-to-expand accordion): Wuse, Wuse 2,
+  Gwarinpa, and Maitama were given directly by the client as the
+  "near/within town" tier - ₦70,000 without an inspection report,
+  ₦100,000 with one. The other 12 areas were split between that same
+  near tier and a >15km tier (₦100,000-₦150,000) using Claude's own
+  geographic grouping (Central Business District, Garki, Asokoro,
+  Utako, Jabi, Katampe, and Guzape as near; Kubwa, Lugbe, Life Camp,
+  Apo, and Lokogoma as >15km), which the client explicitly confirmed
+  as correct.
+- **Commercial**: ₦80,000-₦800,000, flat (not area-based).
+- **Industrial**: ₦300,000-₦800,000, includes a full inspection
+  report, flat.
+- **Electrical inspection & audit** (the more comprehensive offering,
+  distinct from a standard inspection): from ₦300,000-₦2,000,000,
+  includes an electrical plan, flat.
+
+This replaces the earlier round's placeholder "building audit is
+priced per property, custom quote" framing with these real ranges.
 
 **Career applications** (`/careers/[slug]`) — the external "Apply via
 Google Form" redirect is replaced with a form built into the site

@@ -30,7 +30,7 @@ const trustSignals = [
   `${company.teamExperienceYears}+ Years Combined Experience`,
   `${company.trust.googleRating}★ Google Rating`,
   `${company.trust.googleReviewCount}+ Google Reviews`,
-  'Licensed & Insured',
+  `${company.certifications.map((c) => c.name).join(' & ')} Certified`,
   'Residential • Commercial • Industrial',
 ]
 

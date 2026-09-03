@@ -52,6 +52,23 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      // Canonical-domain consolidation: www.kellelectricals.com must not
+      // serve a second copy of the site. Host-matched so this only fires
+      // when a request actually arrives on the www host, preserving the
+      // pathname/query string. This is a code-level backstop; it only
+      // takes effect once www.kellelectricals.com is actually pointed at
+      // this same Vercel project (see docs/next-steps.md's domain-
+      // attachment note - the real domain isn't attached yet). Vercel's
+      // own dashboard redirect (Settings -> Domains -> mark kellelectricals.com
+      // primary) also produces this behavior once both hosts are added
+      // there, so this rule is what fires if that Vercel-level setting is
+      // ever off or reset.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.kellelectricals.com' }],
+        destination: 'https://kellelectricals.com/:path*',
+        permanent: true,
+      },
     ]
   },
 }

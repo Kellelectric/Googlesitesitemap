@@ -97,7 +97,7 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
     const next: Partial<Record<keyof FormState, string>> = {}
     if (!form.name.trim()) next.name = 'Enter your name'
     if (!/^[+0-9\s()-]{7,}$/.test(form.phone.trim())) next.phone = 'Enter a valid phone number'
-    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
       next.email = 'Enter a valid email address'
     }
     if (!form.serviceSlug) next.serviceSlug = 'Select a service'
@@ -218,7 +218,7 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
           />
         </Field>
 
-        <Field label="Email (optional)" error={errors.email}>
+        <Field label="Email" error={errors.email}>
           <input
             type="email"
             value={form.email}

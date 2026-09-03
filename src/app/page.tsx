@@ -30,7 +30,7 @@ export default function HomePage() {
       <ServicesPreview />
       <SolarFeature />
 
-      <section className="bg-paper py-24">
+      <section className="border-t border-ink/10 bg-paper py-16">
         <div className="container-content">
           <Reveal>
             <SolarSizingCalculator />

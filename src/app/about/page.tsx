@@ -455,11 +455,16 @@ export default function AboutPage() {
           whether the roster is trimmed or grown later. */}
       <section id="team" className="scroll-mt-24 bg-paper py-20">
         <div className="container-content">
-          <Reveal>
-            <span className="eyebrow text-petrol/70">Leadership</span>
-            <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-              Who you&rsquo;ll be working with
-            </h2>
+          <Reveal className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <span className="eyebrow text-petrol/70">Leadership</span>
+              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+                Who you&rsquo;ll be working with
+              </h2>
+            </div>
+            <Link href="/leadership" className="link-underline text-sm font-semibold text-petrol">
+              Meet the full team &rarr;
+            </Link>
           </Reveal>
           <StaggerGroup
             className={`mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 ${

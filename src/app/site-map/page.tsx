@@ -30,6 +30,7 @@ const groups: LinkGroup[] = [
     links: [
       { label: 'Home', href: '/' },
       { label: 'About Us', href: '/about' },
+      { label: 'Leadership', href: '/leadership' },
       { label: 'Certifications & Compliance', href: '/certifications-compliance' },
       { label: 'Maintenance & AMC', href: '/maintenance-amc' },
       { label: 'Health, Safety & Environment', href: '/hse' },

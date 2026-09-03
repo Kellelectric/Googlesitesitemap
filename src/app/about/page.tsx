@@ -74,7 +74,7 @@ const values = [
   {
     title: 'Safety first',
     description:
-      'Every job follows documented safety isolation and site protocols, not shortcuts, regardless of how routine the work looks.',
+      'Every design decision and every job on site is filtered through risk to life and property, not schedule or cost - documented safety isolation and site protocols, not shortcuts, regardless of how routine the work looks.',
   },
   {
     title: 'Documented, not just done',
@@ -84,27 +84,17 @@ const values = [
   {
     title: 'Engineered for real conditions',
     description:
-      "Load analysis and design decisions based on Nigeria's actual grid conditions, not textbook assumptions.",
+      "Systems sized and specified to calculation, never estimation, based on Nigeria's actual grid conditions - with margin for growth and fault conditions, not textbook assumptions.",
   },
   {
     title: 'One standard, every crew',
     description:
       "The same documented process on every job, so the quality of the work doesn't depend on which technician shows up.",
   },
-]
-
-const brandPhilosophy = [
-  {
-    title: 'Safety first',
-    description: 'Every design decision is filtered through risk to life and property, not schedule or cost.',
-  },
-  {
-    title: 'Engineered precision',
-    description: 'Systems sized and specified to calculation, never estimation - with margin for growth and fault conditions.',
-  },
   {
     title: 'Client partnership',
-    description: 'Long-term infrastructure relationships over one-off contracts, built on transparent pricing and honest timelines.',
+    description:
+      'Long-term infrastructure relationships over one-off contracts, built on transparent pricing and honest timelines.',
   },
 ]
 
@@ -322,25 +312,30 @@ export default function AboutPage() {
               ))}
             </StaggerGroup>
 
-            {/* Mission / Vision */}
-            <Reveal delay={0.1} className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-2">
-              <div className="border-t-2 border-petrol pt-5">
-                <span className="eyebrow text-petrol/70">Our mission</span>
-                <p className="mt-3 leading-relaxed text-ink/75">
-                  To engineer electrical infrastructure for the grid
-                  conditions that actually exist in Nigeria - with load
-                  analysis before design, documented specifications before
-                  installation, and compliance testing before handover, on
-                  every job regardless of size.
-                </p>
-              </div>
-              <div className="border-t-2 border-petrol pt-5">
-                <span className="eyebrow text-petrol/70">Our vision</span>
-                <p className="mt-3 leading-relaxed text-ink/75">
-                  To be the electrical engineering partner Nigerian homes,
-                  businesses, and industrial sites trust by default - known
-                  for work that is engineered, documented, and built to last.
-                </p>
+            {/* Mission / Vision - a tinted callout instead of another pair of
+                top-bordered cards, so it reads as a distinct pull-out moment
+                rather than the seventh identical block in the column. */}
+            <Reveal delay={0.1} className="mt-14 border border-ink/10 bg-petrol/[0.04] p-6 md:p-8">
+              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                <div>
+                  <span className="eyebrow text-petrol/70">Our mission</span>
+                  <p className="mt-3 leading-relaxed text-ink/75">
+                    To engineer electrical infrastructure for the grid
+                    conditions that actually exist in Nigeria - with load
+                    analysis before design, documented specifications before
+                    installation, and compliance testing before handover, on
+                    every job regardless of size.
+                  </p>
+                </div>
+                <div className="border-t border-ink/10 pt-8 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0">
+                  <span className="eyebrow text-petrol/70">Our vision</span>
+                  <p className="mt-3 leading-relaxed text-ink/75">
+                    To be the electrical engineering partner Nigerian homes,
+                    businesses, and industrial sites trust by default - known
+                    for work that is engineered, documented, and built to
+                    last.
+                  </p>
+                </div>
               </div>
             </Reveal>
 
@@ -350,8 +345,14 @@ export default function AboutPage() {
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
                 What every job is held to
               </h2>
+              <p className="mt-4 max-w-2xl leading-relaxed text-ink/75">
+                We treat engineering as a discipline of consequence - every
+                load calculation, every cable size, every point of earthing
+                exists to protect people and property over decades of use,
+                not just through commissioning day.
+              </p>
             </Reveal>
-            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {values.map((value) => (
                 <MotionDiv key={value.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
                   <h3 className="text-lg font-semibold text-ink">{value.title}</h3>
@@ -360,56 +361,47 @@ export default function AboutPage() {
               ))}
             </StaggerGroup>
 
-            {/* Brand Philosophy */}
-            <Reveal delay={0.1} className="mt-14">
-              <span className="eyebrow text-petrol/70">Brand philosophy</span>
-              <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-                Precision as a philosophy, not a promise
-              </h2>
-              <p className="mt-4 max-w-2xl leading-relaxed text-ink/75">
-                We treat engineering as a discipline of consequence - every
-                load calculation, every cable size, every point of earthing
-                exists to protect people and property over decades of use,
-                not just through commissioning day.
-              </p>
-            </Reveal>
-            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-3">
-              {brandPhilosophy.map((item) => (
-                <MotionDiv key={item.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
-                  <h3 className="text-base font-semibold text-ink">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{item.description}</p>
-                </MotionDiv>
-              ))}
-            </StaggerGroup>
-
-            {/* Competitive Advantages */}
+            {/* Competitive Advantages - boxed cards instead of top-bordered,
+                alternating the section rhythm against Our Values above and
+                Our Expertise below. */}
             <Reveal delay={0.1} className="mt-14">
               <span className="eyebrow text-petrol/70">What sets us apart</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
                 Competitive advantages
               </h2>
             </Reveal>
-            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+            <StaggerGroup className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {competitiveAdvantages.map((item) => (
-                <MotionDiv key={item.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
+                <MotionDiv key={item.title} variants={staggerItem} className="border border-ink/10 p-6">
                   <h3 className="text-base font-semibold text-ink">{item.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-ink/65">{item.description}</p>
                 </MotionDiv>
               ))}
             </StaggerGroup>
 
-            {/* Our Expertise */}
+            {/* Our Expertise - the FAQSection-style numeral + split layout,
+                reinforcing the numbering device used sitewide instead of
+                another top-bordered card grid. */}
             <Reveal delay={0.1} className="mt-14">
               <span className="eyebrow text-petrol/70">Our expertise</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
                 Four functions, one process
               </h2>
             </Reveal>
-            <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
-              {teamRoles.map((role) => (
-                <MotionDiv key={role.title} variants={staggerItem} className="border-t-2 border-petrol pt-5">
-                  <h3 className="text-lg font-semibold text-ink">{role.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{role.description}</p>
+            <StaggerGroup className="mt-8 divide-y divide-ink/10 border-t border-ink/10">
+              {teamRoles.map((role, i) => (
+                <MotionDiv
+                  key={role.title}
+                  variants={staggerItem}
+                  className="grid grid-cols-1 gap-x-8 gap-y-3 py-6 md:grid-cols-[minmax(0,260px)_1fr]"
+                >
+                  <div className="flex items-baseline gap-4">
+                    <span className="font-display text-2xl font-semibold leading-none text-petrol/15">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <h3 className="text-lg font-semibold text-ink">{role.title}</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed text-ink/65">{role.description}</p>
                 </MotionDiv>
               ))}
             </StaggerGroup>
@@ -421,7 +413,9 @@ export default function AboutPage() {
               </div>
             )}
 
-            {/* Our Process */}
+            {/* Our Process - the same large ghost-numeral device
+                ProcessSection uses on the homepage, instead of a small
+                caption-line step number. */}
             <Reveal delay={0.1} className="mt-14">
               <span className="eyebrow text-petrol/70">Our process</span>
               <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
@@ -431,8 +425,10 @@ export default function AboutPage() {
             <StaggerGroup className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
               {process.map((step) => (
                 <MotionDiv key={step.step} variants={staggerItem} className="border-t-2 border-petrol pt-5">
-                  <span className="font-display text-sm font-semibold text-petrol">{step.step}</span>
-                  <h3 className="mt-1 text-lg font-semibold text-ink">{step.title}</h3>
+                  <span className="font-display block text-6xl font-semibold leading-none text-petrol/10">
+                    {step.step}
+                  </span>
+                  <h3 className="mt-3 text-lg font-semibold text-ink">{step.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-ink/65">{step.description}</p>
                 </MotionDiv>
               ))}

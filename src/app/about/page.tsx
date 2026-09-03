@@ -167,54 +167,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Leadership - full-width, own section, not squeezed into the
-          narrow main column alongside the sidebar. team.length currently
-          gives an even 3-column grid (2 full rows of 6); the responsive
-          steps below (1 / 2 / 3-4 columns) keep it balanced whether the
-          roster is trimmed or grown later. */}
-      <section id="team" className="scroll-mt-24 bg-paper py-20">
-        <div className="container-content">
-          <Reveal>
-            <span className="eyebrow text-petrol/70">Leadership</span>
-            <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
-              Who you&rsquo;ll be working with
-            </h2>
-          </Reveal>
-          <StaggerGroup
-            className={`mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 ${
-              team.length === 3 ? 'lg:mx-auto lg:max-w-3xl' : ''
-            }`}
-          >
-            {team.map((member) => (
-              <MotionDiv
-                key={member.name}
-                variants={staggerItem}
-                className="flex h-full flex-col border border-ink/10"
-              >
-                {member.photo && (
-                  <div className="relative aspect-square w-full overflow-hidden">
-                    <Image
-                      src={member.photo}
-                      alt={member.name}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-                <div className="flex flex-1 flex-col border-t-2 border-petrol p-5">
-                  <h3 className="text-lg font-semibold text-ink">{member.name}</h3>
-                  <p className="mt-1 text-sm font-semibold text-petrol/80">{member.title}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{member.bio}</p>
-                </div>
-              </MotionDiv>
-            ))}
-          </StaggerGroup>
-        </div>
-      </section>
-
-      <CompanyTimeline milestones={milestones} />
-
       <section className="bg-paper py-20">
         <div className="container-content grid grid-cols-1 gap-16 lg:grid-cols-[1fr,380px]">
           <div className="min-w-0">
@@ -366,8 +318,9 @@ export default function AboutPage() {
               <span className="eyebrow text-petrol/70">Why clients trust us</span>
               <p className="mt-4 leading-relaxed text-ink/75">
                 If you&rsquo;re wondering whether to hand us your project,
-                here&rsquo;s the honest answer: fifteen years of clients
-                calling us back is the proof. Someone who books a small
+                here&rsquo;s the honest answer: {company.teamExperienceYears}{' '}
+                years of clients calling us back is the proof. Someone who
+                books a small
                 repair today is often the same person calling two years
                 later for a solar installation or a full commercial build.
                 That doesn&rsquo;t happen by accident. It happens because
@@ -491,6 +444,57 @@ export default function AboutPage() {
           </aside>
         </div>
       </section>
+
+      {/* Leadership - moved below the full company narrative (story,
+          mission, values, differentiation) rather than sitting right after
+          the hero, so a visitor meets the company's case for itself before
+          meeting the people - full-width, own section, not squeezed into
+          the narrow main column alongside the sidebar. team.length
+          currently gives an even 3-column grid (2 full rows of 6); the
+          responsive steps below (1 / 2 / 3-4 columns) keep it balanced
+          whether the roster is trimmed or grown later. */}
+      <section id="team" className="scroll-mt-24 bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">Leadership</span>
+            <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+              Who you&rsquo;ll be working with
+            </h2>
+          </Reveal>
+          <StaggerGroup
+            className={`mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 ${
+              team.length === 3 ? 'lg:mx-auto lg:max-w-3xl' : ''
+            }`}
+          >
+            {team.map((member) => (
+              <MotionDiv
+                key={member.name}
+                variants={staggerItem}
+                className="flex h-full flex-col border border-ink/10"
+              >
+                {member.photo && (
+                  <div className="relative aspect-square w-full overflow-hidden">
+                    <Image
+                      src={member.photo}
+                      alt={member.name}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col border-t-2 border-petrol p-5">
+                  <h3 className="text-lg font-semibold text-ink">{member.name}</h3>
+                  <p className="mt-1 text-sm font-semibold text-petrol/80">{member.title}</p>
+                  <p className="mt-3 text-sm leading-relaxed text-ink/65">{member.bio}</p>
+                </div>
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <CompanyTimeline milestones={milestones} />
 
       <CTASection />
     </>

@@ -1,5 +1,33 @@
 # Next Steps
 
+## `/about` layout reorder + a sitewide consistency check (this round)
+
+- **Leadership moved off the top of `/about`.** It previously sat
+  right after the hero, before any company narrative. Moved to after
+  the full story/values/differentiation content (Who We Are through
+  Why Clients Trust Us) and before the milestone timeline and closing
+  CTA - so a visitor reads the company's own case first, then meets
+  the people, then sees the history, matching how About pages are
+  conventionally structured. No content removed, only reordered - team
+  bios, photos, and the `#team` anchor all unchanged.
+- **Numeral consistency fix.** The "Why clients trust us" paragraph
+  spelled out "fifteen years" while every other years-of-experience
+  reference sitewide uses digits (`15+`, `15 years`). Wired it to
+  `company.teamExperienceYears` instead of a hardcoded spelled-out
+  number - now consistent with the rest of the page and site, and
+  can't drift out of sync if that figure ever changes again.
+- **Broader sitewide consistency check (this round):** Verified
+  already consistent, no changes needed - company naming (`Kell
+  Electricals Ltd` vs `Limited` only where legally appropriate: RC
+  number contexts, schema.org, footer copyright), "Wuse 2" spelling
+  (never "Wuse II") across every file that references it, currency
+  formatting (₦ throughout, `NGN` only in the Paystack API/ISO
+  currency-code context), and eyebrow-label casing (Title Case for
+  page/section proper nouns like "About Us"/"Careers"/"Leadership",
+  sentence case for descriptive labels like "Our mission"/"How we
+  work" - this is a deliberate existing pattern, not an inconsistency,
+  left as-is).
+
 ## `/about` page rewritten with the client's real copy (this round)
 
 The client supplied a full rewrite of `/about`'s body content in the

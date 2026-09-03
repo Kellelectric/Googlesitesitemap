@@ -29,7 +29,7 @@ export function generateMetadata({ params }: Props): Metadata {
     title: `${industry.name} Electrical Services`,
     description: industry.summary,
     path: `/industries/${industry.slug}`,
-    image: '/images/photos/industry-detail-hero-control-room.jpg',
+    image: industry.heroImage,
   })
 }
 
@@ -76,7 +76,7 @@ export default function IndustryDetailPage({ params }: Props) {
       {/* Hero */}
       <section className="relative overflow-hidden bg-petrol text-paper">
         <Image
-          src="/images/photos/industry-detail-hero-control-room.jpg"
+          src={industry.heroImage}
           alt=""
           fill
           priority

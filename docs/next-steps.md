@@ -1,5 +1,54 @@
 # Next Steps
 
+## Inspection pricing by area + on-site career applications (this round)
+
+**Inspection pricing** (`/book-appointment`) — a new "Inspection pricing"
+section lists all 16 service areas as a click-to-expand accordion
+(`src/components/booking/InspectionPricing.tsx`), plus a separate note
+that a full building audit is priced per property, not a fixed fee. Every
+area's fee in `src/content/inspectionPricing.ts` is currently `null` - the
+client said the real per-area prices would be sent separately, so nothing
+was invented. Until real numbers are filled in, each area shows "We're
+finalizing the standard fee... call us" instead of a price. **To finish
+this**: fill in the `fee` field for each of the 16 areas in
+`inspectionPricing.ts` with the real figures (in Naira, as a plain
+number - e.g. `15000`), and update `buildingAuditNote` if the wording
+needs adjusting.
+
+**Career applications** (`/careers/[slug]`) — the external "Apply via
+Google Form" redirect is replaced with a form built into the site
+(`src/components/careers/CareerApplicationForm.tsx`), submitted via
+`/api/careers-application` and forwarded to a configurable webhook set
+via `CAREERS_WEBHOOK_URL` (same pattern as `QUOTE_WEBHOOK_URL` - point it
+at Zapier/Make/Zoho Flow to land in a Google Sheet or wherever). Same spam
+protections as the quote form (honeypot, time-trap, rate limit, optional
+hCaptcha via the same `NEXT_PUBLIC_HCAPTCHA_SITE_KEY`/`HCAPTCHA_SECRET_KEY`
+pair). A new `/careers/thank-you` page confirms submission, mirroring
+`/contact/thank-you`.
+
+**Not yet done — needs the client's help to finish**: the client asked for
+submissions to also land in the same Google Forms already in use per
+track, not just a new destination. I attempted to pull each form's real
+field structure myself (so nothing further would be needed from the
+client) by fetching the live Google Form pages directly, but this
+session's sandboxed network blocks/resets connections to
+`docs.google.com` and `accounts.google.com`, so that wasn't possible here.
+
+Also worth flagging: `src/content/careers.ts`'s `applicationFormUrl`
+values show only **3 distinct Google Forms across the 5 tracks** -
+`nysc-placement` and `job-openings` share one URL, and `internship` and
+`industrial-training` share another. Confirm whether that's intentional
+(one shared form covering multiple tracks) before treating it as a bug.
+
+To wire real submissions into an existing Google Form, the fastest path
+that needs no API credentials: open that Google Form → the 3-dot menu →
+"Get pre-filled link" → fill every question with a placeholder answer →
+copy the resulting URL. That URL contains each question's real
+`entry.XXXXXXX` field ID. Send those 3 pre-filled links (one per distinct
+form) and the exact question each `entry.` ID corresponds to, and the
+application form can be wired to submit into those same Forms/response
+sheets directly, in addition to (or instead of) `CAREERS_WEBHOOK_URL`.
+
 ## Back on Botpress for now - Zoho SalesIQ needs a paid subscription (this round)
 
 The Zoho SalesIQ switch (previous round) is reverted at the site level:

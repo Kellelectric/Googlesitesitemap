@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
+import { CareerApplicationForm } from '@/components/careers/CareerApplicationForm'
 import { careerTracks, getCareerTrackBySlug } from '@/content/careers'
 import { company } from '@/content/company'
 import { breadcrumbSchema } from '@/lib/schema'
@@ -33,6 +34,13 @@ export default function CareerTrackPage({ params }: Props) {
   if (!track) notFound()
 
   const isJobOpenings = track.slug === 'job-openings'
+  // Job openings lists full descriptive strings ("Licensed Electrician
+  // (Journeyman level) - residential & commercial installation..."), so
+  // the role picker in the application form only needs the label before
+  // the first " - ".
+  const roleOptions = isJobOpenings
+    ? track.whoItsFor.map((item) => item.split(' - ')[0].trim())
+    : undefined
 
   return (
     <>
@@ -74,12 +82,7 @@ export default function CareerTrackPage({ params }: Props) {
           <p className="mt-5 max-w-xl text-paper/70">{track.description}</p>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <Button
-              href={track.applicationFormUrl}
-              variant="primary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <Button href="#apply" variant="primary">
               Apply Now
             </Button>
             <Button href={company.phoneHref} variant="secondary">
@@ -180,20 +183,11 @@ export default function CareerTrackPage({ params }: Props) {
             <div className="border border-ink/10 p-6">
               <span className="eyebrow text-petrol/70">How to apply</span>
               <p className="mt-4 text-sm leading-relaxed text-ink/75">
-                Fill out our{' '}
-                <a
-                  href={track.applicationFormUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="link-underline font-semibold text-ink"
-                >
-                  {track.name} application form
-                </a>{' '}
-                and our team will follow up - the whole process, from
-                application to confirmation, is handled online. Programme
-                specifics (duration, schedule, and current availability) are
-                confirmed directly once we hear from you. You can also reach
-                us by email at{' '}
+                Apply directly below - the whole process, from application
+                to confirmation, is handled online. Programme specifics
+                (duration, schedule, and current availability) are
+                confirmed directly once we hear from you. You can also
+                reach us by email at{' '}
                 <a href={`mailto:${company.email}`} className="link-underline font-semibold text-ink">
                   {company.email}
                 </a>
@@ -215,6 +209,24 @@ export default function CareerTrackPage({ params }: Props) {
               )}
             </div>
           </aside>
+        </div>
+      </section>
+
+      <section id="apply" className="scroll-mt-16 border-t border-ink/10 bg-paper py-20">
+        <div className="container-content max-w-2xl">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">Apply now</span>
+            <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
+              Apply for {track.name}
+            </h2>
+          </Reveal>
+          <div className="mt-8">
+            <CareerApplicationForm
+              trackSlug={track.slug}
+              trackName={track.name}
+              roleOptions={roleOptions}
+            />
+          </div>
         </div>
       </section>
 
@@ -244,8 +256,7 @@ export default function CareerTrackPage({ params }: Props) {
         heading="Ready to apply?"
         body="Fill out the application form and we'll follow up with next steps."
         primaryLabel="Apply Now"
-        primaryHref={track.applicationFormUrl}
-        primaryExternal
+        primaryHref="#apply"
       />
     </>
   )

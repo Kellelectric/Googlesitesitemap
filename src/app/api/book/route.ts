@@ -2,8 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { verifyHCaptcha } from '@/lib/hcaptcha'
+import { verifyPaystackTransaction } from '@/lib/paystack'
 import { createCalendarEvent, getBusyPeriods, isCalendarConfigured } from '@/lib/googleCalendar'
 import { computeAvailableSlots, isDateBookable, localSlotToDate, SLOT_MINUTES } from '@/lib/bookingSlots'
+import {
+  computeExactPrice,
+  describePrice,
+  type ServiceCategory,
+  type ReportChoice,
+} from '@/content/inspectionPricing'
 
 export const runtime = 'nodejs'
 
@@ -13,6 +20,13 @@ function generateBookingReference(): string {
   return `KE-APPT-${year}-${suffix}`
 }
 
+const VALID_CATEGORIES: ServiceCategory[] = [
+  'residential',
+  'commercial',
+  'industrial',
+  'electrical-audit',
+]
+
 type BookingPayload = {
   name: string
   phone: string
@@ -21,6 +35,10 @@ type BookingPayload = {
   notes?: string
   date: string // YYYY-MM-DD, Africa/Lagos
   time: string // HH:mm, Africa/Lagos
+  serviceCategory?: ServiceCategory
+  areaSlug?: string
+  reportChoice?: ReportChoice
+  paystackReference?: string
   website?: string // honeypot — real users never fill this in
   renderedAt?: number
   captchaToken?: string
@@ -45,7 +63,10 @@ function isValidPayload(body: unknown): body is BookingPayload {
     typeof b.date === 'string' &&
     DATE_RE.test(b.date) &&
     typeof b.time === 'string' &&
-    TIME_RE.test(b.time)
+    TIME_RE.test(b.time) &&
+    (b.serviceCategory === undefined ||
+      (typeof b.serviceCategory === 'string' &&
+        VALID_CATEGORIES.includes(b.serviceCategory as ServiceCategory)))
   )
 }
 
@@ -108,6 +129,38 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'date_closed' }, { status: 422 })
   }
 
+  // Payment gate: only applies when (a) PAYSTACK_SECRET_KEY is configured
+  // and (b) the visitor's selection pins down one exact fee (currently
+  // only the residential near-tier, with a with/without-report choice
+  // made - see computeExactPrice's own comment for why range-priced
+  // categories/tiers don't get a payment gate at all). Everything else
+  // books exactly as it did before payment was added.
+  const paystackSecret = process.env.PAYSTACK_SECRET_KEY
+  const exactPrice =
+    body.serviceCategory && body.reportChoice
+      ? computeExactPrice(body.serviceCategory, body.areaSlug ?? null, body.reportChoice)
+      : null
+
+  if (paystackSecret && exactPrice !== null) {
+    if (!body.paystackReference) {
+      return NextResponse.json({ ok: false, reason: 'payment_required' }, { status: 402 })
+    }
+    const verification = await verifyPaystackTransaction(body.paystackReference, paystackSecret)
+    const expectedKobo = exactPrice * 100
+    if (
+      !verification.ok ||
+      verification.currency !== 'NGN' ||
+      verification.amountKobo !== expectedKobo
+    ) {
+      console.error('Paystack verification failed or amount mismatch', {
+        reference: body.paystackReference,
+        expectedKobo,
+        got: verification,
+      })
+      return NextResponse.json({ ok: false, reason: 'payment_failed' }, { status: 402 })
+    }
+  }
+
   try {
     // Re-check the calendar's real availability right before booking,
     // not just trusting whatever the visitor's browser last fetched -
@@ -126,11 +179,17 @@ export async function POST(request: NextRequest) {
     const endDate = new Date(startDate.getTime() + SLOT_MINUTES * 60 * 1000)
 
     const reference = generateBookingReference()
+    const priceDescription = body.serviceCategory
+      ? describePrice(body.serviceCategory, body.areaSlug ?? null, body.reportChoice ?? null)
+      : null
     const descriptionLines = [
       `Reference: ${reference}`,
       `Phone: ${body.phone}`,
       `Email: ${body.email}`,
       `Address: ${body.address}`,
+      body.serviceCategory ? `Service type: ${body.serviceCategory}` : null,
+      priceDescription ? `Price: ${priceDescription}` : null,
+      exactPrice !== null ? `Paid via Paystack: ${body.paystackReference}` : null,
       body.notes ? `Notes: ${body.notes}` : null,
       'Booked via kellelectricals.com',
     ].filter((line): line is string => line !== null)
@@ -163,6 +222,11 @@ export async function POST(request: NextRequest) {
           notes: body.notes,
           appointmentDate: body.date,
           appointmentTime: body.time,
+          serviceCategory: body.serviceCategory,
+          areaSlug: body.areaSlug,
+          price: priceDescription,
+          paidExactAmount: exactPrice,
+          paystackReference: body.paystackReference,
           calendarEventId: event.id,
         }),
         signal: AbortSignal.timeout(8000),

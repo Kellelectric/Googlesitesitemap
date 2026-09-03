@@ -4,7 +4,6 @@ import { CircuitLines } from '@/components/ui/CircuitLines'
 import { TrackedLink } from '@/components/ui/TrackedLink'
 import { Reveal } from '@/components/ui/Reveal'
 import { BookingWidget } from '@/components/booking/BookingWidget'
-import { InspectionPricing } from '@/components/booking/InspectionPricing'
 import { company } from '@/content/company'
 import { pageMetadata } from '@/lib/metadata'
 import { breadcrumbSchema } from '@/lib/schema'
@@ -116,14 +115,6 @@ export default function BookAppointmentPage() {
               </p>
             </div>
           </aside>
-        </div>
-      </section>
-
-      <section className="border-t border-ink/10 bg-paper py-20">
-        <div className="container-content max-w-3xl">
-          <Reveal>
-            <InspectionPricing />
-          </Reveal>
         </div>
       </section>
     </>

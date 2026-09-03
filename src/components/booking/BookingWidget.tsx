@@ -5,6 +5,15 @@ import Script from 'next/script'
 import { company } from '@/content/company'
 import { isDateBookable } from '@/lib/bookingSlots'
 import { trackEvent } from '@/lib/analytics'
+import {
+  SERVICE_CATEGORIES,
+  inspectionAreas,
+  getResidentialTier,
+  describePrice,
+  computeExactPrice,
+  type ServiceCategory,
+  type ReportChoice,
+} from '@/content/inspectionPricing'
 
 declare global {
   interface Window {
@@ -12,12 +21,30 @@ declare global {
       getResponse: (widgetId?: string) => string
       reset: (widgetId?: string) => void
     }
+    PaystackPop?: {
+      setup: (options: {
+        key: string
+        email: string
+        amount: number
+        currency: string
+        ref: string
+        onClose: () => void
+        callback: (response: { reference: string }) => void
+      }) => { openIframe: () => void }
+    }
   }
 }
 
 const HCAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY
+const PAYSTACK_PUBLIC_KEY = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY
 
-type Step = 'date' | 'time' | 'details' | 'success'
+// Step order: what do you need service for (and its price) comes first,
+// per client direction - pricing should only appear once a visitor is
+// actually booking and has picked their service type, not as a page
+// section anyone can browse. 'payment' is only inserted between
+// 'details' and the final submit when the selection pins down one exact
+// fee and Paystack is configured - see computeExactPrice's comment.
+type Step = 'category' | 'date' | 'time' | 'details' | 'payment' | 'success'
 type LoadState = 'checking' | 'ready' | 'not_configured'
 
 function nextDays(count: number): string[] {
@@ -52,7 +79,12 @@ function formatTimeLabel(hhmm: string): string {
 // aren't set yet, so the page still works during setup.
 export function BookingWidget() {
   const [loadState, setLoadState] = useState<LoadState>('checking')
-  const [step, setStep] = useState<Step>('date')
+  const [step, setStep] = useState<Step>('category')
+  const [category, setCategory] = useState<ServiceCategory | null>(null)
+  const [areaSlug, setAreaSlug] = useState<string | null>(null)
+  const [reportChoice, setReportChoice] = useState<ReportChoice | null>(null)
+  const [payError, setPayError] = useState<string | null>(null)
+  const [paystackLoadFailed, setPaystackLoadFailed] = useState(false)
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [selectedTime, setSelectedTime] = useState<string | null>(null)
   const [slots, setSlots] = useState<string[]>([])
@@ -157,9 +189,16 @@ export function BookingWidget() {
     return Object.keys(next).length === 0 && captchaOk
   }
 
-  async function handleSubmit() {
+  // Only the residential near tier (with a with/without-report choice
+  // made) resolves to one exact figure - everything else is a range, so
+  // there's nothing exact to charge upfront for it. See
+  // content/inspectionPricing.ts's computeExactPrice for the full reasoning.
+  const exactPrice = category ? computeExactPrice(category, areaSlug, reportChoice) : null
+  const paymentRequired = exactPrice !== null && !!PAYSTACK_PUBLIC_KEY
+
+  async function handleSubmit(paystackReference?: string) {
     if (!selectedDate || !selectedTime) return
-    if (!validate()) return
+    if (!paystackReference && !validate()) return
 
     setSubmitting(true)
     setSubmitError(null)
@@ -176,6 +215,10 @@ export function BookingWidget() {
           notes: notes || undefined,
           date: selectedDate,
           time: selectedTime,
+          serviceCategory: category ?? undefined,
+          areaSlug: areaSlug ?? undefined,
+          reportChoice: reportChoice ?? undefined,
+          paystackReference,
           website,
           renderedAt,
           captchaToken,
@@ -199,6 +242,13 @@ export function BookingWidget() {
           setLoadState('not_configured')
           return
         }
+        if (data?.reason === 'payment_failed' || data?.reason === 'payment_required') {
+          setPayError(
+            'We could not confirm your payment. If you were charged, contact us with your payment reference and we will sort it out - otherwise please try paying again.',
+          )
+          setStep('payment')
+          return
+        }
         setSubmitError('Something went wrong. Please call or WhatsApp us instead.')
         return
       }
@@ -211,6 +261,49 @@ export function BookingWidget() {
     } finally {
       setSubmitting(false)
     }
+  }
+
+  // From the details step: either go straight to submitting (no exact
+  // price, or Paystack isn't configured yet - booking works exactly as
+  // it did before payment existed) or, once a payment is actually
+  // required, validate the details first and only then move to the
+  // payment step - a visitor shouldn't pay before their details are
+  // even valid.
+  function continueFromDetails() {
+    if (!paymentRequired) {
+      handleSubmit()
+      return
+    }
+    if (!validate()) return
+    setPayError(null)
+    setStep('payment')
+  }
+
+  function openPaystackCheckout() {
+    if (!PAYSTACK_PUBLIC_KEY || exactPrice === null) return
+    if (!window.PaystackPop) {
+      setPayError('Payment could not load. Please refresh and try again, or call/WhatsApp us.')
+      return
+    }
+    setPayError(null)
+    const handler = window.PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email,
+      amount: exactPrice * 100, // Paystack expects kobo
+      currency: 'NGN',
+      ref: `KE-PAY-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+      onClose: () => {
+        // Visitor closed the popup without paying - stay put, no error.
+      },
+      callback: (response) => {
+        // The client-side callback firing is not proof of payment on its
+        // own - app/api/book/route.ts re-verifies this reference against
+        // Paystack's own API (status, amount, currency) before creating
+        // the calendar event.
+        handleSubmit(response.reference)
+      },
+    })
+    handler.openIframe()
   }
 
   if (loadState === 'checking') {
@@ -247,6 +340,61 @@ export function BookingWidget() {
     )
   }
 
+  if (step === 'payment' && category && exactPrice !== null) {
+    const priceLabel = `₦${exactPrice.toLocaleString('en-NG')}`
+    return (
+      <div className="border border-ink/10 bg-paper p-8 text-center">
+        {PAYSTACK_PUBLIC_KEY && (
+          <Script
+            src="https://js.paystack.co/v1/inline.js"
+            strategy="afterInteractive"
+            onError={() => setPaystackLoadFailed(true)}
+          />
+        )}
+        <h3 className="text-xl font-semibold text-ink">Confirm and pay</h3>
+        <p className="mt-3 text-sm leading-relaxed text-ink/70">
+          Paying {priceLabel} confirms your appointment
+          {selectedDate && selectedTime && (
+            <>
+              {' '}
+              for{' '}
+              {new Date(`${selectedDate}T12:00:00Z`).toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                timeZone: 'UTC',
+              })}{' '}
+              at {formatTimeLabel(selectedTime)}
+            </>
+          )}
+          . We only add this to our calendar once payment succeeds.
+        </p>
+        <button
+          type="button"
+          disabled={submitting || paystackLoadFailed}
+          onClick={openPaystackCheckout}
+          className="mt-6 inline-flex items-center justify-center rounded bg-yellow px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-yellow/90 disabled:opacity-60"
+        >
+          {submitting ? 'Confirming…' : `Pay ${priceLabel} to Confirm`}
+        </button>
+        {paystackLoadFailed && (
+          <p className="mt-4 text-sm text-ink">
+            Payment could not load. Please call {company.phone} or WhatsApp us to book
+            directly.
+          </p>
+        )}
+        {payError && <p className="mt-4 text-sm text-ink">{payError}</p>}
+        <button
+          type="button"
+          onClick={() => setStep('details')}
+          className="mt-4 text-sm text-ink/60 underline"
+        >
+          Back to your details
+        </button>
+      </div>
+    )
+  }
+
   if (step === 'success') {
     return (
       <div className="border border-ink/10 bg-paper p-8 text-center">
@@ -272,10 +420,97 @@ export function BookingWidget() {
     )
   }
 
+  const selectedAreaTier = areaSlug ? getResidentialTier(areaSlug) : undefined
+  const priceLabel = category ? describePrice(category, areaSlug, reportChoice) : null
+  const categoryComplete = category !== null && (category !== 'residential' || areaSlug !== null)
+
   return (
     <div className="border border-ink/10 bg-paper p-6 sm:p-8">
       <div>
-        <span className="eyebrow text-petrol/70">Step 1 - Pick a date</span>
+        <span className="eyebrow text-petrol/70">Step 1 - What do you need service for?</span>
+        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {SERVICE_CATEGORIES.map((c) => (
+            <button
+              key={c.value}
+              type="button"
+              onClick={() => {
+                setCategory(c.value)
+                if (c.value !== 'residential') {
+                  setAreaSlug(null)
+                  setReportChoice(null)
+                }
+              }}
+              className={`border px-3 py-3 text-sm font-semibold transition-colors ${
+                category === c.value
+                  ? 'border-petrol bg-petrol text-paper'
+                  : 'border-ink/15 text-ink hover:border-petrol'
+              }`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+
+        {category === 'residential' && (
+          <div className="mt-4">
+            <BookingField label="Your area">
+              <select
+                value={areaSlug ?? ''}
+                onChange={(e) => {
+                  setAreaSlug(e.target.value || null)
+                  setReportChoice(null)
+                }}
+                className={fieldClass(false)}
+              >
+                <option value="">Select your area</option>
+                {inspectionAreas.map((area) => (
+                  <option key={area.slug} value={area.slug}>
+                    {area.name}
+                  </option>
+                ))}
+              </select>
+            </BookingField>
+
+            {areaSlug && selectedAreaTier === 'near' && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {(['without', 'with'] as const).map((choice) => (
+                  <button
+                    key={choice}
+                    type="button"
+                    onClick={() => setReportChoice(choice)}
+                    className={`border px-3 py-2 text-sm transition-colors ${
+                      reportChoice === choice
+                        ? 'border-petrol bg-petrol text-paper'
+                        : 'border-ink/15 text-ink hover:border-petrol'
+                    }`}
+                  >
+                    {choice === 'without' ? 'Without a report' : 'With a custom report'}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {priceLabel && (
+          <p className="mt-4 text-sm font-semibold text-ink">Price: {priceLabel}</p>
+        )}
+
+        {step === 'category' && (
+          <button
+            type="button"
+            disabled={!categoryComplete}
+            onClick={() => setStep('date')}
+            className="mt-6 inline-flex items-center justify-center rounded bg-yellow px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-yellow/90 disabled:opacity-60"
+          >
+            Continue
+          </button>
+        )}
+      </div>
+
+      {step !== 'category' && (
+      <div className="mt-8">
+        <span className="eyebrow text-petrol/70">Step 2 - Pick a date</span>
         <div className="mt-4 flex gap-2 overflow-x-auto pb-2">
           {days.map((date) => {
             const bookable = isDateBookable(date)
@@ -303,10 +538,11 @@ export function BookingWidget() {
           })}
         </div>
       </div>
+      )}
 
       {(step === 'time' || step === 'details') && selectedDate && (
         <div className="mt-8">
-          <span className="eyebrow text-petrol/70">Step 2 - Pick a time</span>
+          <span className="eyebrow text-petrol/70">Step 3 - Pick a time</span>
           {slotsLoading ? (
             <p className="mt-4 text-sm text-ink/60">Loading available times…</p>
           ) : noSlotsMessage ? (
@@ -334,7 +570,7 @@ export function BookingWidget() {
 
       {step === 'details' && (
         <div className="mt-8 space-y-6">
-          <span className="eyebrow text-petrol/70">Step 3 - Your details</span>
+          <span className="eyebrow text-petrol/70">Step 4 - Your details</span>
 
           <input
             type="text"
@@ -418,10 +654,14 @@ export function BookingWidget() {
           <button
             type="button"
             disabled={submitting}
-            onClick={handleSubmit}
+            onClick={() => continueFromDetails()}
             className="inline-flex items-center justify-center rounded bg-yellow px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-yellow/90 disabled:opacity-60"
           >
-            {submitting ? 'Booking…' : 'Confirm Booking'}
+            {submitting
+              ? 'Booking…'
+              : paymentRequired
+                ? 'Continue to Payment'
+                : 'Confirm Booking'}
           </button>
 
           {submitError && <p className="text-sm text-ink">{submitError}</p>}

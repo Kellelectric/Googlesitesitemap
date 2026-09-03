@@ -60,3 +60,66 @@ export const electricalAuditPricing = {
   max: 2000000,
   note: 'Includes an electrical plan.',
 }
+
+export type ServiceCategory = 'residential' | 'commercial' | 'industrial' | 'electrical-audit'
+export type ReportChoice = 'without' | 'with'
+
+export const SERVICE_CATEGORIES: { value: ServiceCategory; label: string }[] = [
+  { value: 'residential', label: 'Residential' },
+  { value: 'commercial', label: 'Commercial' },
+  { value: 'industrial', label: 'Industrial' },
+  { value: 'electrical-audit', label: 'Electrical Inspection & Audit' },
+]
+
+export function getResidentialTier(areaSlug: string): ResidentialTier | undefined {
+  return inspectionAreas.find((a) => a.slug === areaSlug)?.tier
+}
+
+// Human-readable price line for a category (+ area/report choice for
+// residential) - used to show a visitor what they're booking, before any
+// payment is involved.
+export function describePrice(
+  category: ServiceCategory,
+  areaSlug: string | null,
+  reportChoice: ReportChoice | null,
+): string | null {
+  if (category === 'residential') {
+    if (!areaSlug) return null
+    const tier = getResidentialTier(areaSlug)
+    if (tier === 'near') {
+      return reportChoice === 'with'
+        ? `₦${residentialPricing.near.withReport.toLocaleString('en-NG')} (with a custom report)`
+        : `₦${residentialPricing.near.withoutReport.toLocaleString('en-NG')} (without a report)`
+    }
+    if (tier === 'far') {
+      return `₦${residentialPricing.far.min.toLocaleString('en-NG')} - ₦${residentialPricing.far.max.toLocaleString('en-NG')}`
+    }
+    return null
+  }
+  if (category === 'commercial') {
+    return `₦${commercialPricing.min.toLocaleString('en-NG')} - ₦${commercialPricing.max.toLocaleString('en-NG')}`
+  }
+  if (category === 'industrial') {
+    return `₦${industrialPricing.min.toLocaleString('en-NG')} - ₦${industrialPricing.max.toLocaleString('en-NG')}`
+  }
+  return `From ₦${electricalAuditPricing.min.toLocaleString('en-NG')} - ₦${electricalAuditPricing.max.toLocaleString('en-NG')}`
+}
+
+// Returns a single exact amount (in Naira) only when the category and
+// selections pin down one definite number - the residential near tier,
+// once a with/without-report choice is made. Everything else (the
+// residential far tier, commercial, industrial, electrical audit) is
+// priced as a range, so there is no single figure to charge upfront:
+// those bookings proceed without a payment gate, and the real fee is
+// settled after scoping/on-site, same as before this round.
+export function computeExactPrice(
+  category: ServiceCategory,
+  areaSlug: string | null,
+  reportChoice: ReportChoice | null,
+): number | null {
+  if (category !== 'residential' || !areaSlug || !reportChoice) return null
+  if (getResidentialTier(areaSlug) !== 'near') return null
+  return reportChoice === 'with'
+    ? residentialPricing.near.withReport
+    : residentialPricing.near.withoutReport
+}

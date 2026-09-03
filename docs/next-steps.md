@@ -1,11 +1,53 @@
 # Next Steps
 
-## Real inspection pricing filled in (this round)
+## Pricing moved into the booking flow + Paystack payment gate (this round)
 
-**Inspection pricing** (`/book-appointment`) — the "Inspection pricing"
-section (`src/components/booking/InspectionPricing.tsx`,
-`src/content/inspectionPricing.ts`) now uses real, client-confirmed
-figures instead of the earlier placeholder "TBD" state:
+**Pricing only shows while booking, gated by service type** —
+per client direction, pricing is no longer a page section anyone can
+browse. `/book-appointment`'s booking widget (`BookingWidget.tsx`) now
+opens with "Step 1 - What do you need service for?": Residential /
+Commercial / Industrial / Electrical Inspection & Audit. A price only
+appears once a category is picked (and, for Residential, an area and
+report-choice too) - the standalone `InspectionPricing.tsx` section/
+component is deleted, its pricing logic lives in
+`src/content/inspectionPricing.ts` and is now driven entirely by that
+first booking step.
+
+**Payment confirms the appointment, where a real fee applies** — the
+client asked for payment to validate the appointment. Only the
+residential near tier resolves to one exact number (₦70,000 or
+₦100,000, depending on the report choice); everything else (the
+residential far tier, commercial, industrial, electrical audit) is
+priced as a range, so there's no single figure to charge upfront for
+those - they still book directly, with the real fee settled after
+scoping/on-site, same as before this round. Flag this to the client if
+a different behavior was intended for the range-priced categories
+(e.g. charging the range's low end as a deposit).
+
+Built with **Paystack** (per the client's choice) via
+`src/lib/paystack.ts` and a payment step inserted into `BookingWidget.tsx`
+between entering details and final submission, whenever an exact price
+applies. The flow: the visitor pays via Paystack's inline checkout
+popup (`https://js.paystack.co/v1/inline.js`) → the reference it
+returns is sent to `/api/book` → the server independently re-verifies
+that reference against Paystack's own API (status, amount in kobo,
+currency) via `verifyPaystackTransaction` *before* creating the
+calendar event - the client-side "payment succeeded" callback is never
+trusted on its own. **Inert until configured**, same pattern as every
+other integration here: set
+
+- `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` - the Paystack public key, used
+  client-side to open the checkout popup.
+- `PAYSTACK_SECRET_KEY` - the Paystack secret key, used server-side to
+  verify transactions. Never expose this one client-side.
+
+Until both are set, the booking flow works exactly as it did before
+payment existed (no payment step is ever shown, even for the
+residential near tier).
+
+## Real inspection pricing filled in (client-confirmed figures)
+
+Pricing figures now used throughout (`src/content/inspectionPricing.ts`):
 
 - **Residential** (per area, click-to-expand accordion): Wuse, Wuse 2,
   Gwarinpa, and Maitama were given directly by the client as the

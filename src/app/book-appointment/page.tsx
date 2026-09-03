@@ -4,9 +4,41 @@ import { CircuitLines } from '@/components/ui/CircuitLines'
 import { TrackedLink } from '@/components/ui/TrackedLink'
 import { Reveal } from '@/components/ui/Reveal'
 import { BookingWidget } from '@/components/booking/BookingWidget'
+import { WhyChooseUs } from '@/components/sections/WhyChooseUs'
 import { company } from '@/content/company'
 import { pageMetadata } from '@/lib/metadata'
 import { breadcrumbSchema } from '@/lib/schema'
+import { StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
+import { SLOT_MINUTES, MAX_ADVANCE_DAYS } from '@/lib/bookingSlots'
+
+// Real facts about how the flow actually works (see lib/bookingSlots.ts),
+// not invented policy - used in both the process steps below and the
+// "Good to know" sidebar card.
+const BOOKING_STEPS = [
+  {
+    step: '01',
+    title: 'Tell us what you need',
+    description:
+      'Pick your service type - Residential, Commercial, Industrial, or a full Electrical Inspection & Audit. For Residential, select your area to see your price upfront.',
+  },
+  {
+    step: '02',
+    title: 'Pick a date & time',
+    description: `Real-time availability from our calendar, in ${SLOT_MINUTES}-minute slots - book from a couple of hours out up to ${MAX_ADVANCE_DAYS} days ahead.`,
+  },
+  {
+    step: '03',
+    title: 'Confirm your details',
+    description:
+      'Add your contact info and job address. Where we can quote an exact fee on the spot, payment there confirms your slot - otherwise the appointment books directly and the fee is confirmed after scoping.',
+  },
+  {
+    step: '04',
+    title: "We're on site",
+    description:
+      "A certified engineer arrives at your slot, assesses and documents the job, and follows up with next steps - not a guess, a scoped result.",
+  },
+]
 
 export const metadata: Metadata = pageMetadata({
   title: 'Book an Appointment',
@@ -105,6 +137,18 @@ export default function BookAppointmentPage() {
               </ul>
             </div>
 
+            <div className="border border-ink/10 p-6">
+              <span className="eyebrow text-petrol/70">Good to know</span>
+              <ul className="mt-4 space-y-3 text-sm text-ink/70">
+                <li>Appointments are {SLOT_MINUTES} minutes.</li>
+                <li>Book up to {MAX_ADVANCE_DAYS} days ahead.</li>
+                <li>
+                  You&rsquo;ll get a confirmation the moment it&rsquo;s booked - synced
+                  directly to our calendar.
+                </li>
+              </ul>
+            </div>
+
             <div className="border border-orange/30 bg-orange/5 p-6">
               <span className="eyebrow text-ink">Emergency?</span>
               <p className="mt-3 text-sm leading-relaxed text-ink/75">
@@ -117,6 +161,30 @@ export default function BookAppointmentPage() {
           </aside>
         </div>
       </section>
+
+      <section className="border-t border-ink/10 bg-paper py-24">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">What to expect</span>
+            <h2 className="mt-3 max-w-xl text-3xl font-semibold text-ink md:text-4xl">
+              From booking to a scoped result
+            </h2>
+          </Reveal>
+          <StaggerGroup className="mt-12 grid grid-cols-1 gap-10 border-t border-ink/10 pt-10 sm:grid-cols-2 lg:grid-cols-4">
+            {BOOKING_STEPS.map((step) => (
+              <MotionDiv key={step.step} variants={staggerItem} className="relative">
+                <span className="font-display block text-6xl font-semibold leading-none text-petrol/10">
+                  {step.step}
+                </span>
+                <h3 className="-mt-3 text-lg font-semibold text-ink">{step.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-ink/65">{step.description}</p>
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <WhyChooseUs heading="Why book with Kell Electricals" />
     </>
   )
 }

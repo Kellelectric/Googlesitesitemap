@@ -1,5 +1,24 @@
 # Next Steps
 
+## Production hardening audit: two open items resolved by the client (this round)
+
+- **Team experience figure: 15+ years is correct, not 20+.** A prior
+  production-hardening request asked to standardize the whole site on
+  "20+ years." The client explicitly reconfirmed **15+ is correct** -
+  `company.teamExperienceYears` stays at 15 (already the case; no code
+  change needed). This is now confirmed twice by the client (first when
+  it was corrected from 20 to 15 per their own site audit, now again
+  here) - do not change this figure again without a new, explicit
+  client instruction.
+- **CEO message on `/about`: keep using the current placeholder.** The
+  client said to continue using it. `src/content/ceoMessage.ts` is
+  unchanged - still explicitly flagged in its own header comment as an
+  AI-drafted placeholder, not Gabriel's actual words. "Continue using
+  it" is read here as "keep it live for now," not as sign-off that the
+  specific phrasing is now his real words - if that changes, update
+  `ceoMessage.ts`'s `message` field directly and remove the disclaimer
+  comment at that point.
+
 ## Pricing moved into the booking flow + Paystack payment gate (this round)
 
 **Pricing only shows while booking, gated by service type** —

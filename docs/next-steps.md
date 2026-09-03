@@ -1,5 +1,20 @@
 # Next Steps
 
+## `/leadership` gained a breadcrumb and closing trust section (this round)
+
+- **New `src/components/ui/Breadcrumbs.tsx`** - the site previously only
+  emitted `BreadcrumbList` JSON-LD (for search engines), no visible
+  on-page breadcrumb trail anywhere. Built a small reusable component
+  and used it in `/leadership`'s hero (Home / About / Leadership),
+  fed by the same trail as the page's existing JSON-LD so they can't
+  drift apart. Not yet rolled out to other pages - a candidate for a
+  later round if the client wants visible breadcrumbs sitewide.
+- **Added `<WhyChooseUs heading="One team, held to one standard" />`**
+  before the closing CTA, matching the pattern already used on
+  `/services` and `/industries` (dark WhyChooseUs directly before
+  CTASection) - the page previously jumped straight from "Our Team"
+  to the CTA with no closing trust band, unlike its sibling hub pages.
+
 ## New `/leadership` page (this round)
 
 Added a dedicated `/leadership` page - same real roster from

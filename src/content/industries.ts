@@ -5,11 +5,13 @@ export type Industry = {
   description: string
   challenges: string[]
   serviceSlugs: string[]
+  heroImage: string
 }
 
 export const industries: Industry[] = [
   {
     slug: 'residential',
+    heroImage: '/images/photos/industry-detail-hero-residential.jpg',
     name: 'Residential',
     summary:
       'Homes engineered for Nigeria\'s actual grid conditions, not just the day the wiring passes inspection.',
@@ -34,6 +36,7 @@ export const industries: Industry[] = [
   },
   {
     slug: 'commercial',
+    heroImage: '/images/photos/industry-detail-hero-commercial.jpg',
     name: 'Commercial',
     summary:
       'Offices and retail fit-outs where an electrical fault means lost trading hours, not just an inconvenience.',
@@ -58,6 +61,7 @@ export const industries: Industry[] = [
   },
   {
     slug: 'industrial',
+    heroImage: '/images/photos/industry-detail-hero-industrial.jpg',
     name: 'Industrial',
     summary:
       'Factory and plant electrical infrastructure where downtime is measured in production loss, not inconvenience.',
@@ -82,6 +86,7 @@ export const industries: Industry[] = [
   },
   {
     slug: 'hospitality',
+    heroImage: '/images/photos/industry-detail-hero-hospitality.jpg',
     name: 'Hospitality',
     summary:
       'Hotels, restaurants, and event venues where guests never see the electrical system, only whether it works.',
@@ -106,6 +111,7 @@ export const industries: Industry[] = [
   },
   {
     slug: 'education',
+    heroImage: '/images/photos/industry-detail-hero-education.jpg',
     name: 'Education',
     summary:
       'Schools and training facilities where electrical downtime interrupts instruction, not just inconvenience.',
@@ -130,6 +136,7 @@ export const industries: Industry[] = [
   },
   {
     slug: 'healthcare',
+    heroImage: '/images/photos/industry-detail-hero-healthcare.jpg',
     name: 'Healthcare',
     summary:
       'Clinics and healthcare facilities where backup power isn\'t a convenience, it\'s a patient-safety requirement.',
@@ -154,6 +161,7 @@ export const industries: Industry[] = [
   },
   {
     slug: 'retail',
+    heroImage: '/images/photos/industry-detail-hero-retail.jpg',
     name: 'Retail',
     summary:
       'Shops and showrooms where lighting quality and uptime directly affect the customer walking through the door.',

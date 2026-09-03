@@ -42,3 +42,17 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* PartnerLogos' marquee is meant to keep sliding on desktop even when the
+   visitor's OS has reduced-motion on (per client direction - see that
+   component's own comment) - only its mobile fallback (a static wrapped
+   list, no animation involved) respects the preference. The blanket reset
+   above is !important, so it silently froze the desktop marquee too; this
+   re-enables it above the md breakpoint using --marquee-duration, the same
+   value PartnerLogos already computes and sets inline. */
+@media (prefers-reduced-motion: reduce) and (min-width: 768px) {
+  .animate-marquee {
+    animation-duration: var(--marquee-duration, 30s) !important;
+    animation-iteration-count: infinite !important;
+  }
+}

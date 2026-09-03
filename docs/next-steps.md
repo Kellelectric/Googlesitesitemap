@@ -1,6 +1,27 @@
 # Next Steps
 
-## Zoho SalesIQ Zobot replaces the Botpress trial (this round)
+## Back on Botpress for now - Zoho SalesIQ needs a paid subscription (this round)
+
+The Zoho SalesIQ switch (previous round) is reverted at the site level:
+`src/app/layout.tsx` renders the Botpress `<Script>` tags again, since the
+client doesn't have a paid Zoho SalesIQ subscription yet (required to
+actually use the bot). Nothing was deleted - `src/components/chat/
+ZohoSalesIQ.tsx` and `docs/zoho-salesiq-zobot.md` (full conversation
+design + Deluge script + real Zoho CRM `Leads` field mappings) are both
+still in the repo, ready to swap back in the moment a subscription exists:
+restore the `<ZohoSalesIQ />` import/render in `layout.tsx` in place of the
+Botpress `<Script>` tags, and set `NEXT_PUBLIC_ZOHOSALESIQ_WIDGET_CODE`.
+
+The client has also started building the bot directly in Zoho SalesIQ's
+own **Answer Bot** visual flow builder (Button Cards: one message + up to
+10 buttons per card) rather than the Deluge script route - a full card-by-
+card message/button breakdown matching that builder was given in-session,
+distinct from the script in `docs/zoho-salesiq-zobot.md`. That card
+breakdown isn't saved to a repo file since it's just a way of typing into
+the SalesIQ UI, not code - reference this session's transcript if it needs
+regenerating, or ask for it again once the subscription is active.
+
+## Zoho SalesIQ Zobot replaces the Botpress trial (earlier round)
 
 The client decided: Zoho SalesIQ wins over the Botpress trial embed.
 `src/app/layout.tsx` now renders `<ZohoSalesIQ />`

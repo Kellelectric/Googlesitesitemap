@@ -96,12 +96,13 @@ export default function IndustryDetailPage({ params }: Props) {
           </nav>
 
           <div className="mt-6 flex items-start gap-6">
-            <div className="hidden shrink-0 rounded bg-paper p-3 sm:block">
+            <div className="hidden shrink-0 sm:block">
               <Image
-                src={`/images/industries/${industry.slug}.png`}
+                src={`/images/industries/white/${industry.slug}.png`}
                 alt=""
                 width={64}
                 height={64}
+                priority
                 className="h-16 w-16"
               />
             </div>

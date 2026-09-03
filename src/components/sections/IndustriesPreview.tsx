@@ -5,11 +5,13 @@ import { industries } from '@/content/industries'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 // Was text-only cards, despite a real monoline icon existing for every
-// industry at public/images/industries/*.png (currently unused elsewhere on
-// the homepage). Icons render on their own paper-colored chip - same "put a
-// white/paper card behind brand-colored art on a dark section" pattern
-// PartnerLogos already uses - so they stay legible against the petrol-700
-// background instead of icon lines disappearing into the dark surface.
+// industry at public/images/industries/*.png. Those source icons are
+// petrol-colored line art baked onto an opaque paper background, so on
+// this dark petrol-700 section they render from
+// public/images/industries/white/*.png instead - the same artwork with
+// the paper background keyed to transparent and the line art recolored
+// white (generated once via PIL, see git history), rendered directly on
+// the dark card with no chip behind it.
 export function IndustriesPreview() {
   return (
     <section className="bg-petrol-700 py-24 text-paper">
@@ -33,9 +35,9 @@ export function IndustriesPreview() {
                 href={`/industries/${industry.slug}`}
                 className="link-underline block h-full border border-paper/15 p-6 text-paper/90 hover:border-yellow"
               >
-                <div className="flex h-16 w-16 items-center justify-center bg-paper">
+                <div className="flex h-16 w-16 items-center justify-center">
                   <Image
-                    src={`/images/industries/${industry.slug}.png`}
+                    src={`/images/industries/white/${industry.slug}.png`}
                     alt=""
                     width={64}
                     height={64}

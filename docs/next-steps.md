@@ -1,5 +1,22 @@
 # Next Steps
 
+## New `/leadership` page (this round)
+
+Added a dedicated `/leadership` page - same real roster from
+`src/content/team.ts`, no new facts invented, presented with more room
+than the compact card grid on `/about`: Gabriel and Thelma (the two
+real leadership titles - Founder & CEO, Managing Director) get a
+larger, full-width bio treatment; the other four get the same card
+layout as `/about`, just with more breathing room (4-column grid
+instead of 3). `/about`'s existing Leadership section is unchanged
+content-wise, just gained a "Meet the full team &rarr;" link pointing
+here - nothing was removed from `/about`.
+
+Added to `footerNav` (not primary nav - same "don't crowd the header"
+precedent as `/calculators` and `/emergency-electrical-services`),
+`/site-map`, and `sitemap.xml`. Carries its own `BreadcrumbList` and
+the existing `teamSchema()` JSON-LD.
+
 ## `/about` layout reorder + a sitewide consistency check (this round)
 
 - **Leadership moved off the top of `/about`.** It previously sat

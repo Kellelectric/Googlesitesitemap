@@ -22,6 +22,7 @@ export const primaryNav: NavLink[] = [
 export const footerNav: NavLink[] = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
+  { label: 'Leadership', href: '/leadership' },
   { label: 'Services', href: '/services' },
   { label: 'Solar & Energy Systems', href: '/solar-energy-systems' },
   { label: '24/7 Emergency Electrical', href: '/emergency-electrical-services' },

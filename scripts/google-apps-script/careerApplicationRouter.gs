@@ -17,11 +17,19 @@
  * "pre-filled link" (native ?entry.<id>=value query params) and sends the
  * applicant there directly to finish the form - see
  * src/content/careerFormRouting.ts and docs/careers-automation.md. This
- * webhook is now just a lightweight record/notification point (useful if
- * you later want it to write into an internal tracking Sheet, or trigger
- * a Zoho CRM/email step) - CAREERS_WEBHOOK_URL is REQUIRED for
- * job-openings/nysc-placement (no Google Form, this is their only
- * delivery path) and OPTIONAL/best-effort for the 3 Google Form tracks.
+ * webhook is now a lightweight record/notification point that also sends
+ * the applicant a confirmation email - CAREERS_WEBHOOK_URL is REQUIRED
+ * for job-openings/nysc-placement (no Google Form, this is their only
+ * delivery path) and OPTIONAL/best-effort for the 3 Google Form tracks
+ * (email still sends if it's configured, it's just not the applicant's
+ * only path to the form - the website's own thank-you page already shows
+ * the same link directly).
+ *
+ * EMAIL QUOTA: MailApp.sendEmail() is capped by Google's daily quota -
+ * 100/day for a plain @gmail.com account, higher for Google Workspace
+ * (see MailApp.getRemainingDailyQuota()). Every send below is wrapped in
+ * try/catch so a quota error never turns an otherwise-successful webhook
+ * call into a failure - it just gets logged.
  *
  * DEPLOYMENT (do this in the Apps Script editor, not from this repo):
  *   1. Create a new Apps Script project (script.google.com), paste in this
@@ -100,6 +108,13 @@ function doPost(e) {
           ? 'Applicant was sent a pre-filled link to this track\'s Google Form by the website directly.'
           : 'No Google Form for this track - stays on-site.'),
     )
+
+    if (body.redirectUrl) {
+      sendContinueApplicationEmail_(body)
+    } else {
+      sendApplicantConfirmationEmail_(body)
+    }
+
     return jsonResponse_({ ok: true, reference: reference }, 200)
   } catch (err) {
     // Never leak internal details in the response - log them, return a
@@ -109,6 +124,56 @@ function doPost(e) {
       { ok: false, reason: 'internal_error', reference: (body && body.reference) || null },
       500,
     )
+  }
+}
+
+/**
+ * job-openings / nysc-placement: this webhook IS the application's
+ * delivery point, so a normal "received" confirmation is accurate here.
+ * Never throws - a bad email/quota error is logged, not fatal to doPost.
+ */
+function sendApplicantConfirmationEmail_(body) {
+  try {
+    if (!body.email) return
+    var trackName = body.trackName || body.trackSlug
+    var subject = 'Kell Electricals Ltd — Application Received | ' + body.reference
+    var message =
+      'Thank you for your interest in joining Kell Electricals Ltd.\n\n' +
+      'Your application for ' + trackName + ' has been received and is now under review.\n\n' +
+      'Reference: ' + body.reference + '\n\n' +
+      'Our team reviews applications directly - not an automated filter. ' +
+      'If your background fits what we\'re looking for, we\'ll follow up by phone or email.\n\n' +
+      '— Kell Electricals Ltd'
+    MailApp.sendEmail(body.email, subject, message)
+  } catch (err) {
+    Logger.log('Confirmation email failed for ' + body.reference + ': ' + err)
+  }
+}
+
+/**
+ * apprenticeship / industrial-training / internship: the applicant hasn't
+ * actually finished their application yet at this point (they're
+ * mid-redirect to the official Google Form) - sending "received" here
+ * would be misleading. Sends the same pre-filled link they already saw on
+ * the website's own thank-you page, as a reminder in case they didn't
+ * click through immediately. Never throws, same as above.
+ */
+function sendContinueApplicationEmail_(body) {
+  try {
+    if (!body.email || !body.redirectUrl) return
+    var trackName = body.trackName || body.trackSlug
+    var subject = 'Kell Electricals Ltd — Finish your ' + trackName + ' application | ' + body.reference
+    var message =
+      'Thanks for starting your application for ' + trackName + ' at Kell Electricals Ltd.\n\n' +
+      'One step left: please open the link below to complete the official application ' +
+      'form (you\'ll need a passport photo, means of ID, and a few more details).\n\n' +
+      body.redirectUrl + '\n\n' +
+      'Reference: ' + body.reference + '\n\n' +
+      'If you\'ve already completed it, no further action is needed.\n\n' +
+      '— Kell Electricals Ltd'
+    MailApp.sendEmail(body.email, subject, message)
+  } catch (err) {
+    Logger.log('Continue-application email failed for ' + body.reference + ': ' + err)
   }
 }
 

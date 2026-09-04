@@ -57,6 +57,12 @@ type CareerApplicationWebhookPayload = {
   submittedAt: string
   userAgent?: string
   ipHash?: string
+  // Only present for apprenticeship/industrial-training/internship - lets
+  // the Apps Script webhook send a "continue your application" email with
+  // the same pre-filled link the applicant already sees on the thank-you
+  // page, instead of a misleading "application received" (they haven't
+  // finished the real form yet at this point).
+  redirectUrl?: string
 }
 
 // Best-effort duplicate guard: the same in-memory-cache tradeoff as
@@ -203,6 +209,22 @@ export async function POST(request: NextRequest) {
 
   const reference = generateApplicationReference()
 
+  // apprenticeship / industrial-training / internship: the Google Form's
+  // own pre-filled link IS the delivery mechanism here (see
+  // careerFormRouting.ts for why - these forms have required file uploads
+  // Apps Script can never submit programmatically). CAREERS_WEBHOOK_URL is
+  // optional on this path, purely for an internal "application started"
+  // notification if configured - its failure never blocks the applicant
+  // from reaching the form, and it isn't retried.
+  const redirectUrl = formRoute
+    ? buildPrefillUrl(formRoute, {
+        fullName: body.fullName,
+        email: body.email,
+        phone: body.phone,
+        institution: body.courseOrInstitution,
+      })
+    : null
+
   // Built explicitly (not `...body`) so the honeypot field, the raw
   // hCaptcha response token, and renderedAt never leak into the
   // downstream payload - none of that is useful downstream, and the spec
@@ -223,6 +245,7 @@ export async function POST(request: NextRequest) {
     submittedAt: new Date().toISOString(),
     userAgent: request.headers.get('user-agent') ?? undefined,
     ipHash: ip !== 'unknown' ? hashIp(ip) : undefined,
+    redirectUrl: redirectUrl ?? undefined,
   }
   const payload = JSON.stringify(webhookPayload)
   const secret = process.env.CAREERS_WEBHOOK_SECRET
@@ -231,22 +254,6 @@ export async function POST(request: NextRequest) {
     headers['x-webhook-signature'] = signPayload(payload, secret)
   }
   const webhookUrl = process.env.CAREERS_WEBHOOK_URL
-
-  // apprenticeship / industrial-training / internship: the Google Form's
-  // own pre-filled link IS the delivery mechanism here (see
-  // careerFormRouting.ts for why - these forms have required file uploads
-  // Apps Script can never submit programmatically). CAREERS_WEBHOOK_URL is
-  // optional on this path, purely for an internal "application started"
-  // notification if configured - its failure never blocks the applicant
-  // from reaching the form, and it isn't retried.
-  const redirectUrl = formRoute
-    ? buildPrefillUrl(formRoute, {
-        fullName: body.fullName,
-        email: body.email,
-        phone: body.phone,
-        institution: body.courseOrInstitution,
-      })
-    : null
 
   if (redirectUrl) {
     if (webhookUrl) {

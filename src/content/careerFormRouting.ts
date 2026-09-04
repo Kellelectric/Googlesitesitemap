@@ -9,9 +9,11 @@
 // never read anywhere in the UI) but held INCORRECT form URLs:
 //   - `internship` was pointing at the industrial-training form (sharing
 //     it), when the client has confirmed Internship has its own form.
-//   - `job-openings` was pointing at a Google Form at all, when job
-//     openings should never redirect to a training-programme form - they
-//     stay entirely in the on-site application pipeline.
+//   - `job-openings` and `nysc-placement` were both pointing at what is
+//     actually the Internship form, when neither should redirect to a
+//     training-programme form at all - job-openings never has (it stays
+//     on-site), and the client has directed nysc-placement to be treated
+//     the same way "for now".
 // The three Google Form URLs below were supplied directly by the client
 // in this round and are the authoritative mapping.
 export type CareerFormRoute = {
@@ -41,13 +43,16 @@ export const careerFormRouting: CareerFormRoute[] = [
     trackSlug: 'job-openings',
     googleFormUrl: null,
   },
-  // `nysc-placement` is intentionally NOT listed here - the client's
-  // careers-automation brief named only 4 sources (Apprenticeship,
-  // Industrial Training/SIWES, Internship, Job Openings). NYSC Placement
-  // is a real track on the site but has no confirmed Google Form target
-  // for this automation; it previously pointed (incorrectly) at the
-  // Internship form. Flag this to the client before assuming a route -
-  // don't guess one.
+  {
+    // Client-confirmed direction: "Use the Job Openings [treatment] for
+    // now" - same as job-openings, no Google Form, stays in the on-site
+    // pipeline only. Previously (incorrectly, in the now-removed
+    // applicationFormUrl field) pointed at the Internship form - that
+    // mismatch is gone. Revisit if the client later wants NYSC routed
+    // somewhere specific (its own form, Zoho CRM, etc).
+    trackSlug: 'nysc-placement',
+    googleFormUrl: null,
+  },
 ]
 
 export function getCareerFormRoute(trackSlug: string): CareerFormRoute | undefined {

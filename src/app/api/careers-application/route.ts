@@ -157,12 +157,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'invalid_payload' }, { status: 422 })
   }
 
-  // Observability only, never blocking: a track with no confirmed route
-  // (currently just nysc-placement - see careerFormRouting.ts) still
-  // forwards to CAREERS_WEBHOOK_URL as normal, it just has no confirmed
-  // Google Form destination configured on the Zoho Flow / Apps Script
-  // side yet. Surfacing it here means it shows up in Vercel's logs rather
-  // than silently landing nowhere once Zoho Flow's router is live.
+  // Observability only, never blocking: every current track has a
+  // confirmed entry in careerFormRouting.ts (apprenticeship,
+  // industrial-training, and internship route to a real Google Form;
+  // job-openings and nysc-placement are confirmed as staying on-site).
+  // This only fires if a future new career track is added to careers.ts
+  // without a matching careerFormRouting.ts entry - it still forwards to
+  // CAREERS_WEBHOOK_URL as normal, this just surfaces the gap in Vercel's
+  // logs rather than letting it land nowhere silently once Zoho Flow's
+  // router is live.
   if (!getCareerFormRoute(body.trackSlug)) {
     console.warn(
       `Career application for unmapped track "${body.trackSlug}" (ref pending) - no Google Form route configured. See src/content/careerFormRouting.ts.`,

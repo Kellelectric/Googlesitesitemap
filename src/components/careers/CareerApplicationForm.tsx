@@ -57,15 +57,17 @@ type CareerApplicationFormProps = {
   roleOptions?: string[]
 }
 
-// On-site replacement for the external "Apply via Google Form" redirect -
-// applicants fill this out and submit it without leaving the site. Follows
-// the exact same submit/spam-protection/webhook-forwarding pattern as
-// QuoteForm.tsx (see app/api/careers-application/route.ts): honeypot,
-// time-trap, optional hCaptcha, forwarded to CAREERS_WEBHOOK_URL.
+// Collects the fields common to every career track on-site. Follows the
+// same submit/spam-protection pattern as QuoteForm.tsx (see
+// app/api/careers-application/route.ts): honeypot, time-trap, optional
+// hCaptcha.
 //
-// Does NOT yet also push into the client's existing Google Form for this
-// track - see the API route's comment for why (needs real per-form field
-// entry IDs the client hasn't supplied).
+// For apprenticeship/industrial-training/internship, the API route hands
+// back a pre-filled link to that track's official Google Form (see
+// src/content/careerFormRouting.ts for why this is a redirect rather than
+// a silent server-side submission) - the thank-you page surfaces it as
+// the next step. job-openings/nysc-placement have no Google Form and stay
+// fully on-site.
 export function CareerApplicationForm({
   trackSlug,
   trackName,
@@ -160,6 +162,11 @@ export function CareerApplicationForm({
       setForm(makeInitialState())
       const params = new URLSearchParams({ track: trackSlug })
       if (resBody?.reference) params.set('ref', resBody.reference)
+      // apprenticeship/industrial-training/internship: the applicant still
+      // has to finish the official Google Form (photo, DOB, consent - see
+      // careerFormRouting.ts) - carried through as a query param so the
+      // thank-you page can show it as the next step, not silently drop it.
+      if (resBody?.redirectUrl) params.set('continue', resBody.redirectUrl)
       router.push(`/careers/thank-you?${params.toString()}`)
     } catch {
       setStatus('error')

@@ -1,26 +1,38 @@
 /**
- * Career application router - Google Apps Script Web App.
+ * Career application webhook - Google Apps Script Web App.
  *
- * Receives the structured application payload (forwarded by Zoho Flow, or
- * directly from the website if CAREERS_WEBHOOK_URL is pointed straight at
- * this deployment's Web App URL - see docs/careers-automation.md), verifies
- * it's genuinely from Kell Electricals' pipeline, and submits it into the
- * correct Google Form for the applicant's track using FormApp - which
- * writes to that form's own linked Google Sheet automatically, exactly as
- * a real form submission would.
+ * Receives the structured application payload the website's
+ * /api/careers-application route best-effort forwards to
+ * CAREERS_WEBHOOK_URL, verifies it's genuinely from Kell Electricals'
+ * pipeline, and logs/acknowledges it.
+ *
+ * IMPORTANT - this endpoint no longer submits into the applicant's Google
+ * Form itself. listFormItems() revealed each of the 3 career Google Forms
+ * (apprenticeship, industrial-training, internship) has several REQUIRED
+ * file-upload questions (passport photo, ID, CV, certificates) - Apps
+ * Script's Forms API has no method to submit a file-upload answer at all,
+ * and FormResponse.submit() throws if any required question is left
+ * unanswered. So auto-submitting here would fail on every real
+ * application. Instead, the website itself builds a Google Forms
+ * "pre-filled link" (native ?entry.<id>=value query params) and sends the
+ * applicant there directly to finish the form - see
+ * src/content/careerFormRouting.ts and docs/careers-automation.md. This
+ * webhook is now just a lightweight record/notification point (useful if
+ * you later want it to write into an internal tracking Sheet, or trigger
+ * a Zoho CRM/email step) - CAREERS_WEBHOOK_URL is REQUIRED for
+ * job-openings/nysc-placement (no Google Form, this is their only
+ * delivery path) and OPTIONAL/best-effort for the 3 Google Form tracks.
  *
  * DEPLOYMENT (do this in the Apps Script editor, not from this repo):
  *   1. Create a new Apps Script project (script.google.com), paste in this
- *      file plus form_config.gs and list_form_items.gs.
+ *      file plus formConfig.gs and listFormItems.gs.
  *   2. Project Settings > Script Properties > add CAREERS_WEBHOOK_SECRET,
  *      set to the SAME value as the website's CAREERS_WEBHOOK_SECRET env
  *      var. Never hardcode it here.
- *   3. Run listFormItems() once, fill in FORM_CONFIG's field IDs in
- *      form_config.gs (see that file's own instructions).
- *   4. Deploy > New deployment > type "Web app". Execute as "Me", Who has
+ *   3. Deploy > New deployment > type "Web app". Execute as "Me", Who has
  *      access "Anyone". Copy the deployment URL.
- *   5. Either point Zoho Flow's action at that URL, or (skipping Zoho Flow
- *      entirely) set the website's CAREERS_WEBHOOK_URL directly to it.
+ *   4. Set the website's CAREERS_WEBHOOK_URL to that deployment URL (in
+ *      Vercel's Production environment variables).
  *
  * Nothing above has been done from this coding session - no Google
  * account access exists here. This file is the code; deployment is a
@@ -28,12 +40,12 @@
  */
 
 function doPost(e) {
+  var body
   try {
     if (!e || !e.postData || !e.postData.contents) {
       return jsonResponse_({ ok: false, reason: 'invalid_json' }, 400)
     }
 
-    var body
     try {
       body = JSON.parse(e.postData.contents)
     } catch (err) {
@@ -71,9 +83,9 @@ function doPost(e) {
 
     // --- Duplicate protection (durable, TTL-based) ---------------------
     // CacheService persists across executions (unlike an in-memory map),
-    // so this catches Zoho Flow retries, Apps Script's own retry-on-error
-    // behavior, and network-level duplicate deliveries. 6 hours is the
-    // maximum TTL CacheService allows - plenty for this use case.
+    // so this catches retries and network-level duplicate deliveries. 6
+    // hours is the maximum TTL CacheService allows - plenty for this use
+    // case.
     var cache = CacheService.getScriptCache()
     var cacheKey = 'careerapp_' + reference
     if (cache.get(cacheKey)) {
@@ -81,103 +93,23 @@ function doPost(e) {
       return jsonResponse_({ ok: true, duplicate: true, reference: reference }, 200)
     }
 
-    // job-openings (and any other track with no FORM_CONFIG entry) never
-    // reaches a Google Form - acknowledge success without submitting
-    // anywhere, so Zoho Flow's own next step (e.g. writing to the central
-    // applicant sheet, or a Zoho CRM/Recruit action) can take over.
-    var formConfig = FORM_CONFIG[trackSlug]
-    if (!formConfig) {
-      Logger.log(
-        'No Google Form configured for track "' +
-          trackSlug +
-          '" (reference ' +
-          reference +
-          ') - acknowledging without a form submission. This is expected for job-openings.',
-      )
-      cache.put(cacheKey, '1', 6 * 60 * 60)
-      return jsonResponse_({ ok: true, reference: reference, routed: false }, 200)
-    }
-
-    submitToForm_(formConfig, body)
     cache.put(cacheKey, '1', 6 * 60 * 60)
-    Logger.log('Application ' + reference + ' (' + trackSlug + ') submitted to Google Form.')
-    return jsonResponse_({ ok: true, reference: reference, routed: true }, 200)
+    Logger.log(
+      'Application ' + reference + ' (' + trackSlug + ') acknowledged. ' +
+        (FORM_CONFIG[trackSlug]
+          ? 'Applicant was sent a pre-filled link to this track\'s Google Form by the website directly.'
+          : 'No Google Form for this track - stays on-site.'),
+    )
+    return jsonResponse_({ ok: true, reference: reference }, 200)
   } catch (err) {
     // Never leak internal details in the response - log them, return a
     // generic failure with the reference if we got far enough to have one.
     Logger.log('doPost error: ' + err + (err.stack ? '\n' + err.stack : ''))
     return jsonResponse_(
-      { ok: false, reason: 'internal_error', reference: (typeof body !== 'undefined' && body.reference) || null },
+      { ok: false, reason: 'internal_error', reference: (body && body.reference) || null },
       500,
     )
   }
-}
-
-/**
- * Builds a FormResponse from formConfig.fields -> body's matching value and
- * submits it. A payload field with no corresponding entry in this form's
- * `fields` map (e.g. roleAppliedFor on a training form that doesn't ask
- * for it) is silently skipped rather than erroring - not every form asks
- * every question.
- */
-function submitToForm_(formConfig, body) {
-  var form = FormApp.openByUrl(formConfig.formUrl)
-  var formResponse = form.createResponse()
-
-  var valueByFieldKey = {
-    reference: body.reference,
-    fullName: body.fullName,
-    email: body.email,
-    phone: body.phone,
-    institution: body.courseOrInstitution || '',
-    message: body.message || '',
-  }
-
-  Object.keys(formConfig.fields).forEach(function (fieldKey) {
-    var itemId = formConfig.fields[fieldKey]
-    if (!itemId || itemId.indexOf('REPLACE_ME') === 0) {
-      // Not configured yet - see form_config.gs's setup instructions.
-      Logger.log(
-        'Skipping unconfigured field "' + fieldKey + '" - run listFormItems() and set its real item ID.',
-      )
-      return
-    }
-    var value = valueByFieldKey[fieldKey]
-    if (value === undefined || value === null || value === '') return
-
-    var item = form.getItemById(itemId)
-    if (!item) {
-      Logger.log('Item ID "' + itemId + '" for field "' + fieldKey + '" not found on this form.')
-      return
-    }
-    var itemResponse = buildItemResponse_(item, String(value))
-    if (itemResponse) formResponse.withItemResponse(itemResponse)
-  })
-
-  formResponse.submit()
-}
-
-/**
- * Builds the right kind of ItemResponse for the item's actual type. Every
- * field this pipeline sends is free-text, so TEXT and PARAGRAPH_TEXT cover
- * the real cases; anything else logs a warning rather than throwing, since
- * a form question of an unexpected type (e.g. multiple choice) needs a
- * human to decide how to map an arbitrary string onto it.
- */
-function buildItemResponse_(item, value) {
-  var type = item.getType()
-  if (type === FormApp.ItemType.TEXT) {
-    return item.asTextItem().createResponse(value)
-  }
-  if (type === FormApp.ItemType.PARAGRAPH_TEXT) {
-    return item.asParagraphTextItem().createResponse(value)
-  }
-  Logger.log(
-    'Item "' + item.getTitle() + '" is type ' + type + ', not TEXT/PARAGRAPH_TEXT - skipped. ' +
-      'If this field should receive a value, either change the question type in the Google Form, ' +
-      'or extend buildItemResponse_() to handle it.',
-  )
-  return null
 }
 
 /** Hex-encoded HMAC-SHA256, matching the website's signPayload() exactly. */
@@ -205,8 +137,7 @@ function verifySignature_(payload, secret, providedSignature) {
 function jsonResponse_(body, statusCode) {
   // Apps Script Web Apps cannot set a custom HTTP status code on the
   // response (a platform limitation, not a bug here) - status is
-  // conveyed in the JSON body's `ok`/`reason` fields instead. Document
-  // this for whoever configures Zoho Flow's error handling on this step.
+  // conveyed in the JSON body's `ok`/`reason` fields instead.
   return ContentService.createTextOutput(JSON.stringify(body)).setMimeType(
     ContentService.MimeType.JSON,
   )

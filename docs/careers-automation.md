@@ -61,9 +61,11 @@ Google Apps Script Web App (scripts/google-apps-script/)
   +-- internship            -> Internship Google Form       -> its Google Sheet
   +-- job-openings          -> (no form - acknowledged only, stays in the
   |                             on-site pipeline / a future applicant DB)
-  +-- anything else (e.g. nysc-placement) -> logged, acknowledged, NOT
-                                              silently discarded - see
-                                              "Unmapped tracks" below
+  +-- nysc-placement        -> (no form, client-confirmed "use the Job
+  |                             Openings [treatment] for now" - see
+  |                             "NYSC Placement routing" below)
+  +-- anything else (unexpected track) -> logged, acknowledged, NOT
+                                           silently discarded
 ```
 
 ### Why Google Apps Script instead of Zoho Flow branching directly into 3 Google Forms
@@ -94,23 +96,22 @@ original brief asked for (Zoho CRM, Zoho Recruit, Zoho People, Zoho Cliq
 notifications) - Zoho Flow is the natural place to fan out to those later
 without touching the website or the Apps Script code again.
 
-### Unmapped tracks (nysc-placement)
+### NYSC Placement routing
 
 The real site has 5 career tracks (`src/content/careers.ts`): NYSC
 Placement, Internship, Industrial Training, Apprenticeship, Job Openings.
-The careers-automation brief named only 4 sources (Apprenticeship,
-Industrial Training/SIWES, Internship, Job Openings) - NYSC Placement was
-not mentioned.
+The careers-automation brief named only 4 sources - NYSC Placement wasn't
+one of them, and before this round `careers.ts` had a now-removed
+`applicationFormUrl` field that (incorrectly, and unused anywhere in the
+UI) pointed it at what is actually the Internship form.
 
-Before this round, `careers.ts` had a now-removed `applicationFormUrl`
-field that (incorrectly, and unused anywhere in the UI) pointed
-NYSC Placement at what is actually the Internship form. That mismatch is
-now gone - `nysc-placement` has **no** Google Form route configured in
-`careerFormRouting.ts` or `formConfig.gs`. It still forwards normally to
-`CAREERS_WEBHOOK_URL` (Zoho Flow can still send it wherever makes sense -
-Zoho CRM, a plain email notification, etc.), and the Apps Script router
-logs and acknowledges it rather than erroring, but it will not land in any
-Google Form until the client confirms where it should go.
+**Client-confirmed direction: treat `nysc-placement` the same as
+`job-openings` for now** - no Google Form, stays entirely in the on-site
+pipeline (`careerFormRouting.ts` and `formConfig.gs` both map it to `null`).
+It still forwards normally to `CAREERS_WEBHOOK_URL`, so Zoho Flow can
+still route it elsewhere later (Zoho CRM, a plain email notification,
+etc.) without any website or Apps Script change. Revisit if the client
+later wants it pointed at a specific form.
 
 ## Environment variables
 

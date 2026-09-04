@@ -59,11 +59,12 @@ var FORM_CONFIG = {
       message: 'REPLACE_ME_MESSAGE_ITEM_ID',
     },
   },
-  // 'job-openings' is deliberately absent - job applications never go to a
-  // Google Form (see docs/careers-automation.md). If nysc-placement should
-  // also route to a form, get the client to confirm which one before
-  // adding an entry here - it previously pointed (incorrectly) at the
-  // Internship form and should not be assumed.
+  // 'job-openings' and 'nysc-placement' are both deliberately absent -
+  // neither goes to a Google Form. Job applications never have (see
+  // docs/careers-automation.md); the client has directed NYSC Placement
+  // to be treated the same way "for now" (client-confirmed - previously
+  // it pointed incorrectly at the Internship form). Revisit if the
+  // client later wants NYSC routed to its own form.
 }
 
 /**

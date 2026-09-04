@@ -23,8 +23,9 @@
 
 var FORM_CONFIG = {
   apprenticeship: {
-    formUrl:
-      'https://docs.google.com/forms/d/e/1FAIpQLScyQUddIgthC752dLwSulX9vRT8V4rPdvlz3Wr7EM0VTktE9A/viewform',
+    // The editor (file) URL, NOT the /d/e/.../viewform public link -
+    // FormApp.openByUrl() only reliably resolves the editor's file ID.
+    formUrl: 'https://docs.google.com/forms/d/1PUL21ktvqnla3ku5tRMRjpXLgDeYPTdnL0-heQwcPgI/edit',
     fields: {
       // Run listFormItems() and paste the real item IDs here.
       reference: 'REPLACE_ME_REFERENCE_ITEM_ID',
@@ -36,8 +37,7 @@ var FORM_CONFIG = {
     },
   },
   'industrial-training': {
-    formUrl:
-      'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
+    formUrl: 'https://docs.google.com/forms/d/1XAvz5I9itv04EzR9bDVH4NjMcGaZ1ZQuxWaEMgVjGsg/edit',
     fields: {
       reference: 'REPLACE_ME_REFERENCE_ITEM_ID',
       fullName: 'REPLACE_ME_FULLNAME_ITEM_ID',
@@ -48,8 +48,7 @@ var FORM_CONFIG = {
     },
   },
   internship: {
-    formUrl:
-      'https://docs.google.com/forms/d/e/1FAIpQLScrGwqdcA3rzUVRhHl2kt7afhOGNB9InZsdAmZ7gsG5tXr3eQ/viewform',
+    formUrl: 'https://docs.google.com/forms/d/1xxE4bOP0qaWC47WHApN26kIrTn4NBjSrPJDlq156ANM/edit',
     fields: {
       reference: 'REPLACE_ME_REFERENCE_ITEM_ID',
       fullName: 'REPLACE_ME_FULLNAME_ITEM_ID',

@@ -3,7 +3,16 @@
 // ("Build Real content that are still missing, you can invent everything
 // and I'll make changes later"), overriding this file's earlier no-invent
 // note. Verify and correct every number, date, and eligibility rule before
-// treating this as final. Application form URLs are real and unchanged.
+// treating this as final.
+//
+// The `applicationFormUrl` field this file used to carry has been removed -
+// it was dead code (never read anywhere in the UI, since applications are
+// submitted on-site via CareerApplicationForm -> /api/careers-application,
+// not a Google Form redirect) and its values had drifted incorrect
+// (Internship was pointing at the Industrial Training form; NYSC and Job
+// Openings both pointed at what is actually the Internship form). The
+// correct routing for the careers-automation pipeline now lives in the
+// single-source-of-truth src/content/careerFormRouting.ts.
 //
 // Confirmed REAL fields (do not treat as placeholder or "fix later"):
 // - `apprenticeship`: `duration` (2-year/₦400,000 or 4-year/₦700,000
@@ -38,7 +47,6 @@ export type CareerTrack = {
   description: string
   whoItsFor: string[]
   whatToExpect: string[]
-  applicationFormUrl: string
   duration?: string
   stipend?: string
   programmeFee?: string
@@ -71,8 +79,6 @@ export const careerTracks: CareerTrack[] = [
       'Placement matched to your discipline where possible, across our technical and business functions',
       'Practical experience and documentation that strengthens your CV for what comes after service year',
     ],
-    applicationFormUrl:
-      'https://docs.google.com/forms/d/e/1FAIpQLScrGwqdcA3rzUVRhHl2kt7afhOGNB9InZsdAmZ7gsG5tXr3eQ/viewform',
     duration: 'For the duration of your official NYSC service year, per your posting',
     intake: 'Aligned to NYSC batch call-up and redeployment periods',
     eligibility: [
@@ -106,8 +112,6 @@ export const careerTracks: CareerTrack[] = [
       'Working alongside engineers, technicians, and project coordinators on live jobs',
       'Direct exposure to our documented process: assess, design, install, test, hand over',
     ],
-    applicationFormUrl:
-      'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
     duration: '6 months, same duration as our Industrial Training placements - no shorter placements accepted',
     stipend: '₦30,000-₦40,000/month (beginner/student), ₦40,000-₦60,000 (technical intern), ₦60,000-₦80,000 (skilled, limited supervision), or ₦80,000-₦100,000/month (exceptional intern/graduate trainee) - based on experience and skill level',
     intake: 'Aligned to academic term/semester breaks (typically two intakes a year)',
@@ -135,8 +139,6 @@ export const careerTracks: CareerTrack[] = [
       'Exposure to the documented assess-design-install-test-handover process on real sites',
       'Institution-required attendance and completion documentation, coordinated with your school',
     ],
-    applicationFormUrl:
-      'https://docs.google.com/forms/d/e/1FAIpQLSeZqtld3gTsFoCb9MoXn5FzhK602XAnRlNoEWI1OE1Njwll9g/viewform',
     duration: '6 months, aligned to your institution’s SIWES calendar - we do not accept shorter 3-month placements',
     stipend: '₦25,000/month',
     intake: 'Aligned to the academic SIWES calendar (typically two intakes a year)',
@@ -168,8 +170,6 @@ export const careerTracks: CareerTrack[] = [
       'Progressive exposure to more complex installation, testing, and fault-finding work over time',
       'Working to the same safety and documentation standards as our certified team',
     ],
-    applicationFormUrl:
-      'https://docs.google.com/forms/d/e/1FAIpQLScyQUddIgthC752dLwSulX9vRT8V4rPdvlz3Wr7EM0VTktE9A/viewform',
     duration: '2-year or 4-year track',
     programmeFee: '₦400,000 (2-year track) or ₦700,000 (4-year track)',
     stipend: '₦25,000/month',
@@ -198,8 +198,6 @@ export const careerTracks: CareerTrack[] = [
       'A practical/technical assessment as part of the interview process',
       'Placement on live jobs within your specialization once onboarded',
     ],
-    applicationFormUrl:
-      'https://docs.google.com/forms/d/e/1FAIpQLScrGwqdcA3rzUVRhHl2kt7afhOGNB9InZsdAmZ7gsG5tXr3eQ/viewform',
   },
 ]
 

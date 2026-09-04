@@ -1,8 +1,9 @@
 'use client'
 
-import { cloneElement, FormEvent, useEffect, useState } from 'react'
+import { cloneElement, FormEvent, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Script from 'next/script'
+import Link from 'next/link'
 import { company } from '@/content/company'
 import { trackEvent } from '@/lib/analytics'
 
@@ -77,6 +78,7 @@ export function CareerApplicationForm({
   const [captchaLoadFailed, setCaptchaLoadFailed] = useState(false)
   const [status, setStatus] = useState<FormStatus>('idle')
   const renderedAt = useFormRenderedAt()
+  const startedTracked = useRef(false)
 
   useEffect(() => {
     if (!HCAPTCHA_SITE_KEY) return
@@ -87,6 +89,10 @@ export function CareerApplicationForm({
   }, [])
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
+    if (!startedTracked.current) {
+      startedTracked.current = true
+      trackEvent('career_application_started', { track: trackSlug })
+    }
     setForm((prev) => ({ ...prev, [key]: value }))
   }
 
@@ -118,6 +124,7 @@ export function CareerApplicationForm({
     if (!validate()) return
 
     setStatus('submitting')
+    trackEvent('career_application_submitted', { track: trackSlug })
     try {
       const captchaToken = HCAPTCHA_SITE_KEY ? window.hcaptcha?.getResponse() : undefined
       const res = await fetch('/api/careers-application', {
@@ -139,10 +146,16 @@ export function CareerApplicationForm({
         )
         if (resBody?.reason === 'captcha_failed') {
           setCaptchaError('Verification failed - please try again')
+        } else if (resBody?.reason !== 'not_configured') {
+          trackEvent('career_application_error', {
+            track: trackSlug,
+            reason: resBody?.reason ?? 'unknown',
+          })
         }
         return
       }
 
+      trackEvent('career_application_success', { track: trackSlug })
       trackEvent('generate_lead', { track: trackSlug, source: 'careers_application' })
       setForm(makeInitialState())
       const params = new URLSearchParams({ track: trackSlug })
@@ -150,6 +163,7 @@ export function CareerApplicationForm({
       router.push(`/careers/thank-you?${params.toString()}`)
     } catch {
       setStatus('error')
+      trackEvent('career_application_error', { track: trackSlug, reason: 'network' })
     }
   }
 
@@ -283,9 +297,19 @@ export function CareerApplicationForm({
         </div>
       )}
 
+      <p className="text-xs leading-relaxed text-ink/60">
+        By submitting, you agree that the information above is collected to
+        assess your application for this programme, per our{' '}
+        <Link href="/legal/privacy" className="link-underline">
+          Privacy Policy
+        </Link>
+        .
+      </p>
+
       <button
         type="submit"
         disabled={status === 'submitting'}
+        aria-busy={status === 'submitting'}
         className="inline-flex items-center justify-center rounded bg-yellow px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-yellow/90 disabled:opacity-60"
       >
         {status === 'submitting' ? 'Submitting…' : 'Submit Application'}

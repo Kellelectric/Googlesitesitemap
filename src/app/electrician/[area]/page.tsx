@@ -13,13 +13,14 @@ import { breadcrumbSchema, localServiceSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-type Props = { params: { area: string } }
+type Props = { params: Promise<{ area: string }> }
 
 export function generateStaticParams() {
   return areas.map((area) => ({ area: area.slug }))
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const area = getAreaBySlug(params.area)
   if (!area) return {}
   // "CBD" is the common, real-world local shorthand for Central Business
@@ -39,7 +40,8 @@ const faqs = [
   ...(faqCategories.find((c) => c.category === 'Services & scheduling')?.items ?? []),
 ]
 
-export default function AreaPage({ params }: Props) {
+export default async function AreaPage(props: Props) {
+  const params = await props.params;
   const area = getAreaBySlug(params.area)
   if (!area) notFound()
 

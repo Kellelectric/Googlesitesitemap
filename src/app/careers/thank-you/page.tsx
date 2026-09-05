@@ -31,11 +31,12 @@ function sanitizeContinueUrl(value: string | undefined): string | null {
   }
 }
 
-export default function CareersThankYouPage({
-  searchParams,
-}: {
-  searchParams: { track?: string; ref?: string; continue?: string }
-}) {
+export default async function CareersThankYouPage(
+  props: {
+    searchParams: Promise<{ track?: string; ref?: string; continue?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const track = searchParams.track ? getCareerTrackBySlug(searchParams.track) : undefined
   const reference =
     searchParams.ref && /^KE-APP-\d{4}-[A-Z0-9]{6}$/.test(searchParams.ref)

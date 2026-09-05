@@ -16,13 +16,14 @@ import { breadcrumbSchema, localServiceSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-type Props = { params: { slug: string } }
+type Props = { params: Promise<{ slug: string }> }
 
 export function generateStaticParams() {
   return industries.map((industry) => ({ slug: industry.slug }))
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const industry = getIndustryBySlug(params.slug)
   if (!industry) return {}
   return pageMetadata({
@@ -38,7 +39,8 @@ const faqs = [
   ...(faqCategories.find((c) => c.category === 'Services & scheduling')?.items ?? []),
 ]
 
-export default function IndustryDetailPage({ params }: Props) {
+export default async function IndustryDetailPage(props: Props) {
+  const params = await props.params;
   const industry = getIndustryBySlug(params.slug)
   if (!industry) notFound()
 

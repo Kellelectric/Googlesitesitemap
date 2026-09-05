@@ -21,13 +21,14 @@ const faqs = [
   ...(faqCategories.find((c) => c.category === 'Services & scheduling')?.items ?? []),
 ]
 
-type Props = { params: { slug: string } }
+type Props = { params: Promise<{ slug: string }> }
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }))
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const service = getServiceBySlug(params.slug)
   if (!service) return {}
   return pageMetadata({
@@ -38,7 +39,8 @@ export function generateMetadata({ params }: Props): Metadata {
   })
 }
 
-export default function ServiceDetailPage({ params }: Props) {
+export default async function ServiceDetailPage(props: Props) {
+  const params = await props.params;
   const service = getServiceBySlug(params.slug)
   if (!service) notFound()
 

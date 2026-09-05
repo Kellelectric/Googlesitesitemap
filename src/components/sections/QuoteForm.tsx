@@ -349,7 +349,7 @@ function Field({
 }: {
   label: string
   error?: string
-  children: React.ReactElement
+  children: React.ReactElement<any>
 }) {
   // Derived from the label rather than a new prop at every call site — every
   // label here is a fixed, unique string, so this stays stable and unique

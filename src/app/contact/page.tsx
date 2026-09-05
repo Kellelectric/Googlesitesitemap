@@ -20,11 +20,12 @@ export const metadata: Metadata = pageMetadata({
 // industry pages) land here with that service already selected, instead of
 // dumping the visitor into a blank form and making them re-pick it — one
 // less step between intent and a submitted lead.
-export default function ContactPage({
-  searchParams,
-}: {
-  searchParams: { service?: string }
-}) {
+export default async function ContactPage(
+  props: {
+    searchParams: Promise<{ service?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const prefillService = getServiceBySlug(searchParams.service ?? '')?.slug ?? ''
 
   return (

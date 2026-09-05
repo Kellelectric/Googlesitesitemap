@@ -10,9 +10,14 @@ import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Solar & Hybrid Energy Systems',
+  // "Solar Company in Abuja" - real, accurate, and the flagship solar
+  // page's own dedicated keyword target, distinct from the
+  // /services/solar-inverter-systems service listing's "Solar in Abuja"
+  // seoTitle (see services.ts) so the two pages don't cannibalize each
+  // other's ranking for near-identical phrasing.
+  title: 'Solar Company in Abuja',
   description:
-    'Load-analyzed solar and hybrid inverter systems sized for Nigeria’s grid reality: methodology, system tiers, and what a proper sizing process actually involves.',
+    'Certified solar company in Abuja - load-analyzed solar and hybrid inverter systems sized for Nigeria\'s real grid, not a generic panel count.',
   path: '/solar-energy-systems',
   image: '/images/photos/solar-hero-panel-install.jpg',
 })

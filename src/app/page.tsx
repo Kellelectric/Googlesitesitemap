@@ -18,7 +18,16 @@ import { team } from '@/content/team'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'Certified Electrical Engineering in Abuja',
+  // Targets "electrician in Abuja" / "solar company in Abuja" - both
+  // real, accurate descriptions of the business, and the two highest-
+  // intent generic search terms this site can rank for at the domain
+  // root. Area-specific "Electrician in {area}, Abuja" long-tail terms
+  // are covered separately by the /electrician/[area] pages - this is
+  // deliberately the one page targeting the un-qualified, highest-volume
+  // phrasing, so it isn't duplicated elsewhere (keyword cannibalization).
+  title: 'Electrician & Solar Company in Abuja',
+  description:
+    'Certified electrician and solar company in Abuja - wiring, panel upgrades, solar & inverter systems, CCTV, and 24/7 emergency response. COREN & NEMSA certified.',
   alternates: { canonical: '/' },
 }
 

@@ -76,6 +76,13 @@ export const services: Service[] = [
   {
     slug: 'solar-inverter-systems',
     name: 'Solar & Inverter Systems',
+    // "Solar in Abuja" - kept distinct from /solar-energy-systems'
+    // "Solar Company in Abuja" title so the two pages target related but
+    // non-identical phrasing rather than competing for the same one.
+    // Short by design - `name` + suffix alone would clear Google's ~60
+    // char display budget, so this doesn't have room to also spell out
+    // "Solar & Inverter Systems" again.
+    seoTitle: 'Solar in Abuja',
     category: 'energy',
     flagship: true,
     summary:

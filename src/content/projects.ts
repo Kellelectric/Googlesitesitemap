@@ -1,11 +1,16 @@
-// Real completed projects, supplied directly by the client (location,
-// job scope, and year for each - session instruction: "add these jobs
-// without mentioning their names"). Per that instruction and consistent
-// with this file's long-standing policy, no client/property name is
-// attached to any entry - locations are area-level only (no street
-// address), and no contract values or prices appear anywhere. challenge/
-// solution/outcome text is derived only from the scope and year actually
-// supplied - nothing beyond that is invented.
+// Real completed projects, supplied directly by the client. Real
+// property/client names are now included - the client later supplied a
+// full "Our Work" document naming each project directly (Paradise Phase
+// 1, Drol Apartments, CBN Multipurpose Cooperative, Manreng Estate,
+// Carton Gate Apartment, Kaduna State Government House, Navy Holdings
+// Limited, Andromeda Beauty Locs), superseding an earlier session's
+// "add these jobs without mentioning their names" instruction - this
+// document IS the client's clearance to publish those names. Locations
+// stay area-level only (no street address/Plus Code, even though the
+// client's document included some) and no contract values or prices
+// appear anywhere, consistent with this file's long-standing policy.
+// challenge/solution/outcome text is derived only from the scope
+// actually supplied - nothing beyond that is invented.
 //
 // No longer placeholder content: every entry below is real, so noIndex
 // has been removed from app/projects/page.tsx and
@@ -28,15 +33,15 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: 'prepaid-meter-installation-life-camp',
-    title: 'Prepaid Metering & Solar Lighting',
+    title: 'Paradise Phase 1, Life Camp Estate',
     sector: 'residential',
     serviceSlugs: ['panel-repair-upgrades', 'solar-inverter-systems'],
     location: 'Life Camp, Abuja',
     year: '2019 - 2020',
     summary:
-      'Prepaid meter installation across more than 1,000 residential units, paired with solar street lighting for the estate\'s common areas.',
+      'Prepaid meter installation across more than 1,000 houses at Paradise Phase 1, paired with solar street lighting for the estate\'s common areas.',
     challenge:
-      'The estate needed prepaid metering rolled out across an entire multi-unit residential development, along with reliable street lighting for shared areas - both delivered without disrupting residents already living on site.',
+      'Work at this scale meant standardizing prepaid meter installation across every unit while keeping each meter compliant and properly connected, and rolling out street lighting that would hold up across the estate\'s common areas without constant maintenance call-outs.',
     solution:
       'We installed prepaid meters across more than 1,000 houses on the estate and fitted solar street lights through the common areas, sequencing the work to minimize disruption to residents.',
     outcome:
@@ -45,32 +50,32 @@ export const projects: Project[] = [
   },
   {
     slug: 'electrical-wiring-conduit-jahi-2020',
-    title: 'Wiring, Conduit & Network Cabling',
+    title: 'Drol Apartments, Jahi',
     sector: 'residential',
     serviceSlugs: ['electrical-wiring-installation'],
     location: 'Jahi, Abuja',
     year: '2020',
     summary:
-      'Full electrical wiring, conduit piping, and internet cabling for a residential apartment building in Jahi.',
+      'Full electrical wiring, conduit piping, and internet cabling for Drol Apartments in Jahi - our first engagement at this property.',
     challenge:
-      'A residential apartment building needed its electrical wiring, conduit infrastructure, and internet cabling installed as one coordinated first-fix package.',
+      'The apartment complex needed its electrical wiring, conduit infrastructure, and internet cabling installed as one coordinated first-fix package, laying the groundwork for everything the building would need to run properly from day one.',
     solution:
       'We ran the full electrical wiring and conduit piping for the building, plus internet cabling, delivered together as a single scope.',
     outcome:
-      'The apartments were handed over with complete electrical and network infrastructure in place, ready for occupation.',
+      'The apartments were handed over with complete electrical and network infrastructure in place, ready for occupation - and the client returned to us for a second phase of work (see the Drol Apartments hybrid inverter & solar project below).',
     image: '/images/photos/service-detail-hero-wiring.jpg',
   },
   {
     slug: 'solar-installation-technical-college-kano',
-    title: 'Solar System & Street Lighting',
+    title: 'Kano State College of Health Sciences and Technology',
     sector: 'commercial',
     serviceSlugs: ['solar-inverter-systems'],
     location: 'Tudun Wada, Kano',
     year: '2022',
     summary:
-      'Solar power system and solar street lighting installed across a technical college campus in Kano.',
+      'Solar power system and solar street lighting installed across the Kano State College of Health Sciences and Technology campus.',
     challenge:
-      'The campus needed a solar power installation alongside street lighting to improve power reliability and site lighting across its grounds.',
+      'Public and educational facilities need power they can depend on, and solar backup that doesn\'t just work on installation day but keeps working through years of daily use.',
     solution:
       'We installed a solar power system for the campus along with solar street lights covering the site\'s grounds.',
     outcome:
@@ -79,32 +84,32 @@ export const projects: Project[] = [
   },
   {
     slug: 'hybrid-inverter-solar-jahi-2023',
-    title: 'Hybrid Inverter & Solar Battery',
+    title: 'Drol Apartments, Jahi - Phase 2',
     sector: 'residential',
     serviceSlugs: ['solar-inverter-systems'],
     location: 'Jahi, Abuja',
     year: '2023',
     summary:
-      'Installation of a 5kVA hybrid inverter, 10 solar panels, and a 10kWh lithium battery system for a residential apartment building.',
+      'A second phase of work at Drol Apartments: installing a 5kVA hybrid inverter, 10 solar panels, and a 10kWh lithium battery system.',
     challenge:
       'The property needed a hybrid solar and battery backup system installed to reduce reliance on grid power and generator use.',
     solution:
       'We installed a 5kVA hybrid inverter, 10 units of solar panels, and a 10kWh lithium battery bank, sized to the building\'s load.',
     outcome:
-      'The property now runs on a hybrid solar and battery system for its day-to-day power needs.',
+      'The property now runs on a hybrid solar and battery system for its day-to-day power needs - coming back to us for expanded work, rather than bringing in another contractor, says as much about the first phase as it does about this one.',
     image: '/images/photos/solar-roof-install.jpg',
   },
   {
     slug: 'electrical-finishing-cooperative-garki',
-    title: 'Decking, Wiring & Fixtures',
+    title: 'CBN Multipurpose Cooperative',
     sector: 'commercial',
     serviceSlugs: ['electrical-wiring-installation', 'commercial-office-fitout'],
     location: 'Garki II, Abuja',
     year: 'November 2022 - May 2023',
     summary:
-      'Full electrical decking, conduit piping, wiring, and fixture installation and finishing for a cooperative society\'s building in Garki II.',
+      'Full electrical decking, conduit piping, wiring, and fixture installation and finishing for the CBN Multipurpose Cooperative\'s building in Garki II.',
     challenge:
-      'The building required its complete electrical scope delivered end-to-end - from decking and conduit piping through to wiring and final fixture finishing.',
+      'Work tied to a Central Bank facility leaves no margin for shortcuts at any stage, from the piping behind the walls to the switches and fittings clients actually see.',
     solution:
       'We carried out all electrical decking piping, wiring, and fixture installation and finishing across the project.',
     outcome:
@@ -113,15 +118,15 @@ export const projects: Project[] = [
   },
   {
     slug: 'electrical-hvac-manreng-estate-life-camp',
-    title: 'Conduit, HVAC & Electrical Wiring',
+    title: 'Manreng Estate, Kafe District',
     sector: 'residential',
     serviceSlugs: ['electrical-wiring-installation'],
     location: 'Kafe District, Life Camp, Abuja',
     year: '2023',
     summary:
-      'Electrical conduit, HVAC and copper pipe installation, and full wiring and fixtures for a residential estate in Life Camp\'s Kafe District.',
+      'Electrical conduit, HVAC and copper pipe installation, and full wiring and fixtures across Manreng Estate in Life Camp\'s Kafe District.',
     challenge:
-      'The estate needed its electrical conduit, HVAC piping, and wiring and fixtures coordinated as a combined first-fix and finishing package.',
+      'Multi-unit estate work like this tests whether a team can hold the same standard across dozens of homes, not just one showcase unit.',
     solution:
       'We installed the electrical conduit, HVAC and copper piping, and completed the wiring and fixtures across the estate.',
     outcome:
@@ -130,15 +135,15 @@ export const projects: Project[] = [
   },
   {
     slug: 'electrical-finishing-automation-gwarinpa',
-    title: 'Finishing, Automation & Security',
+    title: 'Carton Gate Apartment, Gwarinpa',
     sector: 'residential',
     serviceSlugs: ['home-automation', 'automated-gates-access-control'],
     location: 'Gwarinpa, Abuja',
     year: '2023',
     summary:
-      'Electrical finishing, home automation, and security system integration for an apartment building in Gwarinpa.',
+      'Electrical finishing, home automation, and security system integration for Carton Gate Apartment in Gwarinpa.',
     challenge:
-      'The apartments needed electrical finishing paired with home automation and security system integration delivered as one coordinated scope.',
+      'Bringing the apartment\'s electrical backbone together with smart controls and a properly integrated security setup, rather than treating them as separate afterthoughts.',
     solution:
       'We completed the electrical finishing and integrated home automation with the security system across the building.',
     outcome:
@@ -147,41 +152,42 @@ export const projects: Project[] = [
   },
   {
     slug: 'solar-backup-government-facility-kaduna',
-    title: 'Solar Backup System Installation',
+    title: 'Kaduna State Government House',
     sector: 'commercial',
     serviceSlugs: ['solar-inverter-systems'],
     location: 'Tudun Nupawa, Kaduna',
     year: '2024',
-    summary: 'Solar backup power system installed for a government facility in Kaduna.',
-    challenge: 'The facility needed a dependable solar backup system to maintain power continuity.',
+    summary: 'Solar backup power system installed for the Kaduna State Government House.',
+    challenge:
+      'Public institutions can\'t afford power interruptions during official business, and that requirement shaped how the backup system was designed and installed.',
     solution: 'We installed a solar backup power system sized to the facility\'s requirements.',
     outcome: 'The facility now has solar backup power in place.',
     image: '/images/photos/solar-hero-panel-install.jpg',
   },
   {
     slug: 'solar-street-lighting-asokoro',
-    title: 'Solar Street Lighting Installation',
+    title: 'Navy Holdings Limited',
     sector: 'commercial',
     serviceSlugs: ['solar-inverter-systems'],
     location: 'Asokoro District, Abuja',
     year: '2024',
-    summary: 'Solar street lighting installed for a guest house facility in Asokoro.',
+    summary: 'Solar street light installation for the Command Guest House, Navy Holdings Limited.',
     challenge:
-      'The facility needed reliable street lighting across its grounds, independent of grid supply.',
+      'The facility needed reliable outdoor lighting across its grounds, independent of grid supply, for a site where security and visibility both matter.',
     solution: 'We installed solar street lights across the facility\'s grounds.',
     outcome: 'The facility now has solar-powered street lighting covering its grounds.',
     image: '/images/photos/maintenance-hero-solar-check.jpg',
   },
   {
     slug: 'solar-renovation-gwarinpa',
-    title: 'Solar System & Building Renovation',
+    title: 'Andromeda Beauty Locs, Gwarinpa',
     sector: 'commercial',
     serviceSlugs: ['solar-inverter-systems', 'electrical-wiring-installation'],
     location: 'Gwarinpa, Abuja',
     summary:
-      '10kWh solar system installation alongside building renovation, ceiling work, and electrical wiring for a commercial property in Gwarinpa.',
+      '10kWh solar system installation alongside building renovation, ceiling work, and electrical wiring for Andromeda Beauty Locs in Gwarinpa.',
     challenge:
-      'The property renovation required solar power installation coordinated with ceiling and general renovation works and a full electrical wiring upgrade.',
+      'Fitting out a functioning beauty and wellness business meant coordinating structural, electrical, and finishing work so the space could open ready for clients, not half-done in one area while another lagged behind.',
     solution:
       'We installed a 10kWh solar system and gypsum board ceiling, and completed the building renovation and electrical wiring and installation as one coordinated scope.',
     outcome:

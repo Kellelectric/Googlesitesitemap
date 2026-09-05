@@ -97,6 +97,10 @@ export const company = {
     'Life Camp',
     'Kubwa',
     'Lugbe',
+    'Jahi',
+    'Kado',
+    'Idu',
+    'Mabushi',
   ],
   // What's covered beyond Abuja itself — confirmed directly by the
   // client: neighboring states, then project work nationwide. Does NOT

@@ -864,18 +864,17 @@ Assist" chatbot (new this round — see below), and a first draft of
   Set that env var once a real GA4 property exists. Search Console
   verification and `sitemap.xml` submission still need to happen once the
   domain is live.
-- **Domain/hosting decision.** Vercel project `googlesitesitemap`
-  (`prj_ZtOKha3gjKpkU7k1KPOV7mh5GdF8`) is the one to attach
-  `kellelectricals.com` to — confirmed correctly detected as Next.js, and
-  its Vercel Authentication is already scoped to exclude custom domains
-  (`ssoProtection.deploymentType: all_except_custom_domains`), so the real
-  domain won't hit a login wall once attached. Steps: add the domain in
-  the Vercel dashboard (Settings → Domains), add the DNS records it shows
-  at the registrar, wait for propagation/SSL. The other Vercel project
-  linked to this same repo (`kellelectricalsst`) has framework detection
-  showing `null` — do not point the domain there without fixing that
-  first. Decide separately whether the old Google Sites version is
-  retired or left as-is once the real domain is live.
+- **Domain/hosting — DONE.** `kellelectricals.com` and `www.kellelectricals.com`
+  are attached to the `googlesitesitemap` Vercel project and confirmed live
+  (verified via `curl`, HTTP 200). Decide separately whether the old Google
+  Sites version is retired now that the real domain is live.
+- **GA4 — DONE.** `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set in Vercel
+  (`G-QNH5R97SG3`) - confirmed actually rendering on the live site via
+  `curl`. Client also confirmed Search Console is set up.
+- **Google Calendar booking — DONE.** Service account env vars are set -
+  confirmed live via `curl` (the booking page no longer falls back to the
+  embedded Google-hosted calendar, which only happens once real calendar
+  credentials are configured).
 - **Conversion funnel wiring — done.** The site previously only measured
   page views; every actual conversion action is now a trackable event
   (`src/lib/analytics.ts`, a no-op until `NEXT_PUBLIC_GA_MEASUREMENT_ID` is

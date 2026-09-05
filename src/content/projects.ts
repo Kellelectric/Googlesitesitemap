@@ -19,6 +19,11 @@
 export type Project = {
   slug: string
   title: string
+  // Optional shorter title for the <title> tag / SERP snippet only - the
+  // on-page H1 always uses `title` above, unchanged. Set this when
+  // `title` (+ " - Kell Electricals Ltd") would push the rendered
+  // <title> past Google's ~60-character display budget.
+  seoTitle?: string
   sector: 'residential' | 'commercial' | 'industrial'
   serviceSlugs: string[]
   location: string
@@ -68,6 +73,7 @@ export const projects: Project[] = [
   {
     slug: 'solar-installation-technical-college-kano',
     title: 'Kano State College of Health Sciences and Technology',
+    seoTitle: 'Kano State College of Health Sciences',
     sector: 'commercial',
     serviceSlugs: ['solar-inverter-systems'],
     location: 'Tudun Wada, Kano',

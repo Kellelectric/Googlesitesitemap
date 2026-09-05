@@ -131,7 +131,7 @@ export const careerTracks: CareerTrack[] = [
     slug: 'industrial-training',
     name: 'Industrial Training',
     summary:
-      "Real electrical work experience for students who want more than filing and errand-running - a 6-month standard placement, or 3 months where your school's programme requires a shorter one.",
+      'Real electrical work experience, not filing and errand-running - a 6-month standard placement, or 3 months for a shorter school requirement.',
     description:
       "We run an Industrial Training (IT) programme for students who want real electrical work experience, not filing and errand-running. Before anyone is formally accepted, every applicant goes through a 1-week trial period - this isn't a formality, it's where we see how you work: whether you show up on time, ask questions when you're unsure, and handle basic tasks on-site. Students who do well in that week move on to a full placement; students who don't are told honestly and released without hard feelings.",
     whoItsFor: [

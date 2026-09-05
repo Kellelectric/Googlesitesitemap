@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
 import { Space_Grotesk, Inter } from 'next/font/google'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
@@ -7,6 +6,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { MobileCallBar } from '@/components/layout/MobileCallBar'
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
+import { KellAssist } from '@/components/chatbot/KellAssist'
 import { company } from '@/content/company'
 import { organizationSchema } from '@/lib/schema'
 
@@ -99,23 +99,21 @@ export default function RootLayout({
         <main>{children}</main>
         <Footer />
         <MobileCallBar />
-        {/* Back on Botpress for now - Zoho SalesIQ needs a paid subscription
-            the client hasn't taken out yet. The Zobot conversation design
-            and Deluge script (docs/zoho-salesiq-zobot.md) and the
-            ZohoSalesIQ component (src/components/chat/ZohoSalesIQ.tsx) are
-            still in the repo, ready to swap back in once that subscription
-            exists - don't delete either.
-            strategy="lazyOnload" defers fetching and running this ~large
-            third-party widget bundle until the browser is idle after the
-            rest of the page has loaded - it was the single biggest driver
-            of a 55/100 mobile PageSpeed Performance score despite 96-100 on
-            every other category, since a chat widget isn't needed for the
-            initial render or first interaction. */}
-        <Script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js" strategy="lazyOnload" />
-        <Script
-          src="https://files.bpcontent.cloud/2026/09/02/15/20260902152603-5BYI2T6Q.js"
-          strategy="lazyOnload"
-        />
+        {/* Custom AI-powered Kell Assist widget, restored per client
+            direction - see src/components/chatbot/KellAssist.tsx and
+            src/app/api/chat/route.ts. Its guided quick-reply flows
+            (service routing, emergency safety message, solar question
+            flow, lead capture via /api/quote) all work with zero
+            configuration; free-text conversation additionally needs
+            ANTHROPIC_API_KEY set (see that route's own comments).
+            Previously replaced by Botpress/Zoho SalesIQ after an
+            Anthropic Console billing lapse took it down - confirm
+            billing is in good standing before relying on this in
+            production again. Botpress's Script tags and the Zoho
+            SalesIQ component (src/components/chat/ZohoSalesIQ.tsx,
+            docs/zoho-salesiq-zobot.md) are left in the repo, not
+            deleted, in case either is wanted again later. */}
+        <KellAssist />
         <SpeedInsights />
       </body>
     </html>

@@ -12,7 +12,11 @@ import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Maintenance & AMC',
+  // "Electrical Maintenance Abuja" - this flagship page owns the local
+  // keyword for this topic; /services/preventive-maintenance-contracts'
+  // own <title> deliberately doesn't repeat "Abuja" (see services.ts) so
+  // the two pages don't compete against each other in search.
+  title: 'Electrical Maintenance Abuja',
   description:
     'Annual maintenance contracts covering scheduled panel inspection, thermal imaging, and generator/solar checks - with a documented report after every visit.',
   path: '/maintenance-amc',

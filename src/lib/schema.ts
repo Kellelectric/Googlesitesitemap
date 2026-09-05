@@ -1,6 +1,7 @@
 import { company } from '@/content/company'
 import { services } from '@/content/services'
 import { expandDayRange, to24Hour } from '@/lib/businessHours'
+import { getReviewUrl } from '@/content/testimonials'
 
 function openingHoursSpecification() {
   return company.businessHours
@@ -70,6 +71,12 @@ export function organizationSchema() {
     slogan: company.tagline,
     openingHoursSpecification: openingHoursSpecification(),
     sameAs: [
+      // The real Google Business Profile URL (same one used sitewide for
+      // "View all reviews" - see testimonials.ts) - linking it here helps
+      // Google connect this site's entity to the Business Profile entity,
+      // which is a real local-ranking (Google Maps/Local Pack) signal,
+      // not just a social link.
+      getReviewUrl(),
       company.social.facebook,
       company.social.instagram,
       company.social.linkedin,

@@ -15,7 +15,12 @@ import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
-  title: '24/7 Emergency Electrical Services',
+  // "Emergency Electrician in Abuja" - one of the highest-intent local
+  // search terms this site can target; this flagship page owns it.
+  // /services/emergency-electrical-response's own <title> deliberately
+  // doesn't repeat "Abuja" (see services.ts) so the two pages don't
+  // compete against each other in search.
+  title: 'Emergency Electrician in Abuja',
   description: `Emergency electrical response across Abuja and beyond for outages, sparking, burning smells, and exposed wiring. Target response ${company.emergencyResponseTarget}.`,
   path: '/emergency-electrical-services',
   image: '/images/photos/emergency-hero-switchboard.jpg',

@@ -18,10 +18,14 @@
 // - `apprenticeship`: `duration` (2-year/₦400,000 or 4-year/₦700,000
 //   `programmeFee`) and `stipend` (₦25,000/month) — sourced from the
 //   client's June 2026 site audit report and a direct client confirmation.
-// - `industrial-training`: `duration` (6 months only, aligned to the
-//   institution's SIWES calendar — the client explicitly does not accept
-//   a shorter 3-month placement), `stipend` (₦25,000/month, same as
-//   apprenticeship), and `applicationChecklist`.
+// - `industrial-training`: real programme details supplied directly by
+//   the client — standard placement is 6 months, with a newly-opened
+//   3-month track for students whose school requires a shorter
+//   placement (supersedes an earlier round's "we do not accept 3-month
+//   placements" statement — that's no longer accurate). Every applicant
+//   goes through a 1-week trial before formal acceptance. `stipend`
+//   (₦25,000/month, same as apprenticeship) and `applicationChecklist`
+//   are unchanged.
 // - All tracks: applications are processed entirely online via the
 //   linked Google Form — no in-person/paper application step.
 // - `internship` and `industrial-training` `eligibility` lists and
@@ -127,32 +131,33 @@ export const careerTracks: CareerTrack[] = [
     slug: 'industrial-training',
     name: 'Industrial Training',
     summary:
-      "Placement for polytechnic and university students completing a mandatory Students' Industrial Work Experience Scheme (SIWES) or equivalent.",
+      'Real electrical work experience, not filing and errand-running - a 6-month standard placement, or 3 months for a shorter school requirement.',
     description:
-      "Industrial Training placements are for students who need to complete a formal work-experience component of their academic programme (SIWES or a university-required equivalent). Placement with Kell Electricals means real fieldwork on electrical jobs under supervision, with the documentation your institution typically requires for sign-off.",
+      "We run an Industrial Training (IT) programme for students who want real electrical work experience, not filing and errand-running. Before anyone is formally accepted, every applicant goes through a 1-week trial period - this isn't a formality, it's where we see how you work: whether you show up on time, ask questions when you're unsure, and handle basic tasks on-site. Students who do well in that week move on to a full placement; students who don't are told honestly and released without hard feelings.",
     whoItsFor: [
-      'Polytechnic or university students with a mandatory industrial training (SIWES) requirement',
-      'Students in electrical/electronic engineering or related technical programmes',
+      'Students in an electrical, electronic, or related engineering programme who need an IT placement',
+      'Willing to actually learn, not just collect a completion letter at the end',
     ],
     whatToExpect: [
-      'Supervised fieldwork alongside our technical team on live jobs',
-      'Exposure to the documented assess-design-install-test-handover process on real sites',
-      'Institution-required attendance and completion documentation, coordinated with your school',
+      'A 1-week trial period before formal acceptance - how you show up, ask questions, and handle basic on-site tasks decides whether you move to a full placement',
+      'Real jobs, under supervision, alongside our technicians - not sitting in an office watching from a distance',
+      'Depending on what\'s running that period: residential wiring, panel work, solar installations, or site inspections',
     ],
-    duration: '6 months, aligned to your institution’s SIWES calendar - we do not accept shorter 3-month placements',
+    duration: '6 months (our standard placement), or 3 months where your school\'s programme requires a shorter placement - indicate which you need on the application form',
     stipend: '₦25,000/month',
     intake: 'Aligned to the academic SIWES calendar (typically two intakes a year)',
     eligibility: [
-      'Enrolled in a polytechnic or university programme with a mandatory SIWES/industrial-training requirement',
-      'Studying electrical/electronic engineering or a closely related technical discipline',
-      'A letter of introduction from your institution',
-      'Able to attend on-site for the full 6-month placement - no partial or shortened placements',
+      'Enrolled in an electrical, electronic, or related engineering programme with an IT/SIWES requirement',
+      'Willing to actually learn on-site, not just collect a completion letter',
+      'Your institution\'s IT requirements and timeline (indicate on the application form if you need the 3-month track)',
     ],
     applicationChecklist: [
       'Updated CV',
       'Student ID card',
-      'SIWES introduction letter from your institution',
+      'Your institution\'s IT requirements (and note if you need the 3-month track instead of the standard 6 months)',
+      'Application is in two steps: submit the form on this page, then complete the second step via the link on the thank-you page - applications aren\'t considered complete until both are done',
     ],
+    programmeDetailsConfirmed: true,
   },
   {
     slug: 'apprenticeship',

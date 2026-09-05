@@ -21,7 +21,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const project = getProjectBySlug(params.slug)
   if (!project) return {}
   return pageMetadata({
-    title: project.title,
+    title: project.seoTitle ?? project.title,
     description: project.summary,
     path: `/projects/${project.slug}`,
     image: project.image,

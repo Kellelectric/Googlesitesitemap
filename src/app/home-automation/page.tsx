@@ -15,7 +15,11 @@ import { process } from '@/content/process'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'Home Automation Systems',
+  // "Home Automation in Abuja" - this flagship page owns the local
+  // keyword for this topic; /services/home-automation's own <title>
+  // deliberately doesn't repeat "Abuja" (see services.ts) so the two
+  // pages don't compete against each other in search.
+  title: 'Home Automation in Abuja',
   description:
     'Smart lighting, climate, and access control integrated at the electrical layer, not bolted on - for homes, offices, and new builds across Abuja.',
   path: '/home-automation',

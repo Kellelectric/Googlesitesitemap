@@ -31,12 +31,25 @@ export const metadata: Metadata = {
     template: `%s - ${company.name}`,
   },
   description: company.positioning,
+  // Real, accurate phrases matching services and locations actually
+  // covered by the site (see src/content/services.ts and areas.ts) -
+  // Google largely ignores this tag today, but it costs nothing and
+  // documents the phrases this site's on-page titles/descriptions
+  // deliberately target (see the seoTitle fields in services.ts).
   keywords: [
+    'electrician in Abuja',
     'electrical contractor Abuja',
+    'emergency electrician Abuja',
+    'solar company in Abuja',
     'solar inverter installation Abuja',
+    'generator installation Abuja',
+    'CCTV installation Abuja',
+    'home automation Abuja',
+    'panel repair Abuja',
+    'industrial electrician Abuja',
+    'commercial electrician Abuja',
     'NEMSA certified electrician',
     'COREN certified electrical engineer',
-    'CCTV installation Abuja',
     'industrial electrical Nigeria',
   ],
   authors: [{ name: company.name }],

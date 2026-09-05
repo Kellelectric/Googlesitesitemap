@@ -8,10 +8,17 @@ export type ServiceCategory =
 export type Service = {
   slug: string
   name: string
-  // Optional shorter name for the <title> tag / SERP snippet only — the
-  // on-page H1/heading always uses `name` above, unchanged. Set this when
-  // `name` (name + " - Kell Electricals Ltd") would push the rendered
-  // <title> past Google's ~60-character display budget.
+  // Optional override for the <title> tag / SERP snippet only — the
+  // on-page H1/heading always uses `name` above, unchanged. Set this
+  // when `name` (name + " - Kell Electricals Ltd") would push the
+  // rendered <title> past Google's ~60-character display budget, and/or
+  // to target a real local-search phrase ("... Abuja") that doesn't fit
+  // alongside the full descriptive name. Every service below with a
+  // dedicated standalone flagship page (solar-inverter-systems,
+  // home-automation, cctv-surveillance, emergency-electrical-response,
+  // preventive-maintenance-contracts) deliberately leaves the "Abuja"
+  // keyword to that flagship page's own title instead, so the two pages
+  // for the same topic don't compete against each other in search.
   seoTitle?: string
   category: ServiceCategory
   summary: string
@@ -33,6 +40,7 @@ export const services: Service[] = [
   {
     slug: 'electrical-wiring-installation',
     name: 'Electrical Wiring & Installation',
+    seoTitle: 'Electrical Wiring in Abuja',
     category: 'power',
     summary:
       'New-build and rewiring work engineered to NEMSA standard, from single-circuit runs to full building distribution.',
@@ -55,6 +63,7 @@ export const services: Service[] = [
   {
     slug: 'panel-repair-upgrades',
     name: 'Panel Repair & Upgrades',
+    seoTitle: 'Panel Repair & Upgrades Abuja',
     category: 'power',
     summary:
       'Diagnosis and upgrade of distribution boards and switchgear that are undersized, outdated, or failing.',
@@ -148,6 +157,7 @@ export const services: Service[] = [
   {
     slug: 'automated-gates-access-control',
     name: 'Automated Gates & Access Control',
+    seoTitle: 'Automated Gates in Abuja',
     category: 'security-automation',
     summary:
       'Motorized gates, intercoms, and access control wired and commissioned as a single reliable system.',
@@ -169,6 +179,7 @@ export const services: Service[] = [
   {
     slug: 'ev-charging-installation',
     name: 'EV Charger Installation',
+    seoTitle: 'EV Charger Installation in Abuja',
     category: 'energy',
     summary:
       'Dedicated EV charging circuits sized correctly against existing panel capacity, not a generic add-on outlet.',
@@ -189,6 +200,7 @@ export const services: Service[] = [
   {
     slug: 'generator-installation-maintenance',
     name: 'Generator Installation & Maintenance',
+    seoTitle: 'Generator Installation in Abuja',
     category: 'power',
     summary:
       'Correctly sized generator installations with automatic transfer switching, plus ongoing maintenance contracts.',
@@ -210,6 +222,7 @@ export const services: Service[] = [
   {
     slug: 'energy-audits',
     name: 'Energy Audits',
+    seoTitle: 'Energy Audit in Abuja',
     category: 'energy',
     summary:
       'Measured consumption analysis that identifies where power and money are actually being lost.',
@@ -230,6 +243,7 @@ export const services: Service[] = [
   {
     slug: 'industrial-electrical-systems',
     name: 'Industrial Electrical Systems',
+    seoTitle: 'Industrial Electrician in Abuja',
     category: 'industrial',
     summary:
       'Three-phase power distribution, motor control, and factory-floor electrical infrastructure engineered to spec.',
@@ -271,7 +285,7 @@ export const services: Service[] = [
   {
     slug: 'fault-finding-diagnostics',
     name: 'Electrical Fault Finding & Diagnostics',
-    seoTitle: 'Fault Finding & Diagnostics',
+    seoTitle: 'Fault Finding in Abuja',
     category: 'maintenance',
     summary:
       'Systematic fault tracing using proper test equipment, not a guess-and-replace approach.',
@@ -292,6 +306,7 @@ export const services: Service[] = [
   {
     slug: 'lighting-design-installation',
     name: 'Lighting Design & Installation',
+    seoTitle: 'Lighting Installation Abuja',
     category: 'power',
     summary:
       'Interior and exterior lighting engineered for the right levels, efficiency, and control, not just fixture placement.',
@@ -312,6 +327,7 @@ export const services: Service[] = [
   {
     slug: 'earthing-lightning-protection',
     name: 'Earthing & Lightning Protection',
+    seoTitle: 'Lightning Protection Abuja',
     category: 'power',
     summary:
       'Earthing systems and lightning protection installed and tested to protect people, equipment, and buildings.',
@@ -333,7 +349,7 @@ export const services: Service[] = [
   {
     slug: 'commercial-office-fitout',
     name: 'Commercial & Office Fit-Out Electrical',
-    seoTitle: 'Commercial & Office Fit-Out',
+    seoTitle: 'Commercial Electrician Abuja',
     category: 'industrial',
     summary:
       'Electrical scope for office and commercial fit-outs, coordinated with the wider build programme.',

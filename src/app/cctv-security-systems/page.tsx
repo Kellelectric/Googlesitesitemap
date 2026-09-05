@@ -15,7 +15,11 @@ import { process } from '@/content/process'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
 export const metadata: Metadata = pageMetadata({
-  title: 'CCTV & Security Systems',
+  // "CCTV Installation in Abuja" - this flagship page owns the local
+  // keyword for this topic; /services/cctv-surveillance's own <title>
+  // deliberately doesn't repeat "Abuja" (see services.ts) so the two
+  // pages don't compete against each other in search.
+  title: 'CCTV Installation in Abuja',
   description:
     'Camera systems positioned and cabled by engineers, with power and network infrastructure built to last, across Abuja and ' +
     company.serviceRegion +

@@ -3,11 +3,14 @@ import { areas } from '@/content/areas'
 // Real pricing, confirmed by the client. Residential is the only
 // property type priced per area - split into two distance tiers rather
 // than a fixed number per area. Client explicitly named Wuse, Wuse 2,
-// Gwarinpa, and Maitama as the near/"within town" tier; the remaining 12
+// Gwarinpa, and Maitama as the near/"within town" tier; the next 12
 // areas were split by the client confirming Claude's own suggested
 // geographic grouping (Central Business District, Garki, Asokoro,
 // Utako, Jabi, Katampe, and Guzape as near/≤15km; Kubwa, Lugbe, Life
-// Camp, Apo, and Lokogoma as the >15km tier) - not invented.
+// Camp, Apo, and Lokogoma as the >15km tier) - not invented. Jahi, Kado,
+// and Mabushi (near/central, adjacent to Jabi/Utako) and Idu (far -
+// Idu Industrial Area sits further out along the airport road) were
+// added later under the same client-confirmed process.
 const NEAR_AREA_SLUGS = [
   'wuse',
   'wuse-2',
@@ -20,6 +23,9 @@ const NEAR_AREA_SLUGS = [
   'jabi',
   'katampe',
   'guzape',
+  'jahi',
+  'kado',
+  'mabushi',
 ]
 
 export type ResidentialTier = 'near' | 'far'

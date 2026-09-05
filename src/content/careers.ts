@@ -23,9 +23,11 @@
 //   3-month track for students whose school requires a shorter
 //   placement (supersedes an earlier round's "we do not accept 3-month
 //   placements" statement — that's no longer accurate). Every applicant
-//   goes through a 1-week trial before formal acceptance. `stipend`
-//   (₦25,000/month, same as apprenticeship) and `applicationChecklist`
-//   are unchanged.
+//   goes through a 1-week trial before formal acceptance. `applicationChecklist`
+//   is unchanged. `stipend` is confirmed real (a stipend is paid, same
+//   as apprenticeship) but the specific naira figure is deliberately not
+//   published on-site — client asked for internship and
+//   industrial-training to state only that a stipend is provided.
 // - All tracks: applications are processed entirely online via the
 //   linked Google Form — no in-person/paper application step.
 // - `internship` and `industrial-training` `eligibility` lists and
@@ -38,8 +40,10 @@
 //   client-confirmed as genuinely open right now, not placeholder.
 //
 // - `internship`: `duration` (6 months, matching Industrial Training's
-//   duration) and `stipend` (a tiered range by intern skill/experience
-//   level, ₦30,000-₦100,000/month) - client-confirmed.
+//   duration) - client-confirmed. A tiered stipend by intern
+//   skill/experience level is paid, but the specific naira figures are
+//   deliberately not published on-site (see `industrial-training` note
+//   above).
 //
 // - `nysc-placement`: real track, content supplied directly by the client.
 //
@@ -117,7 +121,7 @@ export const careerTracks: CareerTrack[] = [
       'Direct exposure to our documented process: assess, design, install, test, hand over',
     ],
     duration: '6 months, same duration as our Industrial Training placements - no shorter placements accepted',
-    stipend: '₦30,000-₦40,000/month (beginner/student), ₦40,000-₦60,000 (technical intern), ₦60,000-₦80,000 (skilled, limited supervision), or ₦80,000-₦100,000/month (exceptional intern/graduate trainee) - based on experience and skill level',
+    stipend: 'A monthly stipend is provided, based on experience and skill level',
     intake: 'Aligned to academic term/semester breaks (typically two intakes a year)',
     eligibility: [
       'Currently enrolled in an electrical/electronic engineering, technical, or vocational programme',
@@ -144,7 +148,7 @@ export const careerTracks: CareerTrack[] = [
       'Depending on what\'s running that period: residential wiring, panel work, solar installations, or site inspections',
     ],
     duration: '6 months (our standard placement), or 3 months where your school\'s programme requires a shorter placement - indicate which you need on the application form',
-    stipend: '₦25,000/month',
+    stipend: 'A monthly stipend is provided',
     intake: 'Aligned to the academic SIWES calendar (typically two intakes a year)',
     eligibility: [
       'Enrolled in an electrical, electronic, or related engineering programme with an IT/SIWES requirement',

@@ -15,16 +15,33 @@ export const metadata: Metadata = pageMetadata({
   noIndex: true,
 })
 
+// Only allow http(s) URLs pointed at Google's own form host - `continue`
+// is an attacker-controlled query param, and this page renders it as a
+// clickable/auto-followed link, so an open redirect elsewhere is a real
+// risk if this check is ever loosened.
+function sanitizeContinueUrl(value: string | undefined): string | null {
+  if (!value) return null
+  try {
+    const url = new URL(value)
+    if (url.protocol !== 'https:') return null
+    if (url.hostname !== 'docs.google.com') return null
+    return url.toString()
+  } catch {
+    return null
+  }
+}
+
 export default function CareersThankYouPage({
   searchParams,
 }: {
-  searchParams: { track?: string; ref?: string }
+  searchParams: { track?: string; ref?: string; continue?: string }
 }) {
   const track = searchParams.track ? getCareerTrackBySlug(searchParams.track) : undefined
   const reference =
     searchParams.ref && /^KE-APP-\d{4}-[A-Z0-9]{6}$/.test(searchParams.ref)
       ? searchParams.ref
       : null
+  const continueUrl = sanitizeContinueUrl(searchParams.continue)
 
   return (
     <section className="relative overflow-hidden bg-petrol text-paper">
@@ -40,11 +57,27 @@ export default function CareersThankYouPage({
             Your reference: <span className="font-semibold text-paper">{reference}</span>
           </p>
         )}
-        <p className="mt-5 max-w-lg text-paper/70">
-          We review applications directly - no automated filter. If your
-          background fits what we&rsquo;re looking for, we&rsquo;ll follow
-          up by phone or email.
-        </p>
+
+        {continueUrl ? (
+          <div className="mt-8 max-w-lg border border-yellow/40 bg-yellow/10 p-6">
+            <p className="text-sm font-semibold text-paper">One more step</p>
+            <p className="mt-2 text-sm leading-relaxed text-paper/75">
+              Your details have been pre-filled into our official{' '}
+              {track ? track.name : 'programme'} application form - please open it now to
+              finish (photo, ID/documents, and your signature are required
+              there).
+            </p>
+            <Button href={continueUrl} className="mt-4" target="_blank" rel="noopener noreferrer">
+              Continue to the application form
+            </Button>
+          </div>
+        ) : (
+          <p className="mt-5 max-w-lg text-paper/70">
+            We review applications directly - no automated filter. If your
+            background fits what we&rsquo;re looking for, we&rsquo;ll follow
+            up by phone or email.
+          </p>
+        )}
 
         <div className="mt-8 max-w-lg border border-paper/20 bg-paper/5 p-6">
           <p className="text-sm leading-relaxed text-paper/75">

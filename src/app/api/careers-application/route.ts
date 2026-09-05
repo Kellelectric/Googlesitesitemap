@@ -3,7 +3,7 @@ import { createHash, createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { verifyHCaptcha } from '@/lib/hcaptcha'
 import { getCareerTrackBySlug } from '@/content/careers'
-import { getCareerFormRoute } from '@/content/careerFormRouting'
+import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting'
 
 export const runtime = 'nodejs'
 
@@ -57,6 +57,12 @@ type CareerApplicationWebhookPayload = {
   submittedAt: string
   userAgent?: string
   ipHash?: string
+  // Only present for apprenticeship/industrial-training/internship - lets
+  // the Apps Script webhook send a "continue your application" email with
+  // the same pre-filled link the applicant already sees on the thank-you
+  // page, instead of a misleading "application received" (they haven't
+  // finished the real form yet at this point).
+  redirectUrl?: string
 }
 
 // Best-effort duplicate guard: the same in-memory-cache tradeoff as
@@ -119,13 +125,14 @@ function isAllowedOrigin(request: NextRequest): boolean {
   return allowed.includes(origin)
 }
 
-// Forwards validated career applications to a configurable webhook
-// (Zoho Flow, or directly a Google Apps Script Web App) set via
-// CAREERS_WEBHOOK_URL - same pattern as QUOTE_WEBHOOK_URL in
-// app/api/quote/route.ts. No destination is hardcoded.
-// See docs/careers-automation.md for the full pipeline design
-// (Zoho Flow -> Google Apps Script -> the correct Google Form ->
-// its linked Google Sheet) and what still needs external configuration.
+// For apprenticeship/industrial-training/internship, hands back a
+// pre-filled Google Form link (see careerFormRouting.ts) - that form's
+// own linked Sheet is the record, no webhook is required. For
+// job-openings/nysc-placement (no Google Form), forwards to a
+// configurable webhook set via CAREERS_WEBHOOK_URL - same pattern as
+// QUOTE_WEBHOOK_URL in app/api/quote/route.ts. No destination is
+// hardcoded. See docs/careers-automation.md for the full design and what
+// still needs external configuration.
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request)
   if (isRateLimited(ip)) {
@@ -162,13 +169,11 @@ export async function POST(request: NextRequest) {
   // industrial-training, and internship route to a real Google Form;
   // job-openings and nysc-placement are confirmed as staying on-site).
   // This only fires if a future new career track is added to careers.ts
-  // without a matching careerFormRouting.ts entry - it still forwards to
-  // CAREERS_WEBHOOK_URL as normal, this just surfaces the gap in Vercel's
-  // logs rather than letting it land nowhere silently once Zoho Flow's
-  // router is live.
-  if (!getCareerFormRoute(body.trackSlug)) {
+  // without a matching careerFormRouting.ts entry.
+  const formRoute = getCareerFormRoute(body.trackSlug)
+  if (!formRoute) {
     console.warn(
-      `Career application for unmapped track "${body.trackSlug}" (ref pending) - no Google Form route configured. See src/content/careerFormRouting.ts.`,
+      `Career application for unmapped track "${body.trackSlug}" (ref pending) - no route configured. See src/content/careerFormRouting.ts.`,
     )
   }
 
@@ -191,14 +196,6 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const webhookUrl = process.env.CAREERS_WEBHOOK_URL
-  if (!webhookUrl) {
-    console.error(
-      'CAREERS_WEBHOOK_URL is not configured - application was received but not forwarded anywhere.',
-    )
-    return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
-  }
-
   // Best-effort duplicate guard, keyed on track + email + phone (see
   // findRecentDuplicate's comment) - a double-click, a slow-network retry,
   // or the applicant re-submitting the same details within the window
@@ -212,11 +209,27 @@ export async function POST(request: NextRequest) {
 
   const reference = generateApplicationReference()
 
+  // apprenticeship / industrial-training / internship: the Google Form's
+  // own pre-filled link IS the delivery mechanism here (see
+  // careerFormRouting.ts for why - these forms have required file uploads
+  // Apps Script can never submit programmatically). CAREERS_WEBHOOK_URL is
+  // optional on this path, purely for an internal "application started"
+  // notification if configured - its failure never blocks the applicant
+  // from reaching the form, and it isn't retried.
+  const redirectUrl = formRoute
+    ? buildPrefillUrl(formRoute, {
+        fullName: body.fullName,
+        email: body.email,
+        phone: body.phone,
+        institution: body.courseOrInstitution,
+      })
+    : null
+
   // Built explicitly (not `...body`) so the honeypot field, the raw
   // hCaptcha response token, and renderedAt never leak into the
-  // downstream payload - none of that is useful to Zoho Flow or the
-  // Google Form, and the spec this pipeline follows is explicit that only
-  // the fields actually needed should be sent.
+  // downstream payload - none of that is useful downstream, and the spec
+  // this pipeline follows is explicit that only the fields actually
+  // needed should be sent.
   const webhookPayload: CareerApplicationWebhookPayload = {
     reference,
     source: 'kellelectricals.com careers application form',
@@ -232,12 +245,36 @@ export async function POST(request: NextRequest) {
     submittedAt: new Date().toISOString(),
     userAgent: request.headers.get('user-agent') ?? undefined,
     ipHash: ip !== 'unknown' ? hashIp(ip) : undefined,
+    redirectUrl: redirectUrl ?? undefined,
   }
   const payload = JSON.stringify(webhookPayload)
   const secret = process.env.CAREERS_WEBHOOK_SECRET
   const headers: Record<string, string> = { 'Content-Type': 'application/json' }
   if (secret) {
     headers['x-webhook-signature'] = signPayload(payload, secret)
+  }
+  const webhookUrl = process.env.CAREERS_WEBHOOK_URL
+
+  if (redirectUrl) {
+    if (webhookUrl) {
+      fetch(webhookUrl, { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(8000) }).catch(
+        (error) => {
+          console.error('Careers webhook forward (best-effort, Google Form track) failed', error)
+        },
+      )
+    }
+    recentSubmissions.set(dupKey, { reference, at: Date.now() })
+    return NextResponse.json({ ok: true, reference, redirectUrl })
+  }
+
+  // job-openings / nysc-placement: no Google Form, so CAREERS_WEBHOOK_URL
+  // is the only delivery path - required, and forwarding failures below
+  // are fatal to the request (existing retry behavior).
+  if (!webhookUrl) {
+    console.error(
+      'CAREERS_WEBHOOK_URL is not configured - application was received but not forwarded anywhere.',
+    )
+    return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
   }
 
   const maxAttempts = 2

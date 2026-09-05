@@ -13,13 +13,12 @@ Google Apps Script setup, and the exact testing procedure.
 | Layer | Status |
 |---|---|
 | Website form, validation, spam protection, reference generation | **IMPLEMENTED** - live in this repo |
-| Webhook signing, retry, duplicate guard, error handling | **IMPLEMENTED** - live in this repo |
+| Pre-filled Google Form link generation (`buildPrefillUrl`) | **IMPLEMENTED** - live in this repo, real field IDs confirmed via `listFormItems()` |
 | Central routing config (`src/content/careerFormRouting.ts`) | **IMPLEMENTED** - live in this repo |
-| Google Apps Script router + form-field inspector | **IMPLEMENTED as code** - written and ready, **not deployed** (no Google account access exists in this environment) |
-| Zoho Flow webhook + routing | **REQUIRES EXTERNAL CONFIGURATION** - no Zoho Flow access exists in this environment; documented below, not built |
-| Google Form field ID mapping (`formConfig.gs`) | **REQUIRES EXTERNAL CONFIGURATION** - placeholders only, an admin must run `listFormItems()` and fill them in |
-| Applicant confirmation email, internal notification | **REQUIRES EXTERNAL CONFIGURATION** - no email provider exists in this codebase; recommended approach documented below (Zoho Flow's own email action, not new website infrastructure) |
-| End-to-end test (website -> Zoho Flow -> Apps Script -> Google Form -> Sheet) | **NOT VERIFIED** - cannot be, without the above being deployed. Only the website-side legs were actually tested (see Testing section). |
+| Google Apps Script webhook (optional notification endpoint) | **IMPLEMENTED as code**, deployed by the client (Web App URL confirmed working) |
+| Zoho Flow webhook + routing | **NOT USED** - see "Why a pre-filled link, not Zoho Flow -> Apps Script -> auto-submit" below |
+| Applicant confirmation email, internal notification | **REQUIRES EXTERNAL CONFIGURATION** - optional, not built |
+| End-to-end test (website -> pre-filled Google Form link -> applicant completes it -> Sheet) | **PARTIALLY VERIFIED** - `buildPrefillUrl()` output confirmed to carry the right `entry.<id>` params for real, live-inspected forms; an applicant actually completing one end-to-end has not been observed from this session. |
 
 Nothing here is claimed as "connected" that hasn't actually been run and
 observed working.
@@ -43,58 +42,61 @@ POST /api/careers-application (src/app/api/careers-application/route.ts)
   |   the existing reference instead of creating a new one)
   |-- generates KE-APP-YYYY-XXXXXX reference
   |
-  v
-CAREERS_WEBHOOK_URL (HMAC-signed JSON POST)
+  +-- apprenticeship / industrial-training / internship:
+  |     buildPrefillUrl() (src/content/careerFormRouting.ts) builds a
+  |     Google Forms pre-filled link for that track using real
+  |     entry.<itemId> values, and the response hands it back as
+  |     `redirectUrl`. The /careers/thank-you page shows it as a "one
+  |     more step" CTA. CAREERS_WEBHOOK_URL, if set, also gets a
+  |     best-effort (non-blocking) copy of the payload for internal
+  |     notification purposes only.
+  |     Applicant clicks through -> finishes the form on Google's own
+  |     page (required photo/ID/CV uploads, DOB, consent, signature) ->
+  |     Google Forms writes the row to that form's own linked Sheet.
   |
-  v
-Zoho Flow  <-- REQUIRES EXTERNAL CONFIGURATION, see below
-  |
-  v
-Google Apps Script Web App (scripts/google-apps-script/)
-  |
-  |-- verifies the same HMAC signature
-  |-- durable duplicate check (CacheService, 6h TTL)
-  |-- looks up the track in FORM_CONFIG
-  |
-  +-- apprenticeship        -> Apprenticeship Google Form   -> its Google Sheet
-  +-- industrial-training   -> Industrial Training Google Form -> its Google Sheet
-  +-- internship            -> Internship Google Form       -> its Google Sheet
-  +-- job-openings          -> (no form - acknowledged only, stays in the
-  |                             on-site pipeline / a future applicant DB)
-  +-- nysc-placement        -> (no form, client-confirmed "use the Job
-  |                             Openings [treatment] for now" - see
-  |                             "NYSC Placement routing" below)
-  +-- anything else (unexpected track) -> logged, acknowledged, NOT
-                                           silently discarded
+  +-- job-openings / nysc-placement (no Google Form):
+        forwarded to CAREERS_WEBHOOK_URL (required for this path -
+        signed, retried on 5xx) for whatever downstream handling the
+        client wants (a tracking Sheet, Zoho CRM, email, etc.)
 ```
 
-### Why Google Apps Script instead of Zoho Flow branching directly into 3 Google Forms
+### Why a pre-filled link, not Zoho Flow -> Apps Script -> auto-submit
 
-Two viable designs exist. This pipeline uses Apps Script as the routing
-layer for one concrete reason: **Google Forms has no documented public API
-for submitting a response by field name from outside Apps Script.** The
-only reliable way to programmatically submit into a Google Form is
-`FormApp` from inside Apps Script, running under an account with edit
-access to that form. Zoho Flow's own Google Forms connector (where it
-exists) has the same constraint under the hood.
+The original design (documented in earlier revisions of this file) routed
+every application through Zoho Flow to a Google Apps Script Web App,
+which used `FormApp` to auto-submit a `FormResponse` into the matching
+Google Form. That design was abandoned after actually inspecting the 3
+real forms with `listFormItems()` (see `scripts/google-apps-script/`):
+each one is a full 40-50 question application with several **required
+file-upload questions** (passport photo, means of ID, CV, certificates).
 
-This also means Zoho Flow's own job stays simple: **one webhook trigger,
-one HTTP action** (POST the payload to the Apps Script Web App URL). No
-branching logic needs to live in Zoho Flow at all - Apps Script's
-`FORM_CONFIG` already knows how to route by `trackSlug`. If you'd rather
-have Zoho Flow branch explicitly (matching a literal reading of "Zoho Flow
-Router" in the original brief), that's also possible: give Zoho Flow 3+1
-IF branches on `trackSlug` and point each at a *different* Apps Script Web
-App deployment (or the same one - it doesn't care), but there's no
-functional benefit to doing it that way, and it's more Zoho Flow steps to
-maintain.
+Two hard constraints rule out auto-submission entirely:
 
-**You can also skip Zoho Flow entirely** for this specific pipeline and
-point `CAREERS_WEBHOOK_URL` directly at the Apps Script Web App URL. The
-only reason to keep Zoho Flow in the middle is the future integration the
-original brief asked for (Zoho CRM, Zoho Recruit, Zoho People, Zoho Cliq
-notifications) - Zoho Flow is the natural place to fan out to those later
-without touching the website or the Apps Script code again.
+1. **Apps Script's Forms API has no method to submit a file-upload answer
+   at all.** This isn't a workaround-able bug - Google doesn't expose one.
+2. **`FormResponse.submit()` throws if any required question is
+   unanswered**, and these forms have many required fields (DOB, state of
+   origin, consent checkboxes, signature) the website's short "Apply Now"
+   form never collects.
+
+So auto-submission would have failed on every real application. Instead,
+the website builds a **Google Forms pre-filled link** - a native Google
+feature (`?entry.<itemId>=value` query params on the public `viewform`
+URL) - with the fields it already collected (name, email, phone, and an
+institution/course field where a form has an unambiguous match) filled
+in, and hands the applicant that link to finish the rest themselves. No
+Apps Script submission step is needed for these 3 tracks at all; the
+form's own linked Sheet remains the record, exactly as if the applicant
+had opened the form directly - they just arrive with several fields
+already done.
+
+The Apps Script Web App still exists (`careerApplicationRouter.gs`), but
+its role changed: it's now an **optional, best-effort notification
+endpoint** (useful if the client later wants it to log to an internal
+tracking Sheet or trigger a Zoho step) rather than the actual delivery
+mechanism. It is **not required** for the 3 Google Form tracks to work.
+Zoho Flow is not used in this design at all - it added no value once
+Apps Script's job stopped being "submit into the form."
 
 ### NYSC Placement routing
 
@@ -118,10 +120,13 @@ later wants it pointed at a specific form.
 See `.env.example` for the complete list with descriptions. The ones this
 specific pipeline uses:
 
-- `CAREERS_WEBHOOK_URL` - Zoho Flow's webhook trigger URL, or the Apps
-  Script Web App URL directly. **Required** for applications to go
-  anywhere; without it the form tells the applicant it isn't connected yet
-  and nothing is lost.
+- `CAREERS_WEBHOOK_URL` - the Apps Script Web App URL (optional
+  notification endpoint). **Required only** for `job-openings` and
+  `nysc-placement` (no Google Form - it's their only delivery path);
+  without it those two tracks tell the applicant it isn't connected yet
+  and nothing is lost. For `apprenticeship`/`industrial-training`/
+  `internship` it's optional and best-effort - the pre-filled Google Form
+  link is generated and returned regardless of whether this is set.
 - `CAREERS_WEBHOOK_SECRET` - shared HMAC-SHA256 signing secret. Must match
   the `CAREERS_WEBHOOK_SECRET` Script Property set in the Apps Script
   project (see below) exactly. Optional but strongly recommended.
@@ -156,31 +161,36 @@ Internship form (both in the now-removed, entirely unused
 read that field), but it would have misrouted every application once an
 automation was wired up to it.
 
-### Field mapping - REQUIRES EXTERNAL CONFIGURATION
+### Field mapping - DONE, via `listFormItems()`
 
 Per the brief this pipeline follows: **do not guess Google Form field
 (entry) IDs from the public viewform URL** - there is no reliable public
-contract for them. `scripts/google-apps-script/formConfig.gs` ships with
-`REPLACE_ME_*` placeholders instead of invented IDs.
+contract for them. `listFormItems()` was actually run against all 3 live
+forms (client-confirmed ownership, authorized under `kellelectricals@gmail.com`)
+and its real output is what populates `src/content/careerFormRouting.ts`'s
+`prefillEntryIds` maps.
 
-To fill them in:
+Each of the 3 forms turned out to be a full 40-50 question application
+(see "Why a pre-filled link" above) - only fields with a real,
+unambiguous matching question were mapped:
 
-1. Open the Apps Script project (see Deployment below) and run
-   `listFormItems()` (in `listFormItems.gs`).
-2. Check **View > Logs** (or **Executions**). For each of the 3 forms it
-   prints every question's title, type, and item ID.
-3. Copy the real IDs into `formConfig.gs`'s `fields` object for the
-   matching form, matching each question to `reference`, `fullName`,
-   `email`, `phone`, `institution` (courseOrInstitution), `message`.
-4. If a form doesn't ask one of these questions, leave that key out of its
-   `fields` object entirely (the router skips fields with no mapping - see
-   `careerApplicationRouter.gs`'s `submitToForm_()`).
+| Track | `fullName` | `email` | `phone` | `institution` |
+|---|---|---|---|---|
+| `apprenticeship` | ✓ ("Full Name") | ✓ ("Email Address") | ✓ ("Phone Number") | *(no matching question on this form)* |
+| `industrial-training` | ✓ ("Full Name") | ✓ ("Email Address") | ✓ ("Phone Number") | ✓ ("Institution Name", Education & Training section - **note**: this form has two differently-scoped "Institution Name" questions; confirm with the client this is the intended one) |
+| `internship` | ✓ ("Full Legal Name") | ✓ ("Email") | ✓ ("Phone number") | ✓ ("Most Recent Institution Attended") |
 
-**Recommendation**: if none of the 3 forms currently has a question for
-the application reference, add one ("Application Reference" - a short
-text question) to each form before finishing this setup. It's the
-easiest way to cross-reference a Google Sheet row back to a specific
-website submission, and it costs nothing to add.
+`reference` and `message` are **deliberately not mapped anywhere** - none
+of the 3 forms has a generic freeform note or an application-reference
+question, and guessing a wrong mapping would silently overwrite an
+applicant's real answer to a differently-worded required question
+instead. The reference number is still shown to the applicant on the
+site's own `/careers/thank-you` page for their own records.
+
+`scripts/google-apps-script/formConfig.gs` still carries `REPLACE_ME_*`
+placeholders in its `fields` object - that file is now unused by the live
+pipeline (see "Why a pre-filled link" above) and kept only as a record of
+the form URLs / item IDs discovered. It is safe to leave as-is.
 
 ## Google Sheets
 
@@ -212,37 +222,54 @@ populated either by a Zoho Flow step (write a row on every webhook
 delivery, regardless of track) or by extending `careerApplicationRouter.gs`
 to also append a row via `SpreadsheetApp`.
 
-## Google Apps Script setup (REQUIRES EXTERNAL CONFIGURATION)
+## Google Apps Script setup (DEPLOYED - client-confirmed working)
 
-The code is written and ready in `scripts/google-apps-script/`:
+The code lives in `scripts/google-apps-script/`:
 
-- `formConfig.gs` - the routing table (form URLs + field ID placeholders).
-- `listFormItems.gs` - the admin inspector utility.
-- `careerApplicationRouter.gs` - the `doPost` handler that does the actual
-  routing, signing verification, and duplicate protection.
+- `formConfig.gs` - the form URLs + field ID reference table. No longer
+  used by `doPost` (see "Why a pre-filled link" above) - kept as a record
+  of what `listFormItems()` found.
+- `listFormItems.gs` - the admin inspector utility. Already run
+  successfully against all 3 live forms.
+- `careerApplicationRouter.gs` - the `doPost` handler: verifies the HMAC
+  signature, durable duplicate check, logs/acknowledges. Optional
+  notification endpoint only - see architecture section above.
 
-None of this has been deployed - deploying it requires a Google account
-with edit access to the 3 forms, which this session does not have. To
-deploy:
+Deployed by the client under `kellelectricals@gmail.com` (confirmed owner
+of all 3 Google Forms). To redeploy after editing the code:
 
-1. Go to [script.google.com](https://script.google.com), create a new
-   project.
-2. Create 3 files matching the names above and paste in each file's
-   contents.
-3. **Project Settings (gear icon) > Script Properties > Add script
-   property**: name `CAREERS_WEBHOOK_SECRET`, value = the exact same
-   string as the website's `CAREERS_WEBHOOK_SECRET` env var. This is how
-   the secret gets into the script without ever being hardcoded.
-4. Run `listFormItems()` once (see "Field mapping" above), fill in the
-   real item IDs in `formConfig.gs`.
-5. **Deploy > New deployment > Select type: Web app.** Execute as
-   **Me**, Who has access **Anyone**. Deploy, copy the Web App URL.
-6. Set the website's `CAREERS_WEBHOOK_URL` to that URL directly, **or**
-   configure Zoho Flow to call it (see below) and point
-   `CAREERS_WEBHOOK_URL` at Zoho Flow's own webhook trigger URL instead.
-7. Every time you edit the script after the first deploy, use **Deploy >
-   Manage deployments > edit (pencil icon) > New version** - editing the
-   code alone does not update the live Web App URL's behavior.
+1. Go to [script.google.com](https://script.google.com), open the "Kell
+   Careers Router" project.
+2. Paste updated file contents into the matching `.gs` file, save.
+3. **Deploy > Manage deployments > edit (pencil icon) > New version** -
+   editing the code alone does not update the live Web App URL's
+   behavior; a new version must be deployed.
+
+One-time setup (already done):
+
+- **Project Settings (gear icon) > Script Properties > Add script
+  property**: name `CAREERS_WEBHOOK_SECRET`, value = the exact same
+  string as the website's `CAREERS_WEBHOOK_SECRET` env var.
+- **Deploy > New deployment > Select type: Web app.** Execute as **Me**,
+  Who has access **Anyone**.
+- Set the website's `CAREERS_WEBHOOK_URL` (Vercel, Production
+  environment) to the resulting Web App URL.
+
+### A real setup issue hit and fixed this round
+
+`FormApp.openByUrl()` only reliably resolves a form's **editor URL**
+(`docs.google.com/forms/d/{fileId}/edit`), not the **published/response
+URL** (`docs.google.com/forms/d/e/{publishedId}/viewform`) - these are two
+different IDs for the same form. Using the published URL (which is what
+the client originally supplied, and what `careerFormRouting.ts` still
+uses as the base for pre-filled links, since that part is correct) made
+`listFormItems()` fail with a misleading "no item with the given ID...
+you do not have permission" error even though the account genuinely owned
+the forms and had full Forms API authorization. Fixed by switching
+`formConfig.gs`'s `formUrl` values to the editor URL for the
+`listFormItems()` run only - `careerFormRouting.ts` (the website side,
+used to build pre-filled links) correctly keeps the published `viewform`
+URL, since that's the one applicants are meant to actually open.
 
 ### A known Apps Script limitation
 
@@ -253,36 +280,25 @@ in the JSON body's `ok` field instead. Whoever configures Zoho Flow's
 error-handling branch on this step needs to check the response body, not
 the HTTP status.
 
-## Zoho Flow configuration (REQUIRES EXTERNAL CONFIGURATION)
+## Zoho Flow - not used in this design
 
-No Zoho Flow access exists in this environment - this section is a
-configuration guide, not something built or verified here.
+Earlier revisions of this pipeline routed through Zoho Flow as a
+pass-through step between the website and Apps Script. That's no longer
+part of the design (see "Why a pre-filled link, not Zoho Flow -> Apps
+Script -> auto-submit" above) - once Apps Script's job stopped being "submit
+into the form," Zoho Flow added a hop with no function. `CAREERS_WEBHOOK_URL`
+points directly at the Apps Script Web App URL.
 
-**Recommended design** (simplest, matches "Zoho Flow should have ONE
-incoming webhook" from the brief):
+If the client later wants a Zoho CRM/Recruit/People/Cliq/Mail integration
+(the original brief's future-integration ask), Zoho Flow is still the
+natural place to add it - point `CAREERS_WEBHOOK_URL` at a Zoho Flow
+webhook trigger instead, with one HTTP action forwarding to the Apps
+Script Web App URL exactly as before, plus whatever Zoho actions are
+wanted alongside it. Nothing about `careerFormRouting.ts` or the pre-fill
+mechanism needs to change for that - only where `CAREERS_WEBHOOK_URL`
+points.
 
-```
-TRIGGER: Webhook (Zoho Flow generates a URL - set this as the website's
-         CAREERS_WEBHOOK_URL)
-  |
-ACTION: HTTP request (POST) -> the Apps Script Web App URL from step 5
-        above. Forward the request body as-is; forward the
-        x-webhook-signature header if Zoho Flow's HTTP action supports
-        custom headers (if it doesn't, see "Signature verification"
-        below for the fallback).
-  |
-(optional, for future Zoho integration - not required for Google Forms
- to work) ACTION: Zoho CRM / Zoho Recruit / Zoho People / Zoho Cliq /
- Zoho Mail actions, using the same webhook payload's fields.
-```
-
-If Zoho Flow's HTTP action **cannot** forward a custom header, the
-payload's JSON body can carry the signature instead - the field name
-`__signature` is already handled as a fallback in
-`careerApplicationRouter.gs`'s signature check (see that file). Include it
-as an extra top-level field if you go this route.
-
-### Payload fields Zoho Flow (and anything downstream of it) will see
+### Payload fields the (optional) webhook receiver sees
 
 ```json
 {
@@ -312,13 +328,17 @@ they're validated and discarded server-side before this payload is built.
 
 ### Applicant confirmation email + internal notification
 
-Recommended: use **Zoho Flow's own email action**, not new website
-infrastructure. No email-sending service (Resend, SendGrid, etc.) exists
-anywhere in this codebase, and introducing one is a real infrastructure
-decision (a new paid account, new secrets) that shouldn't be made
-silently on the client's behalf. Zoho Flow already sits in this pipeline
-and can send email natively as a flow step - zero new code, zero new
-services.
+For `apprenticeship`/`industrial-training`/`internship`, the applicant's
+confirmation of receipt is effectively Google Forms' own built-in
+submission confirmation once they finish the form - no extra email is
+strictly needed. For `job-openings`/`nysc-placement` (and if the client
+wants a confirmation email for the other 3 tracks too, sent immediately
+on the website step rather than waiting for form completion),
+recommended: wire `CAREERS_WEBHOOK_URL` through **Zoho Flow** and use its
+own email action, not new website infrastructure. No email-sending
+service (Resend, SendGrid, etc.) exists anywhere in this codebase, and
+introducing one is a real infrastructure decision (a new paid account,
+new secrets) that shouldn't be made silently on the client's behalf.
 
 **Applicant confirmation** - subject and body to configure in Zoho Flow's
 email action, using the webhook payload's fields:
@@ -381,11 +401,14 @@ the team:
      + phone. Resets on cold start, not shared across serverless
      instances - stops a double-click or an impatient retry from one warm
      instance.
-  2. Apps Script-side (`careerApplicationRouter.gs`): `CacheService`
-     keyed on the application `reference`, 6-hour TTL - durable across
-     executions, catches Zoho Flow retries and network-level duplicate
-     deliveries. This is the layer that actually matters for correctness;
-     the website-side one is a UX nicety for the common case.
+  2. Apps Script-side (`careerApplicationRouter.gs`, if
+     `CAREERS_WEBHOOK_URL` is set): `CacheService` keyed on the
+     application `reference`, 6-hour TTL - durable across executions,
+     catches network-level duplicate deliveries to that optional
+     notification endpoint. For `apprenticeship`/`industrial-training`/
+     `internship`, the real duplicate-prevention boundary is Google
+     Forms itself (nothing stops an applicant from submitting the
+     pre-filled form twice, same as any public Google Form).
 - **Origin allowlist**: optional, off by default (`CAREERS_ALLOWED_ORIGINS`
   unset = no enforcement, unchanged from before this round).
 - **Payload size limit**: requests with a `Content-Length` over 20KB are
@@ -413,52 +436,53 @@ the team:
 | Honeypot filled -> 200 `{ ok: true }`, nothing forwarded | **PASS** |
 | Malformed JSON body -> 400 `invalid_json` | **PASS** |
 | Oversized payload (`Content-Length` > 20KB) -> 413 `payload_too_large` | **PASS** |
-| `CAREERS_WEBHOOK_URL` unset -> 503 `not_configured`, form shows the "email/call us instead" fallback | **PASS** |
+| `CAREERS_WEBHOOK_URL` unset -> `job-openings`/`nysc-placement` return 503 `not_configured`; `apprenticeship`/`industrial-training`/`internship` still succeed with a `redirectUrl` (webhook is optional on that path) | **PASS** |
 | Rate limit (6th request in 10 minutes from one IP) -> 429 `rate_limited` | **PASS** |
-| **Successful forward** (mock webhook receiver on `127.0.0.1:4000`) -> `{ ok: true, reference }`, receiver got a JSON body matching the documented shape exactly, with the honeypot field, raw hCaptcha token, and `renderedAt` all absent | **PASS** - actually observed, not assumed |
+| **Successful forward, `job-openings` track** (mock webhook receiver on `127.0.0.1:4000`) -> `{ ok: true, reference }`, receiver got a JSON body matching the documented shape exactly, with the honeypot field, raw hCaptcha token, and `renderedAt` all absent | **PASS** - actually observed, not assumed |
 | **Webhook signature correctness** - manually recomputed `HMAC-SHA256(body, secret)` in a separate `node -e` process and compared byte-for-byte against the `x-webhook-signature` header the route sent | **PASS** - exact match |
 | **Duplicate detection** - same track+email+phone submitted twice within 2 minutes -> first call forwarded and got a reference, second call returned `{ ok: true, duplicate: true, reference: <same reference as the first> }` and the mock receiver's log confirms only ONE webhook delivery occurred | **PASS** - actually observed, not assumed |
-| `job-openings` track -> forwards correctly with `roleAppliedFor` populated, same payload shape | **PASS** |
+| **`buildPrefillUrl()` output** for all 3 Google Form tracks, given real `fullName`/`email`/`phone`/`courseOrInstitution` values -> URL contains the exact `entry.<itemId>` params from the live `listFormItems()` run (see "Field mapping" table above), correctly URL-encoded | **PASS** - checked against the actual logged item IDs |
+| `listFormItems()` run against all 3 live Google Forms (client-run, in the Apps Script editor, under `kellelectricals@gmail.com`) | **PASS** - real item IDs obtained, now in `careerFormRouting.ts` |
+| Apps Script `doPost` deployed as a Web App, URL confirmed reachable | **PASS** - client-provided deployment URL |
 
-Exact commands are in the "Reproducing these tests" section below.
+Exact commands for the website-side tests are in "Reproducing the
+website-side tests" below.
 
-### What could NOT be tested (no external access)
+### What could NOT be tested from this session
 
-- Actual delivery to a real Zoho Flow webhook (no Zoho Flow instance
-  connected to this session).
-- Actual submission into any of the 3 Google Forms via
-  `careerApplicationRouter.gs` (Apps Script isn't deployed - see Status
-  table).
-- Signature verification round-trip against a live Apps Script deployment.
+- An applicant actually opening a pre-filled link and completing the rest
+  of a real Google Form end-to-end (no browser session as an applicant
+  was run from here - the client should do one real test submission per
+  track before announcing the pipeline live).
+- The Apps Script webhook (`careerApplicationRouter.gs`) receiving a real
+  POST from the live website in production (only the website's own
+  best-effort `fetch()` call and its error handling were exercised
+  locally against a mock receiver).
 - hCaptcha and hCaptcha-failure paths (no real site/secret key pair
   configured in this environment).
 
-### Full manual test plan (for whoever deploys the Apps Script + Zoho Flow)
+### Full manual test plan (client-run, one pass before announcing live)
 
-Once both are live, verify each track end-to-end:
-
-1. **Apprenticeship** - submit with `trackSlug=apprenticeship`. Expect:
-   website returns a `KE-APP-...` reference -> Zoho Flow receives the
-   webhook -> Apps Script logs a successful submission -> a new row
-   appears in the Apprenticeship form's linked Google Sheet, with the
-   reference visible in whichever column it was mapped to.
-2. **Industrial Training** - same, `trackSlug=industrial-training`,
-   check the Industrial Training sheet.
-3. **Internship** - same, `trackSlug=internship`, check the **Internship**
-   sheet specifically (previously this track's data would have gone to
-   the Industrial Training sheet under the old, now-removed mapping -
-   confirm that's no longer happening).
-4. **Job Openings** - submit with `trackSlug=job-openings`. Expect: no
-   Google Form submission occurs (there isn't one for this track) - the
-   Apps Script logs "acknowledging without a form submission" and returns
-   `routed: false`.
-5. Negative cases from the brief not already covered by the automated
-   table above: CAPTCHA failure (needs real hCaptcha keys), Zoho Flow
-   unavailable (temporarily disable the Zoho Flow trigger and confirm the
-   website's retry-then-502 behavior), Google Apps Script unavailable
-   (point `CAREERS_WEBHOOK_URL` at a URL that 404s and confirm the same),
-   invalid webhook signature (send a request to the Apps Script URL
-   directly with a wrong signature and confirm 401 `invalid_signature`).
+1. **Apprenticeship / Industrial Training / Internship** - submit the
+   on-site form for each track. Expect: website redirects to
+   `/careers/thank-you` showing a "Continue to the application form" CTA
+   -> clicking it opens the real Google Form with Full Name/Email/Phone
+   (and Institution, where mapped) already filled in -> complete the
+   remaining required fields (photo, DOB, consent, signature, etc.) and
+   submit -> confirm a new row appears in that form's own linked Google
+   Sheet.
+2. **Job Openings / NYSC Placement** - submit with `trackSlug=job-openings`
+   or `nysc-placement`. Expect: no Google Form redirect (there isn't one
+   for these tracks) - if `CAREERS_WEBHOOK_URL` is set, confirm the
+   configured downstream (tracking Sheet, Zoho CRM, etc.) received it;
+   if unset, confirm the applicant sees the "email/call us instead"
+   fallback rather than a silent failure.
+3. Negative cases: CAPTCHA failure (needs real hCaptcha keys), Apps
+   Script webhook unavailable for `job-openings`/`nysc-placement` (point
+   `CAREERS_WEBHOOK_URL` at a URL that 404s, confirm the retry-then-502
+   behavior), invalid webhook signature (send a request to the Apps
+   Script URL directly with a wrong signature and confirm 401
+   `invalid_signature`).
 
 ### Reproducing the website-side tests locally
 
@@ -488,33 +512,47 @@ curl -s -X POST http://localhost:3999/api/careers-application \
    content only - see that file's own header comment on the no-invent
    policy).
 2. If it needs a Google Form destination, add an entry to
-   `src/content/careerFormRouting.ts` (website side) **and**
-   `scripts/google-apps-script/formConfig.gs` (Apps Script side) with the
-   real form URL - never guess one.
-3. Run `listFormItems()` again to get that form's real field IDs, fill
-   them into `formConfig.gs`.
+   `src/content/careerFormRouting.ts` with the real, live `googleFormUrl`
+   (the public `viewform` link - never guess one) and a `prefillEntryIds`
+   map.
+3. To get that form's real field IDs: temporarily add its editor URL
+   (`docs.google.com/forms/d/{fileId}/edit` - **not** the `viewform`
+   link, see "A real setup issue hit and fixed this round" above) to
+   `formConfig.gs`'s `FORM_CONFIG` and run `listFormItems()` again in the
+   Apps Script editor. Map only fields with a real, unambiguous matching
+   question - leave a field out entirely rather than guessing (see
+   "Field mapping" above for why `reference`/`message` are skipped on all
+   3 existing forms).
 4. If it should route to something other than a Google Form (e.g.
-   straight into Zoho CRM/Recruit), that's a Zoho Flow-side branch on
-   `trackSlug` - no website or Apps Script change needed, since the full
-   payload already reaches Zoho Flow regardless of where Apps Script
-   routes it.
+   straight into Zoho CRM/Recruit), set `googleFormUrl: null` for it in
+   `careerFormRouting.ts` and forward it via `CAREERS_WEBHOOK_URL` -
+   same treatment as `job-openings`/`nysc-placement`.
 5. No code change is needed to the API route itself
    (`src/app/api/careers-application/route.ts`) - it already reads the
-   track dynamically from `careers.ts` and doesn't hardcode any track
-   name.
+   track dynamically from `careers.ts` and routes dynamically from
+   `careerFormRouting.ts`, no track name is hardcoded.
 
 ## Troubleshooting
 
-- **"Online submission isn't connected yet" shown to applicants** -
-  `CAREERS_WEBHOOK_URL` is unset in the current environment (Vercel:
-  check Production specifically, not just Preview/Development).
-- **Applications arrive at Zoho Flow but never reach a Google Form** -
-  check the Apps Script project's **Executions** log for the specific
-  invocation. Common causes: `formConfig.gs` still has `REPLACE_ME_*`
-  placeholders (nothing gets submitted for that field, but this alone
-  won't stop the response from being created - check the log for "Skipping
-  unconfigured field" lines to see which ones), or the Web App wasn't
-  redeployed as a **new version** after the last code edit.
+- **"Online submission isn't connected yet" shown to applicants on
+  job-openings/nysc-placement** - `CAREERS_WEBHOOK_URL` is unset in the
+  current environment (Vercel: check Production specifically, not just
+  Preview/Development). This should never happen on
+  apprenticeship/industrial-training/internship, since those don't
+  require `CAREERS_WEBHOOK_URL` at all.
+- **Pre-filled Google Form link opens but a field is blank that should be
+  filled** - check `careerFormRouting.ts`'s `prefillEntryIds` for that
+  track; either the field genuinely has no match on that specific form
+  (see the "Field mapping" table above), or the applicant left it empty
+  on the website's own form.
+- **`FormApp.openByUrl()` fails with "No item with the given ID could be
+  found... you do not have permission"** when running `listFormItems()`
+  - almost always means the URL in `formConfig.gs` is the published
+  `/d/e/{id}/viewform` link rather than the editor `/d/{id}/edit` link;
+  see "A real setup issue hit and fixed this round" above. Confirm with
+  `Session.getEffectiveUser().getEmail()` that the script is actually
+  running as an account with edit access to the form (Forms sharing, not
+  just Drive-level sharing).
 - **401 `invalid_signature` from the Apps Script URL** - the
   `CAREERS_WEBHOOK_SECRET` Script Property doesn't match the website's env
   var exactly (whitespace, wrong environment). If intentionally testing
@@ -523,4 +561,4 @@ curl -s -X POST http://localhost:3999/api/careers-application \
 - **A track's applications aren't in the sheet you expect** - see
   "Google Forms" above; confirm you're checking the sheet for the correct
   `trackSlug`, since this exact confusion (Internship vs Industrial
-  Training) is the bug this round fixed.
+  Training) is the bug an earlier round of this pipeline fixed.

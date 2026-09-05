@@ -16,11 +16,12 @@ export const metadata: Metadata = pageMetadata({
   noIndex: true,
 })
 
-export default function ThankYouPage({
-  searchParams,
-}: {
-  searchParams: { urgency?: string; ref?: string }
-}) {
+export default async function ThankYouPage(
+  props: {
+    searchParams: Promise<{ urgency?: string; ref?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
   const isEmergency = searchParams.urgency === 'emergency'
   // Only accept a reference that matches our own generated format
   // (KE-YYYY-XXXXXX) — this is a display value, not a security boundary,

@@ -12,13 +12,14 @@ import { articleSchema, breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
 
-type Props = { params: { slug: string } }
+type Props = { params: Promise<{ slug: string }> }
 
 export function generateStaticParams() {
   return articles.map((article) => ({ slug: article.slug }))
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const article = getArticleBySlug(params.slug)
   if (!article) return {}
   return pageMetadata({
@@ -29,7 +30,8 @@ export function generateMetadata({ params }: Props): Metadata {
   })
 }
 
-export default function ArticleDetailPage({ params }: Props) {
+export default async function ArticleDetailPage(props: Props) {
+  const params = await props.params;
   const article = getArticleBySlug(params.slug)
   if (!article) notFound()
 

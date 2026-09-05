@@ -344,7 +344,7 @@ function Field({
 }: {
   label: string
   error?: string
-  children: React.ReactElement
+  children: React.ReactElement<any>
 }) {
   const errorId = `${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-error`
   return (

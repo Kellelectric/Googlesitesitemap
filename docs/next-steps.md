@@ -1118,13 +1118,47 @@ facts from it are now wired into the codebase:
 
 ## Dependency note
 
-Shipped on Next.js 14.2.35 (latest patched 14.x) rather than the newer
-Next 16 major. `npm audit` flags several CVEs in the 14.x→16.3.0 range, but
-they concern Middleware, Server Actions, and custom Image Optimization
-`remotePatterns` — none of which this build currently uses (no middleware,
-no server actions, no `next/image` remote patterns configured). Re-evaluate
-before adding any of those features, or when scheduling a Next 15/16
-upgrade.
+**Upgraded to Next.js 16.3.4 / React 19.2.8 (this round), per client
+request.** Previously shipped on 14.2.35 with the CVEs in the 14.x→16.3.0
+range deliberately deferred (they concerned Middleware/Server
+Actions/custom Image `remotePatterns`, none of which this build used) -
+now resolved by the upgrade itself rather than staying deferred.
+
+Done via the official `npx @next/codemod@canary upgrade latest`, which:
+- Bumped `next`/`eslint-config-next` to 16.3.4, `react`/`react-dom` to
+  19.2.8, `@types/react(-dom)` to match.
+- Migrated every dynamic route's `params`/`searchParams` to the
+  Next 15+ async-Promise API (`await props.params`) - applied uniformly
+  across all `/[slug]`/`/[area]` pages, `generateMetadata`, and
+  `generateStaticParams` call sites.
+- Migrated `next lint` to a flat-config `eslint.config.mjs` (old
+  `.eslintrc.json` removed, now dead).
+- Applied the React 19 codemod recipe (no `ReactDOM.render`/string refs/
+  `useFormState` existed to migrate; one real fix - `Field`'s
+  `children: React.ReactElement` widened to `React.ReactElement<any>` in
+  `CareerApplicationForm.tsx`/`QuoteForm.tsx`, since React 19's tightened
+  `cloneElement` generics need an explicit prop type for the
+  aria-attribute injection those components do).
+
+Two manual fixes after the codemod:
+- Removed a speculative `export const instant = false` (+ TODO comment)
+  the codemod added to every page for a "Cache Components" experimental
+  feature this project doesn't opt into (`next.config.js` has no
+  `experimental.cacheComponents` flag) - it was actually a hard type
+  error without that flag enabled, not a working opt-out.
+- Pinned `eslint` to `^9.39.5` (down from the auto-installed 10.10.0) -
+  `eslint-config-next`'s own transitive plugins (`eslint-plugin-import`/
+  `jsx-a11y`/`react`) only support ESLint up to v9, and v10 crashed with
+  `scopeManager.addGlobals is not a function` on every file.
+
+Verified: `npx tsc --noEmit`, `npx eslint .`, `npm run build` (Turbopack,
+Next 16's default) all clean; `scripts/audit-seo.mjs` against a local
+production server - 96 pages, 0 metadata issues, 0 broken links; `/api/chat`,
+`/api/quote`, `/api/careers-application` smoke-tested for graceful
+degradation; `npm audit` - 0 vulnerabilities (also bumped `postcss` to
+8.5.28 to clear an unrelated build-time-only XSS/path-traversal advisory).
+Not yet done: a real click-through of the deployed site by a human (this
+session verified via `curl`/`tsc`/build tooling, not a browser).
 
 ## Testing before launch
 

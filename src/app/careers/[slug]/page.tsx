@@ -12,13 +12,14 @@ import { breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-type Props = { params: { slug: string } }
+type Props = { params: Promise<{ slug: string }> }
 
 export function generateStaticParams() {
   return careerTracks.map((track) => ({ slug: track.slug }))
 }
 
-export function generateMetadata({ params }: Props): Metadata {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const track = getCareerTrackBySlug(params.slug)
   if (!track) return {}
   return pageMetadata({
@@ -29,7 +30,8 @@ export function generateMetadata({ params }: Props): Metadata {
   })
 }
 
-export default function CareerTrackPage({ params }: Props) {
+export default async function CareerTrackPage(props: Props) {
+  const params = await props.params;
   const track = getCareerTrackBySlug(params.slug)
   if (!track) notFound()
 

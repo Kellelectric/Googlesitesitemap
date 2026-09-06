@@ -9,6 +9,7 @@ import { getAreaBySlug, areas } from '@/content/areas'
 import { services, categoryLabels } from '@/content/services'
 import { company } from '@/content/company'
 import { faqCategories } from '@/content/faqs'
+import { getResidentialTier, residentialPricing } from '@/content/inspectionPricing'
 import { breadcrumbSchema, localServiceSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
@@ -144,6 +145,49 @@ export default async function AreaPage(props: Props) {
               </MotionDiv>
             ))}
           </StaggerGroup>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">Residential inspection pricing</span>
+            <h2 className="mt-3 max-w-2xl text-2xl font-semibold text-ink md:text-3xl">
+              What a residential inspection costs in {area.name}
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink/70">
+              {getResidentialTier(area.slug) === 'near' ? (
+                <>
+                  {area.name} falls within our near-tier coverage area, so a
+                  standard residential inspection is a flat{' '}
+                  <strong className="text-ink">
+                    ₦{residentialPricing.near.withoutReport.toLocaleString('en-NG')}
+                  </strong>{' '}
+                  (or{' '}
+                  <strong className="text-ink">
+                    ₦{residentialPricing.near.withReport.toLocaleString('en-NG')}
+                  </strong>{' '}
+                  with a custom written report) — no distance surcharge.
+                </>
+              ) : (
+                <>
+                  {area.name} falls within our far-tier coverage area, so a
+                  standard residential inspection runs{' '}
+                  <strong className="text-ink">
+                    ₦{residentialPricing.far.min.toLocaleString('en-NG')} - ₦
+                    {residentialPricing.far.max.toLocaleString('en-NG')}
+                  </strong>
+                  , reflecting the extra distance from our base.
+                </>
+              )}{' '}
+              Commercial, industrial, and full electrical audit pricing is the
+              same across all of Abuja, regardless of area - see{' '}
+              <Link href="/book-appointment" className="link-underline font-semibold">
+                Book an Appointment
+              </Link>{' '}
+              for the full breakdown and to schedule one for {area.name}.
+            </p>
+          </Reveal>
         </div>
       </section>
 

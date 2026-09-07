@@ -69,6 +69,26 @@ const nextConfig = {
         destination: 'https://kellelectricals.com/:path*',
         permanent: true,
       },
+      // Same consolidation, for Vercel's own auto-generated project domain.
+      // googlesitesitemap.vercel.app serves the identical production build
+      // (it's the bare project alias, not a password/SSO-gated preview -
+      // those are already inaccessible without a Vercel login) and, unlike
+      // the preview aliases, has been publicly crawlable since the project
+      // was first created — well before kellelectricals.com was attached
+      // and confirmed as primary. Google's Search Console flagged exactly
+      // this: it started treating this URL as the canonical for the
+      // homepage, /contact, and /testimonials instead of the declared
+      // kellelectricals.com canonical, despite this domain's own <link
+      // rel="canonical"> tag already correctly pointing at
+      // kellelectricals.com. A redirect removes the duplicate outright
+      // instead of relying on Google to honor a canonical tag it has
+      // already shown it will override.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'googlesitesitemap.vercel.app' }],
+        destination: 'https://kellelectricals.com/:path*',
+        permanent: true,
+      },
     ]
   },
 }

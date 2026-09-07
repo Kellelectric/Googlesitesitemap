@@ -46,7 +46,18 @@ const nextConfig = {
       // Legacy Google Sites paths (from the old sitemap9.xml) — preserves
       // any existing SEO equity once kellelectricals.com points here.
       // /about, /services, /contact, and /testimonials already match 1:1
-      // on the new site, so only /home needs a redirect.
+      // on the new site, so only /home needs a redirect. Destination is
+      // deliberately relative ('/'), not an absolute URL: Next.js 16
+      // silently collapses a fully static absolute destination targeting
+      // the bare root back down to a relative Location header (confirmed
+      // via a spoofed-Host test locally - the identical absolute-URL
+      // pattern works fine everywhere else in this file because those
+      // destinations use a dynamic `:path*` segment, not a static root).
+      // A relative destination here still reaches the correct canonical
+      // URL - www.kellelectricals.com/home takes one extra hop through
+      // Vercel's own www->non-www edge redirect first, which is a normal,
+      // Google-tolerated short chain, not worth working around with a
+      // fragile absolute-URL trick for a bare root path.
       {
         source: '/home',
         destination: '/',

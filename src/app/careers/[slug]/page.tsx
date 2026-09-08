@@ -26,7 +26,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     title: `${track.name} - Careers`,
     description: track.summary,
     path: `/careers/${track.slug}`,
-    image: '/images/photos/career-detail-hero-vocational-training.jpg',
+    image: '/images/photos/electrician-area-hero-onsite.jpg',
   })
 }
 
@@ -61,13 +61,13 @@ export default async function CareerTrackPage(props: Props) {
 
       <section className="relative overflow-hidden bg-petrol text-paper">
         <Image
-          src="/images/photos/career-detail-hero-vocational-training.jpg"
+          src="/images/photos/electrician-area-hero-onsite.jpg"
           alt=""
           fill
           priority
           quality={60}
           sizes="100vw"
-          className="object-cover object-[50%_30%]"
+          className="object-cover object-[75%_35%]"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />

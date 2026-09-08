@@ -29,6 +29,12 @@ type ApplicationPayload = {
   fullName: string
   email: string
   phone: string
+  // Only required/validated for the abujaOnly tracks (nysc-placement,
+  // industrial-training, apprenticeship) - see careers.ts's `abujaOnly`
+  // field and CareerApplicationForm's own gate, which already blocks a
+  // non-Abuja submission client-side. Re-checked here since a client-side
+  // gate is never a substitute for server-side validation.
+  state?: string
   courseOrInstitution?: string
   roleAppliedFor?: string
   cvLink?: string
@@ -50,6 +56,7 @@ type CareerApplicationWebhookPayload = {
   fullName: string
   email: string
   phone: string
+  state?: string
   courseOrInstitution?: string
   roleAppliedFor?: string
   cvLink?: string
@@ -164,6 +171,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'invalid_payload' }, { status: 422 })
   }
 
+  // Server-side re-check of CareerApplicationForm's own client-side gate -
+  // a client-side check alone can always be bypassed by posting directly
+  // to this endpoint, and this is a real eligibility rule (client
+  // direction: NYSC Placement/Industrial Training/Apprenticeship only
+  // accept applicants currently based in Abuja), not just a UX nicety.
+  if (track.abujaOnly && body.state !== 'FCT (Abuja)') {
+    return NextResponse.json({ ok: false, reason: 'not_abuja' }, { status: 422 })
+  }
+
   // Observability only, never blocking: every current track has a
   // confirmed entry in careerFormRouting.ts (apprenticeship,
   // industrial-training, and internship route to a real Google Form;
@@ -238,6 +254,7 @@ export async function POST(request: NextRequest) {
     fullName: body.fullName,
     email: body.email,
     phone: body.phone,
+    state: body.state,
     courseOrInstitution: body.courseOrInstitution,
     roleAppliedFor: body.roleAppliedFor,
     cvLink: body.cvLink,

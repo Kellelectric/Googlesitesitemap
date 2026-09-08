@@ -47,6 +47,14 @@
 //
 // - `nysc-placement`: real track, content supplied directly by the client.
 //
+// - `abujaOnly`: client direction - NYSC Placement, Industrial Training,
+//   and Apprenticeship only accept applicants currently based in Abuja
+//   (FCT); Internship and Job Openings were not included in this
+//   direction, so they stay open to applicants anywhere. Reflected in
+//   each track's `eligibility` list and enforced on the application form
+//   itself (CareerApplicationForm requires a "current state" selection
+//   and blocks submission for a non-Abuja state on these three tracks).
+//
 // All career tracks are now confirmed real. No placeholder fields remain.
 export type CareerTrack = {
   slug: string
@@ -64,6 +72,12 @@ export type CareerTrack = {
   // True only when duration/fee/etc. below are confirmed real — controls
   // whether the detail page shows the "indicative, unconfirmed" caveat.
   programmeDetailsConfirmed?: boolean
+  // Client direction: NYSC Placement, Industrial Training, and
+  // Apprenticeship only accept applicants currently based in Abuja (FCT) -
+  // applicants from other states aren't accepted for these three tracks.
+  // Drives both the eligibility copy below and CareerApplicationForm's
+  // required "current state" field/gate on /careers/[slug].
+  abujaOnly?: boolean
 }
 
 export const careerTracks: CareerTrack[] = [
@@ -90,6 +104,7 @@ export const careerTracks: CareerTrack[] = [
     duration: 'For the duration of your official NYSC service year, per your posting',
     intake: 'Aligned to NYSC batch call-up and redeployment periods',
     eligibility: [
+      'Currently based in Abuja (FCT) - we\'re unable to accept PPA applications from Corps Members serving or posted outside Abuja',
       'Currently serving NYSC Corps Member seeking a Place of Primary Assignment (PPA), or preparing for an upcoming posting',
       'Willing to learn, professional, punctual, and team-oriented',
       'Comfortable following workplace and safety procedures',
@@ -102,6 +117,7 @@ export const careerTracks: CareerTrack[] = [
       'Short statement on why you’d like to join Kell Electricals',
     ],
     programmeDetailsConfirmed: true,
+    abujaOnly: true,
   },
   {
     slug: 'internship',
@@ -151,6 +167,7 @@ export const careerTracks: CareerTrack[] = [
     stipend: 'A monthly stipend is provided',
     intake: 'Aligned to the academic SIWES calendar (typically two intakes a year)',
     eligibility: [
+      'Currently based in Abuja (FCT) - we\'re unable to accept IT placements from students based outside Abuja',
       'Enrolled in an electrical, electronic, or related engineering programme with an IT/SIWES requirement',
       'Willing to actually learn on-site, not just collect a completion letter',
       'Your institution\'s IT requirements and timeline (indicate on the application form if you need the 3-month track)',
@@ -162,6 +179,7 @@ export const careerTracks: CareerTrack[] = [
       'Application is in two steps: submit the form on this page, then complete the second step via the link on the thank-you page - applications aren\'t considered complete until both are done',
     ],
     programmeDetailsConfirmed: true,
+    abujaOnly: true,
   },
   {
     slug: 'apprenticeship',
@@ -184,11 +202,13 @@ export const careerTracks: CareerTrack[] = [
     stipend: '₦25,000/month',
     intake: 'Rolling intake, reviewed quarterly',
     eligibility: [
+      'Currently based in Abuja (FCT) - we\'re unable to accept apprenticeship applicants based outside Abuja',
       'WAEC/SSCE or equivalent, minimum age 18',
       'Some technical aptitude or prior trade exposure preferred but not required',
       'Able to commit to and pay the full programme fee for the chosen track',
     ],
     programmeDetailsConfirmed: true,
+    abujaOnly: true,
   },
   {
     slug: 'job-openings',

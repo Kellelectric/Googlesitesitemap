@@ -18,6 +18,19 @@ declare global {
 
 const HCAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY
 
+// Nigeria's 36 states + the FCT, for the "current state" field shown when
+// a track is Abuja-only (see careers.ts's `abujaOnly` field). "FCT (Abuja)"
+// is the value that satisfies the Abuja-only gate below.
+const NIGERIAN_STATES = [
+  'Abia', 'Adamawa', 'Akwa Ibom', 'Anambra', 'Bauchi', 'Bayelsa', 'Benue',
+  'Borno', 'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu',
+  'FCT (Abuja)', 'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina',
+  'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo',
+  'Osun', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
+]
+
+const ABUJA_STATE_VALUE = 'FCT (Abuja)'
+
 function useFormRenderedAt() {
   const [renderedAt] = useState(() => Date.now())
   return renderedAt
@@ -29,6 +42,7 @@ type FormState = {
   fullName: string
   email: string
   phone: string
+  state: string
   courseOrInstitution: string
   roleAppliedFor: string
   cvLink: string
@@ -41,6 +55,7 @@ function makeInitialState(): FormState {
     fullName: '',
     email: '',
     phone: '',
+    state: '',
     courseOrInstitution: '',
     roleAppliedFor: '',
     cvLink: '',
@@ -55,6 +70,11 @@ type CareerApplicationFormProps = {
   // Only job-openings currently lists specific roles to choose from - any
   // other track leaves this empty and the field doesn't render.
   roleOptions?: string[]
+  // NYSC Placement, Industrial Training, and Apprenticeship only - see
+  // careers.ts's `abujaOnly` field. Makes "current state" required and
+  // blocks submission (with an explanatory error, not a silent reject)
+  // when the applicant isn't based in the FCT.
+  requiresAbuja?: boolean
 }
 
 // Collects the fields common to every career track on-site. Follows the
@@ -72,6 +92,7 @@ export function CareerApplicationForm({
   trackSlug,
   trackName,
   roleOptions,
+  requiresAbuja,
 }: CareerApplicationFormProps) {
   const router = useRouter()
   const [form, setForm] = useState<FormState>(makeInitialState)
@@ -105,6 +126,13 @@ export function CareerApplicationForm({
       next.email = 'Enter a valid email address'
     }
     if (!/^[+0-9\s()-]{7,}$/.test(form.phone.trim())) next.phone = 'Enter a valid phone number'
+    if (requiresAbuja) {
+      if (!form.state) {
+        next.state = 'Select your current state'
+      } else if (form.state !== ABUJA_STATE_VALUE) {
+        next.state = `We're only able to accept ${trackName} applicants currently based in the FCT (Abuja) - sorry, we can't proceed with this application.`
+      }
+    }
     if (roleOptions && roleOptions.length > 0 && !form.roleAppliedFor) {
       next.roleAppliedFor = 'Select the role you’re applying for'
     }
@@ -142,12 +170,20 @@ export function CareerApplicationForm({
         setStatus(
           resBody?.reason === 'not_configured'
             ? 'not_configured'
-            : resBody?.reason === 'captcha_failed'
+            : resBody?.reason === 'captcha_failed' || resBody?.reason === 'not_abuja'
               ? 'idle'
               : 'error',
         )
         if (resBody?.reason === 'captcha_failed') {
           setCaptchaError('Verification failed - please try again')
+        } else if (resBody?.reason === 'not_abuja') {
+          // Defense-in-depth: the client-side gate in validate() already
+          // stops this in the normal flow - this only fires if that check
+          // was somehow bypassed (stale state, a direct API call).
+          setErrors((prev) => ({
+            ...prev,
+            state: `We're only able to accept ${trackName} applicants currently based in the FCT (Abuja) - sorry, we can't proceed with this application.`,
+          }))
         } else if (resBody?.reason !== 'not_configured') {
           trackEvent('career_application_error', {
             track: trackSlug,
@@ -246,7 +282,32 @@ export function CareerApplicationForm({
             placeholder="e.g. Electrical Engineering, University of Abuja"
           />
         </Field>
+
+        {requiresAbuja && (
+          <Field label="Your current state" error={errors.state}>
+            <select
+              value={form.state}
+              onChange={(e) => update('state', e.target.value)}
+              className={inputClass(!!errors.state)}
+            >
+              <option value="">Select your state</option>
+              {NIGERIAN_STATES.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
+          </Field>
+        )}
       </div>
+
+      {requiresAbuja && (
+        <p className="border-l-2 border-yellow bg-petrol/5 px-4 py-3 text-sm leading-relaxed text-ink/75">
+          {trackName} is only open to applicants currently based in Abuja
+          (FCT) - we&rsquo;re not able to accept applications from other
+          states for this programme.
+        </p>
+      )}
 
       {roleOptions && roleOptions.length > 0 && (
         <Field label={`Role you're applying for`} error={errors.roleAppliedFor}>

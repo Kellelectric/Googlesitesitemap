@@ -3,10 +3,11 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { CircuitLines } from '@/components/ui/CircuitLines'
+import { ServiceCard } from '@/components/ui/ServiceCard'
 import { CTASection } from '@/components/sections/CTASection'
 import { FAQSection } from '@/components/sections/FAQSection'
 import { getAreaBySlug, areas } from '@/content/areas'
-import { services, categoryLabels } from '@/content/services'
+import { services } from '@/content/services'
 import { company } from '@/content/company'
 import { faqCategories } from '@/content/faqs'
 import { getResidentialTier, residentialPricing } from '@/content/inspectionPricing'
@@ -107,16 +108,9 @@ export default async function AreaPage(props: Props) {
             </h2>
           </Reveal>
           <StaggerGroup className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {services.map((service) => (
-              <MotionDiv key={service.slug} variants={staggerItem} className="border border-ink/10 p-6">
-                <span className="eyebrow text-petrol/70">{categoryLabels[service.category]}</span>
-                <Link
-                  href={`/services/${service.slug}`}
-                  className="link-underline mt-2 block text-base font-semibold text-ink"
-                >
-                  {service.name}
-                </Link>
-                <p className="mt-3 text-sm leading-relaxed text-ink/70">{service.summary}</p>
+            {services.map((service, i) => (
+              <MotionDiv key={service.slug} variants={staggerItem}>
+                <ServiceCard service={service} index={i + 1} />
               </MotionDiv>
             ))}
           </StaggerGroup>

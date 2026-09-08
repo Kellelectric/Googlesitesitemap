@@ -162,6 +162,40 @@ export function articleSchema(params: {
   }
 }
 
+// For /news/[slug] posts - distinct from articleSchema() above (TechArticle,
+// used for /resources' evergreen how-to guides): a dated post is more
+// accurately a BlogPosting, and carries datePublished, which TechArticle
+// intentionally doesn't (resources articles aren't dated - see that file's
+// sitemap.ts comment on why fabricated dates are worse than no date).
+export function blogPostingSchema(params: {
+  title: string
+  summary: string
+  slug: string
+  datePublished: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: params.title,
+    description: params.summary,
+    datePublished: params.datePublished,
+    url: `${company.domain}/news/${params.slug}`,
+    author: {
+      '@type': 'Organization',
+      name: company.name,
+      url: company.domain,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: company.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${company.domain}/brand/logo-on-light.png`,
+      },
+    },
+  }
+}
+
 // For pages that describe Kell Electricals' services in a specific context
 // (a service area or an industry) rather than a single named service —
 // distinct from serviceSchema() above, which is for the 16 individual

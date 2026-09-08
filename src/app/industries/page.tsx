@@ -51,28 +51,30 @@ export default function IndustriesPage() {
               <MotionDiv key={industry.slug} variants={staggerItem}>
                 <Link
                   href={`/industries/${industry.slug}`}
-                  className="group relative flex h-full flex-col justify-between border border-ink/10 bg-paper p-8 transition-colors duration-200 hover:border-yellow"
+                  className="group relative flex h-full min-h-[22rem] flex-col justify-end overflow-hidden border border-ink/10"
                 >
+                  <Image
+                    src={industry.heroImage}
+                    alt=""
+                    fill
+                    quality={65}
+                    sizes="(min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" />
                   <div className="absolute inset-x-0 top-0 h-[2px] w-0 bg-yellow transition-[width] duration-300 group-hover:w-full" />
-                  <div>
-                    <Image
-                      src={`/images/industries/${industry.slug}.png`}
-                      alt=""
-                      width={72}
-                      height={72}
-                      className="h-16 w-16"
-                    />
-                    <h2 className="mt-4 text-2xl font-semibold text-ink">
+                  <div className="relative p-8">
+                    <h2 className="text-2xl font-semibold text-paper">
                       {industry.name}
                     </h2>
-                    <p className="mt-3 text-sm leading-relaxed text-ink/70">
+                    <p className="mt-3 text-sm leading-relaxed text-paper/75">
                       {industry.summary}
                     </p>
+                    <span className="link-underline mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-yellow">
+                      View services
+                      <span aria-hidden="true">&rarr;</span>
+                    </span>
                   </div>
-                  <span className="link-underline mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-petrol">
-                    View services
-                    <span aria-hidden="true">&rarr;</span>
-                  </span>
                 </Link>
               </MotionDiv>
             ))}

@@ -8,6 +8,18 @@ import { company } from '@/content/company'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
+// Hub cards previously had no imagery at all (plain bordered text boxes).
+// Assigned real, distinct photos per track from public/images/photos/ -
+// career-detail-hero-vocational-training.jpg and
+// careers-hero-apprentice-training.jpg were sitting unused on disk.
+const heroImageBySlug: Record<string, string> = {
+  'nysc-placement': '/images/photos/about-hero-team.jpg',
+  internship: '/images/photos/career-detail-hero-vocational-training.jpg',
+  'industrial-training': '/images/photos/careers-hero-apprentice-training.jpg',
+  apprenticeship: '/images/photos/electrician-area-hero-onsite.jpg',
+  'job-openings': '/images/photos/hero-control-panel.jpg',
+}
+
 export const metadata: Metadata = pageMetadata({
   title: 'Careers',
   description:
@@ -51,19 +63,28 @@ export default function CareersPage() {
               <MotionDiv key={track.slug} variants={staggerItem}>
                 <Link
                   href={`/careers/${track.slug}`}
-                  className="group relative flex h-full flex-col justify-between border border-ink/10 bg-paper p-8 transition-colors duration-200 hover:border-yellow"
+                  className="group relative flex h-full min-h-[22rem] flex-col justify-end overflow-hidden border border-ink/10"
                 >
+                  <Image
+                    src={heroImageBySlug[track.slug]}
+                    alt=""
+                    fill
+                    quality={65}
+                    sizes="(min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent" />
                   <div className="absolute inset-x-0 top-0 h-[2px] w-0 bg-yellow transition-[width] duration-300 group-hover:w-full" />
-                  <div>
-                    <h2 className="text-2xl font-semibold text-ink">{track.name}</h2>
-                    <p className="mt-3 text-sm leading-relaxed text-ink/70">
+                  <div className="relative p-8">
+                    <h2 className="text-2xl font-semibold text-paper">{track.name}</h2>
+                    <p className="mt-3 text-sm leading-relaxed text-paper/75">
                       {track.summary}
                     </p>
+                    <span className="link-underline mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-yellow">
+                      Learn more
+                      <span aria-hidden="true">&rarr;</span>
+                    </span>
                   </div>
-                  <span className="link-underline mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-petrol">
-                    Learn more
-                    <span aria-hidden="true">&rarr;</span>
-                  </span>
                 </Link>
               </MotionDiv>
             ))}

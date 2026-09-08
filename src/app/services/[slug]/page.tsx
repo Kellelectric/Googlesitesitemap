@@ -21,6 +21,37 @@ const faqs = [
   ...(faqCategories.find((c) => c.category === 'Services & scheduling')?.items ?? []),
 ]
 
+// Every service page used to share one hero photo (service-detail-hero-wiring.jpg)
+// regardless of what the service actually was - solar, CCTV, and home automation
+// pages all showed the same wiring close-up. Mapped here to the closest real photo
+// already in public/images/photos/ for each service; a few services without an
+// exact match share a sensibly-adjacent photo with another service (there are 13
+// usable photos for 16 services), which is still a real improvement over one
+// photo for all 16. Falls back to the original wiring photo only if a slug is
+// ever added here without a mapping.
+const heroImageBySlug: Record<string, string> = {
+  'electrical-wiring-installation': '/images/photos/service-detail-hero-wiring.jpg',
+  'panel-repair-upgrades': '/images/photos/hero-control-panel.jpg',
+  'generator-installation-maintenance': '/images/photos/electrician-area-hero-onsite.jpg',
+  'lighting-design-installation': '/images/photos/services-substation.jpg',
+  'earthing-lightning-protection': '/images/photos/hse-hero-site-safety.jpg',
+  'solar-inverter-systems': '/images/photos/solar-hero-panel-install.jpg',
+  'ev-charging-installation': '/images/photos/solar-roof-install.jpg',
+  'energy-audits': '/images/photos/compliance-hero-inspection.jpg',
+  'home-automation': '/images/photos/home-automation-hero-smart-panel.jpg',
+  'cctv-surveillance': '/images/photos/cctv-hero-camera-install.jpg',
+  'automated-gates-access-control': '/images/photos/developers-hero-site-review.jpg',
+  'industrial-electrical-systems': '/images/photos/developers-hero-site-review.jpg',
+  'commercial-office-fitout': '/images/photos/industries-hero-commercial-building.jpg',
+  'emergency-electrical-response': '/images/photos/emergency-hero-switchboard.jpg',
+  'fault-finding-diagnostics': '/images/photos/electrician-area-hero-onsite.jpg',
+  'preventive-maintenance-contracts': '/images/photos/maintenance-hero-solar-check.jpg',
+}
+
+function getHeroImage(slug: string): string {
+  return heroImageBySlug[slug] ?? '/images/photos/service-detail-hero-wiring.jpg'
+}
+
 type Props = { params: Promise<{ slug: string }> }
 
 export function generateStaticParams() {
@@ -35,7 +66,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     title: service.seoTitle ?? service.name,
     description: service.summary,
     path: `/services/${service.slug}`,
-    image: '/images/photos/service-detail-hero-wiring.jpg',
+    image: getHeroImage(service.slug),
   })
 }
 
@@ -79,7 +110,7 @@ export default async function ServiceDetailPage(props: Props) {
 
       <section className="relative overflow-hidden bg-petrol text-paper">
         <Image
-          src="/images/photos/service-detail-hero-wiring.jpg"
+          src={getHeroImage(service.slug)}
           alt=""
           fill
           priority

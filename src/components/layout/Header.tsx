@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { primaryNav } from '@/content/nav'
 import { company } from '@/content/company'
 import { Button } from '@/components/ui/Button'
+import { SearchOverlay } from '@/components/search/SearchOverlay'
 import { trackEvent } from '@/lib/analytics'
 
 export function Header() {
@@ -43,14 +44,21 @@ export function Header() {
           </Button>
         </div>
 
-        <button
-          type="button"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow lg:hidden"
-          onClick={() => setOpen((v) => !v)}
-        >
+        {/* One SearchOverlay instance, visible at every breakpoint (not
+            inside the lg:flex/lg:hidden split above) so there's only ever
+            one modal in the DOM - Ctrl/Cmd+K stays a single global listener
+            instead of duplicating across a desktop and a mobile instance. */}
+        <div className="flex items-center gap-2">
+          <SearchOverlay />
+
+          <button
+            type="button"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow lg:hidden"
+            onClick={() => setOpen((v) => !v)}
+          >
           <span
             className={`h-[2px] w-6 bg-paper transition-transform duration-200 ${open ? 'translate-y-2 rotate-45' : ''}`}
           />
@@ -60,7 +68,8 @@ export function Header() {
           <span
             className={`h-[2px] w-6 bg-paper transition-transform duration-200 ${open ? '-translate-y-2 -rotate-45' : ''}`}
           />
-        </button>
+          </button>
+        </div>
       </div>
 
       {/* Row 2 (lg+ only): full-width nav on its own line below the logo

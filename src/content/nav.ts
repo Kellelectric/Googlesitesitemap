@@ -37,6 +37,7 @@ export const footerNav: NavLink[] = [
   { label: 'Load & Solar Calculators', href: '/calculators' },
   { label: 'Book an Appointment', href: '/book-appointment' },
   { label: 'Resources', href: '/resources' },
+  { label: 'News & Updates', href: '/news' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Testimonials', href: '/testimonials' },
   { label: 'Careers', href: '/careers' },

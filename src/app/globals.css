@@ -18,6 +18,14 @@
   ::selection {
     @apply bg-yellow text-ink;
   }
+  /* Chromium/WebKit render a native blue clear-button on type="search"
+     inputs (e.g. the site search box) that clashes with the petrol/yellow
+     palette - hide it, the input still clears normally by selecting and
+     deleting the text. */
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
 }
 
 @layer components {

@@ -1,5 +1,44 @@
 # Next Steps
 
+## Site search, `/news`, and case-study schema fields (this round)
+
+Three recommended features from a site-status review, all shipped:
+
+- **Site search.** `src/lib/searchIndex.ts` builds a flat, client-bundled
+  index over services/industries/resources/news/projects/careers/areas/
+  static pages (no separate backend, no new dependency — the content
+  arrays are already this small and already shipped in every page's JS).
+  `src/components/search/SearchBox.tsx` is the reusable input+results
+  list; `SearchOverlay.tsx` wraps it as a modal triggered by a header
+  icon button or Ctrl/Cmd+K (one instance, visible at every breakpoint,
+  so there's only ever one modal in the DOM). `/search?q=...` is a
+  standalone `noIndex` page for a shareable/no-JS-friendly destination,
+  using the same `SearchBox`. Not added as a 13th `primaryNav` link —
+  Header's own comment already flagged the nav row as at capacity.
+- **`/news` — project spotlights + advisories, distinct from
+  `/resources`.** `src/content/news.ts` is a new, dated content type:
+  "Project Spotlight" posts may only restate facts already in
+  `projects.ts` (2 seeded, linked via `relatedProjectSlug` — Kaduna
+  State Government House and Navy Holdings, both already public per
+  `projects.ts`'s own clearance) — no new scope/dates/outcomes invented.
+  "Advisory" posts (1 seeded — a rainy-season backup-power checklist)
+  carry general professional guidance in the same register as
+  `/resources`, not fabricated statistics or claimed regulatory changes.
+  Added to `footerNav` (not primary, same "don't crowd the header"
+  precedent as `/calculators`), `/site-map`, `sitemap.ts`, and a new
+  `blogPostingSchema()` in `lib/schema.ts` (distinct from
+  `articleSchema()`'s `TechArticle` — a dated post is a `BlogPosting`).
+- **Case-study depth — schema-ready, deliberately not populated.**
+  `Project` in `projects.ts` gained optional `beforeImage`/`afterImage`/
+  `clientQuote` fields, and `/projects/[slug]` renders both
+  conditionally when present. Left unset on all 9 real projects: none
+  have a genuine "before" photo on file (only one real photo per
+  project exists), and no client has supplied a quote with confirmed
+  permission to attribute it by name — inventing either would misattribute
+  words/images to a real property or person, which this file's own
+  header comment already rules out for scope/pricing. Populate per-project
+  once the client supplies real assets.
+
 ## `/leadership` gained a breadcrumb and closing trust section (this round)
 
 - **New `src/components/ui/Breadcrumbs.tsx`** - the site previously only

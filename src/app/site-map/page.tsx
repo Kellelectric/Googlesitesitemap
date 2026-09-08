@@ -7,6 +7,7 @@ import { industries } from '@/content/industries'
 import { articles } from '@/content/resources'
 import { careerTracks } from '@/content/careers'
 import { projects } from '@/content/projects'
+import { news } from '@/content/news'
 import { areas } from '@/content/areas'
 import { legalNav } from '@/content/nav'
 import { pageMetadata } from '@/lib/metadata'
@@ -70,6 +71,13 @@ const groups: LinkGroup[] = [
     links: [
       { label: 'Resources Overview', href: '/resources' },
       ...articles.map((a) => ({ label: a.title, href: `/resources/${a.slug}` })),
+    ],
+  },
+  {
+    heading: 'News & Updates',
+    links: [
+      { label: 'News Overview', href: '/news' },
+      ...news.map((n) => ({ label: n.title, href: `/news/${n.slug}` })),
     ],
   },
   {

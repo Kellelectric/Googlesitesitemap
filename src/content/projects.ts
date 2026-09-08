@@ -33,6 +33,21 @@ export type Project = {
   solution: string
   outcome: string
   image: string
+  // Case-study depth fields — schema only, deliberately left unset on
+  // every entry below. A before/after pair needs a genuine "before" photo
+  // (none of these 9 projects have one on file — `image` is the only real
+  // photo supplied per project) and clientQuote needs a real quote the
+  // client has confirmed permission to attribute by name — inventing
+  // either would misattribute words/images to a real property or person,
+  // which this file's own header comment already rules out for scope/
+  // pricing. Populate per-project once the client supplies real assets;
+  // /projects/[slug] already renders both conditionally when present.
+  beforeImage?: string
+  afterImage?: string
+  clientQuote?: {
+    text: string
+    attribution: string
+  }
 }
 
 export const projects: Project[] = [

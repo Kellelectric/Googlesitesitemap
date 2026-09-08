@@ -13,7 +13,7 @@ export const metadata: Metadata = pageMetadata({
   description:
     'NYSC placement, internship, industrial training, apprenticeship, and job opportunities at Kell Electricals Ltd, a COREN and NEMSA certified engineering company.',
   path: '/careers',
-  image: '/images/photos/careers-hero-apprentice-training.jpg',
+  image: '/images/photos/about-hero-team.jpg',
 })
 
 export default function CareersPage() {
@@ -21,13 +21,13 @@ export default function CareersPage() {
     <>
       <section className="relative overflow-hidden bg-petrol text-paper">
         <Image
-          src="/images/photos/careers-hero-apprentice-training.jpg"
+          src="/images/photos/about-hero-team.jpg"
           alt=""
           fill
           priority
           quality={60}
           sizes="100vw"
-          className="object-cover object-[50%_30%]"
+          className="object-cover object-[70%_30%]"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
         <CircuitLines className="pointer-events-none absolute -right-16 -top-10 h-full w-1/2 text-paper/10" />

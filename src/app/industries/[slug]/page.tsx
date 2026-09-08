@@ -7,6 +7,7 @@ import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { WhyChooseUs } from '@/components/sections/WhyChooseUs'
 import { FAQSection } from '@/components/sections/FAQSection'
+import { ReviewHighlight } from '@/components/sections/ReviewHighlight'
 import { getIndustryBySlug, industries } from '@/content/industries'
 import { getServiceBySlug } from '@/content/services'
 import { company } from '@/content/company'
@@ -221,6 +222,8 @@ export default async function IndustryDetailPage(props: Props) {
           </StaggerGroup>
         </div>
       </section>
+
+      <ReviewHighlight seedKey={industry.slug} />
 
       <CTASection
         heading={`Ready to scope your ${industry.name.toLowerCase()} job?`}

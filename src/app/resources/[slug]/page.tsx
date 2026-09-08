@@ -14,6 +14,35 @@ import { Reveal } from '@/components/ui/Reveal'
 
 type Props = { params: Promise<{ slug: string }> }
 
+// All 13 articles used to share one hero photo (resource-detail-hero-manual.jpg)
+// regardless of topic - the same templated-sameness pattern already fixed this
+// session for /services/[slug] and /careers/[slug]. Mapped here to the closest
+// real photo already in public/images/photos/ for each article's actual subject;
+// there are only ~12 usable non-duplicate photos for 13 articles, so #3 and #12
+// (both literally about the same distribution panel/breaker) deliberately share
+// one. resource-detail-hero-manual.jpg (a technician with an inspection
+// checklist) is kept for the one article it's the best match for - inspection
+// frequency - rather than as the generic fallback.
+const heroImageBySlug: Record<string, string> = {
+  'sizing-a-hybrid-inverter-system': '/images/photos/solar-hero-panel-install.jpg',
+  'nemsa-compliance-commercial-fitout': '/images/photos/compliance-hero-inspection.jpg',
+  'signs-your-panel-needs-upgrading': '/images/photos/hero-control-panel.jpg',
+  'generator-vs-solar-vs-hybrid': '/images/photos/maintenance-hero-solar-check.jpg',
+  'cctv-camera-placement-and-cabling-basics': '/images/photos/cctv-hero-camera-install.jpg',
+  'three-phase-power-basics-for-facility-managers': '/images/photos/about-blueprint-review.jpg',
+  'earthing-and-lightning-protection-what-to-know': '/images/photos/hse-hero-site-safety.jpg',
+  'ev-charger-installation-what-your-property-needs': '/images/photos/solar-roof-install.jpg',
+  'how-to-size-a-backup-generator': '/images/photos/electrician-area-hero-onsite.jpg',
+  'understanding-cable-sizes-for-residential-electrical': '/images/photos/service-detail-hero-wiring.jpg',
+  'common-solar-installation-mistakes-nigeria': '/images/photos/developers-hero-site-review.jpg',
+  'why-does-my-breaker-keep-tripping': '/images/photos/hero-control-panel.jpg',
+  'how-often-you-need-an-electrical-safety-inspection': '/images/photos/resource-detail-hero-manual.jpg',
+}
+
+function getHeroImage(slug: string): string {
+  return heroImageBySlug[slug] ?? '/images/photos/resource-detail-hero-manual.jpg'
+}
+
 export function generateStaticParams() {
   return articles.map((article) => ({ slug: article.slug }))
 }
@@ -26,7 +55,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     title: article.seoTitle ?? article.title,
     description: article.summary,
     path: `/resources/${article.slug}`,
-    image: '/images/photos/resource-detail-hero-manual.jpg',
+    image: getHeroImage(article.slug),
   })
 }
 
@@ -69,7 +98,7 @@ export default async function ArticleDetailPage(props: Props) {
 
       <section className="relative overflow-hidden bg-petrol text-paper">
         <Image
-          src="/images/photos/resource-detail-hero-manual.jpg"
+          src={getHeroImage(article.slug)}
           alt=""
           fill
           priority

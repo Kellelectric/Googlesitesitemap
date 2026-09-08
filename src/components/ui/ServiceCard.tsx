@@ -16,7 +16,7 @@ export function ServiceCard({ service, index }: { service: Service; index?: numb
             {categoryLabels[service.category]}
           </span>
           {typeof index === 'number' && (
-            <span className="font-display text-sm text-ink/30">
+            <span className="font-display text-sm text-ink/60">
               {String(index).padStart(2, '0')}
             </span>
           )}

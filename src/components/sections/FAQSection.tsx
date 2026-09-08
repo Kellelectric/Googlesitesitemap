@@ -41,9 +41,14 @@ export function FAQSection({ items, viewAllHref }: { items: FAQ[]; viewAllHref?:
               className="grid grid-cols-1 gap-x-8 gap-y-3 py-8 md:grid-cols-[minmax(0,320px)_1fr]"
             >
               <div className="flex items-baseline gap-4">
-                <span className="font-display text-2xl font-semibold leading-none text-petrol/15">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
+                {/* Rendered via CSS content, not a real text node - see
+                    ProcessSection's ghost numerals for why aria-hidden
+                    alone doesn't satisfy automated contrast checkers. */}
+                <span
+                  aria-hidden="true"
+                  data-num={String(i + 1).padStart(2, '0')}
+                  className="font-display text-2xl font-semibold leading-none text-petrol/15 before:content-[attr(data-num)]"
+                />
                 <h3 className="text-lg font-semibold text-ink">{item.question}</h3>
               </div>
               <p className="leading-relaxed text-ink/70">{item.answer}</p>

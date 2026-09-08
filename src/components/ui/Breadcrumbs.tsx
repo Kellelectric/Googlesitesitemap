@@ -32,7 +32,11 @@ export function Breadcrumbs({ items, dark = true }: BreadcrumbsProps) {
           const isLast = i === items.length - 1
           return (
             <li key={item.label} className="flex items-center gap-2">
-              {i > 0 && <span className={separatorColor}>/</span>}
+              {i > 0 && (
+                <span className={separatorColor} aria-hidden="true">
+                  /
+                </span>
+              )}
               {item.href && !isLast ? (
                 <Link href={item.href} className={`link-underline transition-colors ${linkColor}`}>
                   {item.label}

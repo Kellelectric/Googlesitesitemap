@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
+import { ReviewHighlight } from '@/components/sections/ReviewHighlight'
 import { getProjectBySlug, projects, sectorLabels } from '@/content/projects'
 import { getServiceBySlug } from '@/content/services'
 import { company } from '@/content/company'
@@ -178,6 +179,8 @@ export default async function ProjectDetailPage(props: Props) {
           </StaggerGroup>
         </div>
       </section>
+
+      <ReviewHighlight seedKey={project.slug} />
 
       <CTASection
         heading="Have a similar job in mind?"

@@ -7,6 +7,7 @@ import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { WhyChooseUs } from '@/components/sections/WhyChooseUs'
 import { FAQSection } from '@/components/sections/FAQSection'
+import { ReviewHighlight } from '@/components/sections/ReviewHighlight'
 import { getServiceBySlug, services, categoryLabels } from '@/content/services'
 import { industries } from '@/content/industries'
 import { process } from '@/content/process'
@@ -236,6 +237,8 @@ export default async function ServiceDetailPage(props: Props) {
       <WhyChooseUs dark={false} layout="compact" />
 
       <FAQSection items={faqs} viewAllHref="/faq" />
+
+      <ReviewHighlight seedKey={service.slug} />
 
       <CTASection
         heading={`Ready to scope your ${service.name.toLowerCase()} job?`}

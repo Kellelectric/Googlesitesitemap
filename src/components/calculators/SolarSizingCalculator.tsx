@@ -87,7 +87,10 @@ export function SolarSizingCalculator({ dark = false }: { dark?: boolean }) {
         Assumes {ABUJA_AVERAGE_PEAK_SUN_HOURS} average peak sun hours/day, an 80% usable battery
         depth-of-discharge, and typical system losses - a planning estimate,
         not a quote.{' '}
-        <Link href="/contact" className="link-underline font-semibold text-yellow">
+        <Link
+          href="/contact"
+          className={`link-underline font-semibold ${dark ? 'text-yellow' : 'text-petrol'}`}
+        >
           Request a sizing consultation
         </Link>
         .

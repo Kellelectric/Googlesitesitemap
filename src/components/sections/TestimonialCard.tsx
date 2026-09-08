@@ -53,7 +53,7 @@ export function TestimonialCard({
           target="_blank"
           rel="noopener noreferrer"
           className="link-underline shrink-0"
-          aria-label={`View this review on ${testimonial.source}`}
+          aria-label={`${testimonial.source} Review - view on ${testimonial.source}`}
         >
           {isGoogle ? <GoogleReviewBadge /> : <TrustpilotReviewBadge />}
         </a>

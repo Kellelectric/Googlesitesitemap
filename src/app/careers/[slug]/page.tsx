@@ -227,6 +227,7 @@ export default async function CareerTrackPage(props: Props) {
               trackSlug={track.slug}
               trackName={track.name}
               roleOptions={roleOptions}
+              requiresAbuja={track.abujaOnly}
             />
           </div>
         </div>

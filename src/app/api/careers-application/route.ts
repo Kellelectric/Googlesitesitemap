@@ -354,10 +354,24 @@ export async function POST(request: NextRequest) {
   const payload = JSON.stringify(webhookPayload)
   const secret = process.env.CAREERS_WEBHOOK_SECRET
   const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  let webhookUrl = process.env.CAREERS_WEBHOOK_URL
   if (secret) {
-    headers['x-webhook-signature'] = signPayload(payload, secret)
+    const signature = signPayload(payload, secret)
+    headers['x-webhook-signature'] = signature
+    // Google Apps Script Web Apps cannot read custom HTTP headers on an
+    // incoming request at all (no e.headers in doPost) - only Content-Type
+    // and URL query parameters are visible to the script. The header above
+    // is kept for any non-Apps-Script receiver (e.g. a Zoho Flow webhook)
+    // that CAREERS_WEBHOOK_URL might point to instead, but the query param
+    // below is what careerApplicationRouter.gs's doPost actually reads
+    // (e.parameter['x-webhook-signature'], checked first in its
+    // verifySignature branch).
+    if (webhookUrl) {
+      const urlWithSignature = new URL(webhookUrl)
+      urlWithSignature.searchParams.set('x-webhook-signature', signature)
+      webhookUrl = urlWithSignature.toString()
+    }
   }
-  const webhookUrl = process.env.CAREERS_WEBHOOK_URL
 
   if (redirectUrl) {
     if (webhookUrl) {

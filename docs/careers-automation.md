@@ -153,6 +153,26 @@ own test sender while developing), create an API key, then set
 `RESEND_API_KEY`, `CAREERS_FROM_EMAIL` (a verified sender address), and
 `CAREERS_NOTIFY_EMAIL` (where internal notifications land).
 
+### Provisioned this session (real, live resources - not invented)
+
+- **Resend**: `kellelectricals.com` was already a verified sending domain
+  in the client's Resend account. A dedicated, sending-only API key named
+  "Careers Application Pipeline" was created scoped to that domain. The
+  key itself was shown once to the user in chat and is not stored in this
+  repo - set it as `RESEND_API_KEY` in Vercel directly.
+- **Google Sheet**: created at
+  `https://docs.google.com/spreadsheets/d/1LmCOGdVL8x2RPI0rHAtqsTi1n1ZX4AtllTkO2Rj69Bc/edit`,
+  already owned by `kellelectricals@gmail.com` (same account the Apps
+  Script router deploys under - no sharing step needed). Set
+  `SPREADSHEET_ID=1LmCOGdVL8x2RPI0rHAtqsTi1n1ZX4AtllTkO2Rj69Bc` as a Script
+  Property once the updated `careerApplicationRouter.gs` (with
+  `appendToSheet_`) is redeployed.
+- **Zoho CRM self-client** and **Slack Incoming Webhook** were NOT
+  provisioned this session - both require a manual step in each service's
+  own console under an account this session doesn't have access to
+  (Zoho's API Console, Slack's App directory). See their setup steps
+  above.
+
 ### Google Sheet applicant log
 
 Extends the already-deployed Apps Script webhook rather than adding a new

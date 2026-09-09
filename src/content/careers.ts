@@ -55,6 +55,12 @@
 //   itself (CareerApplicationForm requires a "current state" selection
 //   and blocks submission for a non-Abuja state on these three tracks).
 //
+// - `industrial-training`'s `pastTrainees`: 3 real 2026-batch trainees
+//   (Collins, Sebastian, Terhile Waku), name + photo supplied directly by
+//   the client. Photos live in public/images/trainees/. No bio or
+//   surname-only detail given beyond the name as supplied - don't invent
+//   additional detail per-person.
+//
 // All career tracks are now confirmed real. No placeholder fields remain.
 export type CareerTrack = {
   slug: string
@@ -72,6 +78,9 @@ export type CareerTrack = {
   // True only when duration/fee/etc. below are confirmed real — controls
   // whether the detail page shows the "indicative, unconfirmed" caveat.
   programmeDetailsConfirmed?: boolean
+  // Real past trainees, client-supplied name + photo per person - see
+  // `industrial-training`'s entry below for the current real list.
+  pastTrainees?: { name: string; photo: string }[]
   // Client direction: NYSC Placement, Industrial Training, and
   // Apprenticeship only accept applicants currently based in Abuja (FCT) -
   // applicants from other states aren't accepted for these three tracks.
@@ -177,6 +186,11 @@ export const careerTracks: CareerTrack[] = [
       'Student ID card',
       'Your institution\'s IT requirements (and note if you need the 3-month track instead of the standard 6 months)',
       'Application is in two steps: submit the form on this page, then complete the second step via the link on the thank-you page - applications aren\'t considered complete until both are done',
+    ],
+    pastTrainees: [
+      { name: 'Collins', photo: '/images/trainees/collins.jpg' },
+      { name: 'Sebastian', photo: '/images/trainees/sebastian.jpg' },
+      { name: 'Terhile Waku', photo: '/images/trainees/terhile-waku.jpg' },
     ],
     programmeDetailsConfirmed: true,
     abujaOnly: true,

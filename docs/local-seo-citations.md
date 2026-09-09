@@ -4,6 +4,27 @@ Prepared as a reference doc for launch. This is off-site work — no code
 changes required, just consistent, manual submissions. Hand this to
 whoever manages Google Business Profile / directory listings.
 
+## Do this now (ordered by effort vs. payoff)
+
+1. **NEMSA directory** — highest value (regulatory + real backlink), but
+   the direct directory URL below currently redirects to NEMSA's
+   homepage rather than the listing page — their site structure appears
+   to have changed since this doc was last checked. From nemsa.gov.ng's
+   homepage, look for "Directory" in the main navigation, or search
+   "NEMSA directory of certified electrical contractors" directly on
+   Google — the page still exists, just not at the URL on file. Confirm
+   Kell Electricals is listed, or find their current application process
+   if not.
+2. **Abuja Galleria** — Abuja-specific, worth the few minutes. Use the
+   medium description above.
+3. **Bing Places for Business** + **Bing Webmaster Tools** — free,
+   5 minutes, and Bing Webmaster Tools also lets you submit
+   `sitemap.xml` the same way Google Search Console does.
+4. **ConnectNigeria / Nigeria Galleria / VConnect** — lower priority,
+   do if time allows.
+5. **COREN verification portal** — not a directory (no listing/backlink),
+   just a status check — confirm the registration resolves correctly.
+
 ## The exact NAP block to use everywhere
 
 Search engines match business listings across the web by comparing
@@ -26,6 +47,28 @@ Whatever is already live on the Google Business Profile listing should be
 the master source of truth — if it differs from the above in any way,
 update this doc (and the Business Profile) rather than leaving two
 different versions live.
+
+## Ready-to-paste business descriptions
+
+Every directory below asks for a description in a different length. Three
+sizes, copy/paste as-is — built only from facts already published on the
+site (no new claims), so nothing here needs a fact-check before you paste
+it.
+
+**Short (~110 characters — fits most "tagline"/"short description" fields):**
+```
+COREN and NEMSA certified electrical engineering for homes, businesses, and industrial sites in Abuja.
+```
+
+**Medium (~300 characters — fits most "business description" fields):**
+```
+Kell Electricals Ltd is a COREN and NEMSA certified electrical engineering company based in Wuse 2, Abuja. We handle electrical wiring, solar and hybrid inverter systems, CCTV and security, home automation, and industrial electrical work across residential, commercial, and industrial properties in Abuja.
+```
+
+**Long (~600 characters — fits "about"/"full description" fields):**
+```
+Kell Electricals Ltd is the engineering partner Abuja's homes, businesses, and industrial sites call when electrical infrastructure has to work the first time and every time. COREN and NEMSA certified, with 15+ years of combined engineering experience across the team and 1,000+ projects completed. Services span 16 lines across four categories: power (wiring, panel repair, fault-finding), energy (solar and hybrid inverter systems, energy audits, generator installation), security and automation (CCTV, home automation, automated gates and access control, EV charging), and maintenance (preventive maintenance contracts, emergency response). Based at 741 Alexandria Crescent, Wuse 2, Abuja.
+```
 
 ## Priority 1: Regulatory directories (industry credibility + real backlink)
 

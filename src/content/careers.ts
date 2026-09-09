@@ -235,6 +235,9 @@ export const careerTracks: CareerTrack[] = [
       'Licensed Electrician (Journeyman level) - residential & commercial installation and fault-finding',
       'Site Supervisor - coordinating multi-trade electrical fit-outs on active construction sites',
       'Solar & Inverter Installation Technician - hybrid solar/battery system installation and commissioning',
+      'Secretary - office administration, scheduling, and correspondence support',
+      'Marketer - promoting services, managing outreach, and generating leads',
+      'Business Developer - identifying new business opportunities and building client relationships',
     ],
     whatToExpect: [
       'Direct application review by our engineering team, not an automated filter',

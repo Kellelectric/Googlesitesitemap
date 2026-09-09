@@ -15,6 +15,38 @@ import {
 
 export const runtime = 'nodejs'
 
+// Google Apps Script Web Apps respond to a POST at .../exec with an empty
+// 302 redirect to a one-time script.googleusercontent.com/macros/echo URL
+// that carries the real response body. Node's fetch() `redirect: 'follow'`
+// (the default) converts that redirect's method to GET per the WHATWG spec
+// - normally harmless - but was confirmed during live testing this round to
+// intermittently fail against this specific redirect chain (manually
+// verified with curl: the redirect had to be followed as an explicit,
+// separate GET request to come back reliably). Handled manually here so
+// CAREERS_WEBHOOK_URL pointed at an Apps Script deployment works
+// deterministically; a non-redirecting receiver (e.g. Zoho Flow) is
+// unaffected since this only branches on a 3xx response.
+async function postToWebhook(
+  url: string,
+  headers: Record<string, string>,
+  body: string,
+): Promise<Response> {
+  const initial = await fetch(url, {
+    method: 'POST',
+    headers,
+    body,
+    redirect: 'manual',
+    signal: AbortSignal.timeout(8000),
+  })
+  if (initial.status >= 300 && initial.status < 400) {
+    const location = initial.headers.get('location')
+    if (location) {
+      return fetch(location, { method: 'GET', signal: AbortSignal.timeout(8000) })
+    }
+  }
+  return initial
+}
+
 // Same short-reference pattern as app/api/quote/route.ts.
 function generateApplicationReference(): string {
   const year = new Date().getFullYear()
@@ -375,11 +407,9 @@ export async function POST(request: NextRequest) {
 
   if (redirectUrl) {
     if (webhookUrl) {
-      fetch(webhookUrl, { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(8000) }).catch(
-        (error) => {
-          console.error('Careers webhook forward (best-effort, Google Form track) failed', error)
-        },
-      )
+      postToWebhook(webhookUrl, headers, payload).catch((error) => {
+        console.error('Careers webhook forward (best-effort, Google Form track) failed', error)
+      })
     }
     recentSubmissions.set(dupKey, { reference, at: Date.now() })
     return NextResponse.json({ ok: true, reference, redirectUrl })
@@ -399,12 +429,7 @@ export async function POST(request: NextRequest) {
   let lastError: unknown
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
-      const forwarded = await fetch(webhookUrl, {
-        method: 'POST',
-        headers,
-        body: payload,
-        signal: AbortSignal.timeout(8000),
-      })
+      const forwarded = await postToWebhook(webhookUrl, headers, payload)
 
       if (forwarded.ok) {
         recentSubmissions.set(dupKey, { reference, at: Date.now() })

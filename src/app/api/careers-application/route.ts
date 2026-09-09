@@ -4,6 +4,14 @@ import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { verifyHCaptcha } from '@/lib/hcaptcha'
 import { getCareerTrackBySlug } from '@/content/careers'
 import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting'
+import { createCareerLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
+import { sendCareerSlackNotification, isSlackNotifyConfigured } from '@/lib/slackNotify'
+import {
+  sendApplicantConfirmationEmail,
+  sendInternalNotificationEmail,
+  isResendConfigured,
+  isCareerNotifyEmailConfigured,
+} from '@/lib/resendEmail'
 
 export const runtime = 'nodejs'
 
@@ -264,6 +272,85 @@ export async function POST(request: NextRequest) {
     ipHash: ip !== 'unknown' ? hashIp(ip) : undefined,
     redirectUrl: redirectUrl ?? undefined,
   }
+  // Direct integrations, independent of CAREERS_WEBHOOK_URL - each one is
+  // env-var gated (see src/lib/zohoCrm.ts, slackNotify.ts, resendEmail.ts)
+  // and fires for every track, not just job-openings/nysc-placement, since
+  // a CRM record / team notification is useful regardless of whether the
+  // applicant also gets redirected to a Google Form. Fire-and-forget -
+  // never awaited, never blocks or fails the applicant's own response.
+  // hasFormRedirect (kept before webhookPayload was built - see
+  // `redirectUrl` above) governs whether an *applicant-confirmation* email
+  // makes sense here (the Apps Script webhook, if configured, sends its
+  // own "finish the form" email instead for that path - see careers-
+  // automation.md's duplicate-email note in careerApplicationRouter.gs).
+  if (isZohoCrmConfigured()) {
+    createCareerLead({
+      fullName: body.fullName,
+      email: body.email,
+      phone: body.phone,
+      trackName: track.name,
+      roleAppliedFor: body.roleAppliedFor,
+      courseOrInstitution: body.courseOrInstitution,
+      cvLink: body.cvLink,
+      message: body.message,
+      reference,
+    }).catch((error) => {
+      console.error('Zoho CRM lead create (best-effort) failed', error)
+    })
+  }
+
+  if (isSlackNotifyConfigured()) {
+    sendCareerSlackNotification({
+      reference,
+      trackName: track.name,
+      fullName: body.fullName,
+      email: body.email,
+      phone: body.phone,
+      roleAppliedFor: body.roleAppliedFor,
+      cvLink: body.cvLink,
+    }).catch((error) => {
+      console.error('Slack notification (best-effort) failed', error)
+    })
+  }
+
+  if (isCareerNotifyEmailConfigured()) {
+    sendInternalNotificationEmail({
+      reference,
+      trackName: track.name,
+      fullName: body.fullName,
+      email: body.email,
+      phone: body.phone,
+      courseOrInstitution: body.courseOrInstitution,
+      roleAppliedFor: body.roleAppliedFor,
+      cvLink: body.cvLink,
+      message: body.message,
+      submittedAt: webhookPayload.submittedAt,
+    }).catch((error) => {
+      console.error('Internal notification email (best-effort) failed', error)
+    })
+  }
+
+  if (isResendConfigured() && !redirectUrl) {
+    // Only for tracks without a Google Form redirect - the redirect
+    // tracks' own applicant email is "finish your application", sent by
+    // the Apps Script webhook if configured, not "received" (they haven't
+    // finished yet). See the duplicate-email note above.
+    sendApplicantConfirmationEmail({
+      reference,
+      trackName: track.name,
+      fullName: body.fullName,
+      email: body.email,
+      phone: body.phone,
+      courseOrInstitution: body.courseOrInstitution,
+      roleAppliedFor: body.roleAppliedFor,
+      cvLink: body.cvLink,
+      message: body.message,
+      submittedAt: webhookPayload.submittedAt,
+    }).catch((error) => {
+      console.error('Applicant confirmation email (best-effort) failed', error)
+    })
+  }
+
   const payload = JSON.stringify(webhookPayload)
   const secret = process.env.CAREERS_WEBHOOK_SECRET
   const headers: Record<string, string> = { 'Content-Type': 'application/json' }

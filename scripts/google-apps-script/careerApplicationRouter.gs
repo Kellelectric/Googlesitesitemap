@@ -31,6 +31,22 @@
  * try/catch so a quota error never turns an otherwise-successful webhook
  * call into a failure - it just gets logged.
  *
+ * NOTE ON DUPLICATE CONFIRMATION EMAILS: the website (src/lib/resendEmail.ts)
+ * can independently send the applicant the same confirmation email via
+ * Resend, gated on its own RESEND_API_KEY/CAREERS_FROM_EMAIL env vars. That
+ * path and this one (MailApp, below) are not aware of each other - if both
+ * are configured at once, the applicant receives two confirmation emails.
+ * Pick one: either leave RESEND_API_KEY unset and let this Apps Script
+ * keep sending confirmations, or set it and remove/comment out the
+ * sendApplicantConfirmationEmail_/sendContinueApplicationEmail_ calls
+ * below. See docs/careers-automation.md.
+ *
+ * SHEET LOGGING (optional): if a SPREADSHEET_ID Script Property is set,
+ * every acknowledged application is appended as a row to a "Applications"
+ * sheet in that spreadsheet (created automatically on first write if it
+ * doesn't exist yet) - see appendToSheet_() below. Unset by default; no
+ * spreadsheet is created or assumed without this being configured.
+ *
  * DEPLOYMENT (do this in the Apps Script editor, not from this repo):
  *   1. Create a new Apps Script project (script.google.com), paste in this
  *      file plus formConfig.gs and listFormItems.gs.
@@ -41,6 +57,10 @@
  *      access "Anyone". Copy the deployment URL.
  *   4. Set the website's CAREERS_WEBHOOK_URL to that deployment URL (in
  *      Vercel's Production environment variables).
+ *   5. OPTIONAL - Sheet logging: create a Google Sheet, copy its ID (the
+ *      long string in its URL between /d/ and /edit), add a Script
+ *      Property SPREADSHEET_ID with that value. An "Applications" tab is
+ *      created automatically on the first application received.
  *
  * Nothing above has been done from this coding session - no Google
  * account access exists here. This file is the code; deployment is a
@@ -115,6 +135,8 @@ function doPost(e) {
       sendApplicantConfirmationEmail_(body)
     }
 
+    appendToSheet_(body)
+
     return jsonResponse_({ ok: true, reference: reference }, 200)
   } catch (err) {
     // Never leak internal details in the response - log them, return a
@@ -174,6 +196,51 @@ function sendContinueApplicationEmail_(body) {
     MailApp.sendEmail(body.email, subject, message)
   } catch (err) {
     Logger.log('Continue-application email failed for ' + body.reference + ': ' + err)
+  }
+}
+
+/**
+ * Appends one row per application to a spreadsheet's "Applications" sheet -
+ * the "recommended central applicant database" from docs/careers-
+ * automation.md, now actually wired up rather than just recommended. Only
+ * runs if SPREADSHEET_ID is set as a Script Property; otherwise a no-op.
+ * Never throws - a Sheets error is logged, not fatal to doPost, same
+ * pattern as the email senders above.
+ */
+function appendToSheet_(body) {
+  var spreadsheetId = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID')
+  if (!spreadsheetId) return
+
+  try {
+    var ss = SpreadsheetApp.openById(spreadsheetId)
+    var sheet = ss.getSheetByName('Applications')
+    var headers = [
+      'Application Reference', 'Application Date', 'Programme', 'Applicant Name',
+      'Email', 'Phone', 'Institution', 'Course', 'Role Applied For', 'CV Link',
+      'Message', 'Source', 'Application Status',
+    ]
+    if (!sheet) {
+      sheet = ss.insertSheet('Applications')
+      sheet.appendRow(headers)
+      sheet.setFrozenRows(1)
+    }
+    sheet.appendRow([
+      body.reference || '',
+      body.submittedAt || new Date().toISOString(),
+      body.trackName || body.trackSlug || '',
+      body.fullName || '',
+      body.email || '',
+      body.phone || '',
+      body.courseOrInstitution || '',
+      '',
+      body.roleAppliedFor || '',
+      body.cvLink || '',
+      body.message || '',
+      body.source || 'kellelectricals.com careers application form',
+      'New',
+    ])
+  } catch (err) {
+    Logger.log('Sheet append failed for ' + body.reference + ': ' + err)
   }
 }
 

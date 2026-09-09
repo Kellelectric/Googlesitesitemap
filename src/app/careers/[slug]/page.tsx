@@ -214,6 +214,37 @@ export default async function CareerTrackPage(props: Props) {
         </div>
       </section>
 
+      {track.pastTrainees && track.pastTrainees.length > 0 && (
+        <section className="border-t border-ink/10 bg-paper py-16">
+          <div className="container-content">
+            <Reveal>
+              <span className="eyebrow text-petrol/70">Past trainees</span>
+              <h2 className="mt-3 text-xl font-semibold text-ink">
+                2026 Industrial Trainees
+              </h2>
+            </Reveal>
+            <StaggerGroup className="mt-6 grid grid-cols-3 gap-3 sm:gap-6 sm:max-w-md">
+              {track.pastTrainees.map((trainee) => (
+                <MotionDiv key={trainee.name} variants={staggerItem} className="text-center">
+                  <div className="relative mx-auto aspect-square w-full max-w-24 overflow-hidden border border-ink/10 sm:max-w-28">
+                    <Image
+                      src={trainee.photo}
+                      alt={trainee.name}
+                      fill
+                      sizes="120px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <p className="mt-2 text-xs font-semibold text-ink sm:text-sm">
+                    {trainee.name}
+                  </p>
+                </MotionDiv>
+              ))}
+            </StaggerGroup>
+          </div>
+        </section>
+      )}
+
       <section id="apply" className="scroll-mt-16 border-t border-ink/10 bg-paper py-20">
         <div className="container-content max-w-2xl">
           <Reveal>

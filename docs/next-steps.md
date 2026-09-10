@@ -234,8 +234,8 @@ Google Form" redirect is replaced with a form built into the site
 via `CAREERS_WEBHOOK_URL` (same pattern as `QUOTE_WEBHOOK_URL` - point it
 at Zapier/Make/Zoho Flow to land in a Google Sheet or wherever). Same spam
 protections as the quote form (honeypot, time-trap, rate limit, optional
-hCaptcha via the same `NEXT_PUBLIC_HCAPTCHA_SITE_KEY`/`HCAPTCHA_SECRET_KEY`
-pair). A new `/careers/thank-you` page confirms submission, mirroring
+Cloudflare Turnstile via the same `NEXT_PUBLIC_TURNSTILE_SITE_KEY`/
+`TURNSTILE_SECRET_KEY` pair). A new `/careers/thank-you` page confirms submission, mirroring
 `/contact/thank-you`.
 
 **Not yet done — needs the client's help to finish**: the client asked for
@@ -338,8 +338,8 @@ all adjustable constants in that file), narrowed against the calendar's
 real `freeBusy` response, and re-checked once more at booking time to
 close the race window between two visitors viewing the same open slot.
 Same spam protections as the quote form (honeypot, time-trap, per-IP
-rate limit, optional hCaptcha via the same `NEXT_PUBLIC_HCAPTCHA_SITE_KEY`
-/`HCAPTCHA_SECRET_KEY` pair). A successful booking is also best-effort
+rate limit, optional Cloudflare Turnstile via the same
+`NEXT_PUBLIC_TURNSTILE_SITE_KEY`/`TURNSTILE_SECRET_KEY` pair). A successful booking is also best-effort
 forwarded to `QUOTE_WEBHOOK_URL` if set, so it shows up alongside quote
 leads in whatever CRM that points at — this never blocks or fails the
 booking itself.
@@ -751,11 +751,12 @@ Assist" chatbot (new this round — see below), and a first draft of
   submissions completed faster than 3 seconds after the form renders),
   and a best-effort in-memory per-IP rate limit (5 requests / 10 minutes;
   resets on cold start, so it will not stop a distributed attack). Add
-  hCaptcha — wired in, gated on env vars. Set `NEXT_PUBLIC_HCAPTCHA_SITE_KEY`
-  (client-side, embedded in the page) and `HCAPTCHA_SECRET_KEY`
-  (server-side, verifies the token against hCaptcha's API in
-  `app/api/quote/route.ts`) to activate it — until both are set, the form
-  works exactly as before with no widget shown and no token required.
+  Cloudflare Turnstile — wired in, gated on env vars. Set
+  `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (client-side, embedded in the page) and
+  `TURNSTILE_SECRET_KEY` (server-side, verifies the token against
+  Cloudflare's siteverify API in `app/api/quote/route.ts`) to activate it —
+  until both are set, the form works exactly as before with no widget
+  shown and no token required.
   - **Webhook hardening (optional but recommended).** Set
     `QUOTE_WEBHOOK_SECRET` in the deployment to have the route sign each
     forwarded payload with an `x-webhook-signature` header (HMAC-SHA256 of

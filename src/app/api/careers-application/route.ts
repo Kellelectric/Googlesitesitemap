@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHash, createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
-import { verifyHCaptcha } from '@/lib/hcaptcha'
+import { verifyTurnstile } from '@/lib/turnstile'
 import { getCareerTrackBySlug } from '@/content/careers'
 import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting'
 import { createCareerLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
@@ -244,10 +244,10 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const hcaptchaSecret = process.env.HCAPTCHA_SECRET_KEY
-  if (hcaptchaSecret) {
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY
+  if (turnstileSecret) {
     const token = typeof body.captchaToken === 'string' ? body.captchaToken : ''
-    if (token && !(await verifyHCaptcha(token, hcaptchaSecret))) {
+    if (token && !(await verifyTurnstile(token, turnstileSecret))) {
       return NextResponse.json({ ok: false, reason: 'captcha_failed' }, { status: 422 })
     }
   }

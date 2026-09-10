@@ -7,24 +7,24 @@ import { services } from '@/content/services'
 import { company } from '@/content/company'
 import { trackEvent } from '@/lib/analytics'
 
-// hCaptcha exposes itself as a global once its script loads, not an npm
+// Turnstile exposes itself as a global once its script loads, not an npm
 // package — matches this file's existing pattern of talking to gtag
 // (see lib/analytics.ts) the same way.
 declare global {
   interface Window {
-    hcaptcha?: {
+    turnstile?: {
       getResponse: (widgetId?: string) => string
       reset: (widgetId?: string) => void
     }
   }
 }
 
-// Only set once a real hCaptcha site key exists in the deployment env —
+// Only set once a real Turnstile site key exists in the deployment env —
 // see docs/next-steps.md. Undefined here means the widget doesn't render
-// and the server doesn't require a token either (see HCAPTCHA_SECRET_KEY
+// and the server doesn't require a token either (see TURNSTILE_SECRET_KEY
 // in app/api/quote/route.ts), so the form works exactly as before until
 // both are configured.
-const HCAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 // Set once on mount and sent back with the submission. The API rejects
 // submissions completed faster than a human plausibly could — see
@@ -74,17 +74,17 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
   const [status, setStatus] = useState<FormStatus>('idle')
   const renderedAt = useFormRenderedAt()
 
-  // Fail open, not closed: if the hCaptcha script never loads (ad blocker,
-  // privacy extension, a network that blocks hcaptcha.com outright — all
-  // observed in the field), window.hcaptcha stays undefined forever and a
-  // real customer would be stuck unable to submit at all. Losing bot
-  // protection to an infrastructure hiccup is a far smaller cost than
-  // losing a real lead, and the honeypot/time-trap/rate-limit checks still
-  // apply either way.
+  // Fail open, not closed: if the Turnstile script never loads (ad blocker,
+  // privacy extension, a network that blocks challenges.cloudflare.com
+  // outright — all observed in the field), window.turnstile stays
+  // undefined forever and a real customer would be stuck unable to submit
+  // at all. Losing bot protection to an infrastructure hiccup is a far
+  // smaller cost than losing a real lead, and the honeypot/time-trap/
+  // rate-limit checks still apply either way.
   useEffect(() => {
-    if (!HCAPTCHA_SITE_KEY) return
+    if (!TURNSTILE_SITE_KEY) return
     const timer = setTimeout(() => {
-      if (!window.hcaptcha) setCaptchaLoadFailed(true)
+      if (!window.turnstile) setCaptchaLoadFailed(true)
     }, 6000)
     return () => clearTimeout(timer)
   }, [])
@@ -107,8 +107,8 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
     setErrors(next)
 
     let captchaOk = true
-    if (HCAPTCHA_SITE_KEY && !captchaLoadFailed) {
-      const token = window.hcaptcha?.getResponse()
+    if (TURNSTILE_SITE_KEY && !captchaLoadFailed) {
+      const token = window.turnstile?.getResponse()
       captchaOk = !!token
       setCaptchaError(captchaOk ? undefined : "Verify you're not a robot")
     }
@@ -122,7 +122,7 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
 
     setStatus('submitting')
     try {
-      const captchaToken = HCAPTCHA_SITE_KEY ? window.hcaptcha?.getResponse() : undefined
+      const captchaToken = TURNSTILE_SITE_KEY ? window.turnstile?.getResponse() : undefined
       const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -134,7 +134,7 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
       if (!res.ok) {
         // A used/expired token can't be resubmitted — reset so the next
         // attempt (whatever the failure reason) gets a fresh one.
-        window.hcaptcha?.reset()
+        window.turnstile?.reset()
         setStatus(
           resBody?.reason === 'not_configured'
             ? 'not_configured'
@@ -301,16 +301,16 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
         </p>
       )}
 
-      {HCAPTCHA_SITE_KEY && !captchaLoadFailed && (
+      {TURNSTILE_SITE_KEY && !captchaLoadFailed && (
         <div>
           <Script
-            src="https://js.hcaptcha.com/1/api.js"
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
             strategy="afterInteractive"
             async
             defer
             onError={() => setCaptchaLoadFailed(true)}
           />
-          <div className="h-captcha" data-sitekey={HCAPTCHA_SITE_KEY} />
+          <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} />
           {captchaError && (
             <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">
               {captchaError}

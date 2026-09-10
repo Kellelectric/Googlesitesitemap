@@ -105,12 +105,10 @@ export default function RootLayout({
             (service routing, emergency safety message, solar question
             flow, lead capture via /api/quote) all work with zero
             configuration; free-text conversation additionally needs
-            ANTHROPIC_API_KEY set (see that route's own comments).
-            Previously replaced by Botpress/Zoho SalesIQ after an
-            Anthropic Console billing lapse took it down - confirm
-            billing is in good standing before relying on this in
-            production again. Botpress's Script tags and the Zoho
-            SalesIQ component (src/components/chat/ZohoSalesIQ.tsx,
+            GROQ_API_KEY set (see that route's own comments). Runs on
+            Groq's hosted Llama models rather than Anthropic, per client
+            direction. Botpress's Script tags and the Zoho SalesIQ
+            component (src/components/chat/ZohoSalesIQ.tsx,
             docs/zoho-salesiq-zobot.md) are left in the repo, not
             deleted, in case either is wanted again later. */}
         <KellAssist />

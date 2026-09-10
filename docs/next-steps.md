@@ -664,8 +664,8 @@ existing article and service page's discipline against inventing numbers.
   (`createRateLimiter`, `getClientIp`) and wired it into `/api/chat` too
   (20 requests / 10 minutes per IP — looser than the quote form's 5,
   since a normal chat conversation is naturally several turns). This was
-  flagged as a gap: `/api/chat` calls a real (billed) Anthropic API once
-  `ANTHROPIC_API_KEY` is set, and had no abuse protection at all. Same
+  flagged as a gap: `/api/chat` calls a real (billed) Groq API once
+  `GROQ_API_KEY` is set, and had no abuse protection at all. Same
   caveat as before — in-memory, resets on cold start, won't stop a
   distributed attack, but does stop a single script hammering the
   endpoint.
@@ -1033,19 +1033,23 @@ Assist" chatbot (new this round — see below), and a first draft of
     existing `/api/quote` endpoint (tagged `channel: 'kell_assist_chatbot'`
     for attribution) — no new backend integration needed.
   - **Free-text conversation** goes through a new `/api/chat` route
-    (`src/app/api/chat/route.ts`) that calls the Anthropic Messages API
-    directly via `fetch` (no SDK dependency added) with a system prompt
-    built entirely from `src/content/chatbot.ts`, which composes from the
-    *existing* typed content files (`services.ts`, `industries.ts`,
-    `faqs.ts`, `careers.ts`, `company.ts`) — the model can't know anything
-    the website doesn't already say, and it's instructed to reply with the
+    (`src/app/api/chat/route.ts`) that calls Groq's OpenAI-compatible
+    chat-completions API (hosted Llama models) directly via `fetch` (no
+    SDK dependency added) with a system prompt built entirely from
+    `src/content/chatbot.ts`, which composes from the *existing* typed
+    content files (`services.ts`, `industries.ts`, `faqs.ts`,
+    `careers.ts`, `company.ts`) — the model can't know anything the
+    website doesn't already say, and it's instructed to reply with the
     brief's exact fallback line ("I don't want to give you incorrect
     information...") rather than invent an answer. **This needs
-    `ANTHROPIC_API_KEY` set in the deployment to actually respond to free
+    `GROQ_API_KEY` set in the deployment to actually respond to free
     text — same env-var-gated pattern as `QUOTE_WEBHOOK_URL` and
-    `NEXT_PUBLIC_GA_MEASUREMENT_ID`.** Without it, `/api/chat` returns
-    `not_configured` and the widget falls back to a grounded, non-AI
-    summary pulled from the same content files, then offers Request a
+    `NEXT_PUBLIC_GA_MEASUREMENT_ID`.** (Originally built on the Anthropic
+    Messages API; migrated to Groq per client direction — same request
+    shape swapped for Groq's OpenAI-compatible endpoint, everything else
+    unchanged.) Without it, `/api/chat` returns `not_configured` and the
+    widget falls back to a grounded, non-AI summary pulled from the same
+    content files, then offers Request a
     Quote / WhatsApp — the guided flows above are unaffected either way.
   - **Analytics**: fires `chat_opened`, `service_selected`,
     `quote_requested`, `consultation_requested`, `emergency_selected`,
@@ -1057,7 +1061,7 @@ Assist" chatbot (new this round — see below), and a first draft of
     developer, not a non-technical admin panel — building a real admin UI
     was out of scope for this round given everything else requested); rate
     limiting on `/api/chat` (the quote endpoint has one, this doesn't yet —
-    worth adding before `ANTHROPIC_API_KEY` is set, to avoid a cost-abuse
+    worth adding before `GROQ_API_KEY` is set, to avoid a cost-abuse
     vector); persisting chat history server-side (currently client-only,
     lost on refresh).
 - **Full 7-category service page restructure — done, all 7.** The brief

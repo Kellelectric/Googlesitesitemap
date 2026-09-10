@@ -5,8 +5,8 @@ import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 
 export const runtime = 'nodejs'
 
-// Each free-text turn costs a real Anthropic API call once ANTHROPIC_API_KEY
-// is set, so this is stricter than the quote form's rate limit — a normal
+// Each free-text turn costs a real Groq API call once GROQ_API_KEY is set,
+// so this is stricter than the quote form's rate limit — a normal
 // back-and-forth conversation stays well under 20 turns in 10 minutes, but
 // a script hammering this endpoint gets cut off well before running up a
 // meaningful bill.
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'invalid_payload' }, { status: 422 })
   }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY
+  const apiKey = process.env.GROQ_API_KEY
   if (!apiKey) {
     // Graceful degradation: the chatbot's guided quick-reply flows (service
     // routing, emergency safety message, solar question flow, lead capture)
@@ -106,38 +106,31 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
   }
 
-  const workspaceId = process.env.ANTHROPIC_WORKSPACE_ID
-
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    // Groq's API is OpenAI-compatible: a `chat/completions` endpoint with a
+    // `system` message as the first item in `messages` rather than Anthropic's
+    // separate top-level `system` field.
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        // Required when the key is identity-linked across multiple Console
-        // workspaces rather than scoped to one - without this the Anthropic
-        // API rejects the request with a 400 asking for it explicitly.
-        ...(workspaceId ? { 'anthropic-workspace-id': workspaceId } : {}),
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
+        model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
         max_tokens: 400,
-        system: buildSystemPrompt(),
-        messages: body.messages,
+        messages: [{ role: 'system', content: buildSystemPrompt() }, ...body.messages],
       }),
       signal: AbortSignal.timeout(15000),
     })
 
     if (!response.ok) {
-      console.error('Anthropic API error', response.status, await response.text())
+      console.error('Groq API error', response.status, await response.text())
       return NextResponse.json({ ok: false, reason: 'upstream_error' }, { status: 502 })
     }
 
     const data = await response.json()
-    const reply: string =
-      data?.content?.find((block: { type: string }) => block.type === 'text')?.text ??
-      uncertainResponseMessage
+    const reply: string = data?.choices?.[0]?.message?.content ?? uncertainResponseMessage
 
     return NextResponse.json({ ok: true, reply })
   } catch (error) {
@@ -150,7 +143,7 @@ export async function POST(request: NextRequest) {
 // duplicating company facts.
 export async function GET() {
   return NextResponse.json({
-    configured: Boolean(process.env.ANTHROPIC_API_KEY),
+    configured: Boolean(process.env.GROQ_API_KEY),
     phoneHref: company.phoneHref,
     phone: company.phone,
     whatsappHref: company.whatsappHref,

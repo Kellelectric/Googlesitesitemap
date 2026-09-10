@@ -168,7 +168,7 @@ field labels, emergency keywords/safety message, solar flow questions, and
 a `buildKnowledgeBase()` composer that pulls from `services.ts`,
 `industries.ts`, `faqs.ts`, `careers.ts`, and `company.ts` rather than
 duplicating facts. The chat API route (`src/app/api/chat/route.ts`) builds
-its system prompt entirely from this file, gated on `ANTHROPIC_API_KEY`
+its system prompt entirely from this file, gated on `GROQ_API_KEY`
 being set — see `next-steps.md`.
 
 ### `src/content/nav.ts`

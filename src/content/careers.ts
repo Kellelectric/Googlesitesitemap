@@ -236,6 +236,7 @@ export const careerTracks: CareerTrack[] = [
       'Site Supervisor - coordinating multi-trade electrical fit-outs on active construction sites',
       'Solar & Inverter Installation Technician - hybrid solar/battery system installation and commissioning',
       'Secretary - office administration, scheduling, and correspondence support',
+      'Receptionist - front desk, visitor and call handling, and day-to-day office support',
       'Marketer - promoting services, managing outreach, and generating leads',
       'Business Developer - identifying new business opportunities and building client relationships',
     ],

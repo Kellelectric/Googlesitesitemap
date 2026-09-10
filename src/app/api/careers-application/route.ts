@@ -4,8 +4,48 @@ import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { verifyHCaptcha } from '@/lib/hcaptcha'
 import { getCareerTrackBySlug } from '@/content/careers'
 import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting'
+import { createCareerLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
+import { sendCareerSlackNotification, isSlackNotifyConfigured } from '@/lib/slackNotify'
+import {
+  sendApplicantConfirmationEmail,
+  sendInternalNotificationEmail,
+  isResendConfigured,
+  isCareerNotifyEmailConfigured,
+} from '@/lib/resendEmail'
 
 export const runtime = 'nodejs'
+
+// Google Apps Script Web Apps respond to a POST at .../exec with an empty
+// 302 redirect to a one-time script.googleusercontent.com/macros/echo URL
+// that carries the real response body. Node's fetch() `redirect: 'follow'`
+// (the default) converts that redirect's method to GET per the WHATWG spec
+// - normally harmless - but was confirmed during live testing this round to
+// intermittently fail against this specific redirect chain (manually
+// verified with curl: the redirect had to be followed as an explicit,
+// separate GET request to come back reliably). Handled manually here so
+// CAREERS_WEBHOOK_URL pointed at an Apps Script deployment works
+// deterministically; a non-redirecting receiver (e.g. Zoho Flow) is
+// unaffected since this only branches on a 3xx response.
+async function postToWebhook(
+  url: string,
+  headers: Record<string, string>,
+  body: string,
+): Promise<Response> {
+  const initial = await fetch(url, {
+    method: 'POST',
+    headers,
+    body,
+    redirect: 'manual',
+    signal: AbortSignal.timeout(8000),
+  })
+  if (initial.status >= 300 && initial.status < 400) {
+    const location = initial.headers.get('location')
+    if (location) {
+      return fetch(location, { method: 'GET', signal: AbortSignal.timeout(8000) })
+    }
+  }
+  return initial
+}
 
 // Same short-reference pattern as app/api/quote/route.ts.
 function generateApplicationReference(): string {
@@ -264,21 +304,112 @@ export async function POST(request: NextRequest) {
     ipHash: ip !== 'unknown' ? hashIp(ip) : undefined,
     redirectUrl: redirectUrl ?? undefined,
   }
+  // Direct integrations, independent of CAREERS_WEBHOOK_URL - each one is
+  // env-var gated (see src/lib/zohoCrm.ts, slackNotify.ts, resendEmail.ts)
+  // and fires for every track, not just job-openings/nysc-placement, since
+  // a CRM record / team notification is useful regardless of whether the
+  // applicant also gets redirected to a Google Form. Fire-and-forget -
+  // never awaited, never blocks or fails the applicant's own response.
+  // hasFormRedirect (kept before webhookPayload was built - see
+  // `redirectUrl` above) governs whether an *applicant-confirmation* email
+  // makes sense here (the Apps Script webhook, if configured, sends its
+  // own "finish the form" email instead for that path - see careers-
+  // automation.md's duplicate-email note in careerApplicationRouter.gs).
+  if (isZohoCrmConfigured()) {
+    createCareerLead({
+      fullName: body.fullName,
+      email: body.email,
+      phone: body.phone,
+      trackName: track.name,
+      roleAppliedFor: body.roleAppliedFor,
+      courseOrInstitution: body.courseOrInstitution,
+      cvLink: body.cvLink,
+      message: body.message,
+      reference,
+    }).catch((error) => {
+      console.error('Zoho CRM lead create (best-effort) failed', error)
+    })
+  }
+
+  if (isSlackNotifyConfigured()) {
+    sendCareerSlackNotification({
+      reference,
+      trackName: track.name,
+      fullName: body.fullName,
+      email: body.email,
+      phone: body.phone,
+      roleAppliedFor: body.roleAppliedFor,
+      cvLink: body.cvLink,
+    }).catch((error) => {
+      console.error('Slack notification (best-effort) failed', error)
+    })
+  }
+
+  if (isCareerNotifyEmailConfigured()) {
+    sendInternalNotificationEmail({
+      reference,
+      trackName: track.name,
+      fullName: body.fullName,
+      email: body.email,
+      phone: body.phone,
+      courseOrInstitution: body.courseOrInstitution,
+      roleAppliedFor: body.roleAppliedFor,
+      cvLink: body.cvLink,
+      message: body.message,
+      submittedAt: webhookPayload.submittedAt,
+    }).catch((error) => {
+      console.error('Internal notification email (best-effort) failed', error)
+    })
+  }
+
+  if (isResendConfigured() && !redirectUrl) {
+    // Only for tracks without a Google Form redirect - the redirect
+    // tracks' own applicant email is "finish your application", sent by
+    // the Apps Script webhook if configured, not "received" (they haven't
+    // finished yet). See the duplicate-email note above.
+    sendApplicantConfirmationEmail({
+      reference,
+      trackName: track.name,
+      fullName: body.fullName,
+      email: body.email,
+      phone: body.phone,
+      courseOrInstitution: body.courseOrInstitution,
+      roleAppliedFor: body.roleAppliedFor,
+      cvLink: body.cvLink,
+      message: body.message,
+      submittedAt: webhookPayload.submittedAt,
+    }).catch((error) => {
+      console.error('Applicant confirmation email (best-effort) failed', error)
+    })
+  }
+
   const payload = JSON.stringify(webhookPayload)
   const secret = process.env.CAREERS_WEBHOOK_SECRET
   const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  let webhookUrl = process.env.CAREERS_WEBHOOK_URL
   if (secret) {
-    headers['x-webhook-signature'] = signPayload(payload, secret)
+    const signature = signPayload(payload, secret)
+    headers['x-webhook-signature'] = signature
+    // Google Apps Script Web Apps cannot read custom HTTP headers on an
+    // incoming request at all (no e.headers in doPost) - only Content-Type
+    // and URL query parameters are visible to the script. The header above
+    // is kept for any non-Apps-Script receiver (e.g. a Zoho Flow webhook)
+    // that CAREERS_WEBHOOK_URL might point to instead, but the query param
+    // below is what careerApplicationRouter.gs's doPost actually reads
+    // (e.parameter['x-webhook-signature'], checked first in its
+    // verifySignature branch).
+    if (webhookUrl) {
+      const urlWithSignature = new URL(webhookUrl)
+      urlWithSignature.searchParams.set('x-webhook-signature', signature)
+      webhookUrl = urlWithSignature.toString()
+    }
   }
-  const webhookUrl = process.env.CAREERS_WEBHOOK_URL
 
   if (redirectUrl) {
     if (webhookUrl) {
-      fetch(webhookUrl, { method: 'POST', headers, body: payload, signal: AbortSignal.timeout(8000) }).catch(
-        (error) => {
-          console.error('Careers webhook forward (best-effort, Google Form track) failed', error)
-        },
-      )
+      postToWebhook(webhookUrl, headers, payload).catch((error) => {
+        console.error('Careers webhook forward (best-effort, Google Form track) failed', error)
+      })
     }
     recentSubmissions.set(dupKey, { reference, at: Date.now() })
     return NextResponse.json({ ok: true, reference, redirectUrl })
@@ -298,12 +429,7 @@ export async function POST(request: NextRequest) {
   let lastError: unknown
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     try {
-      const forwarded = await fetch(webhookUrl, {
-        method: 'POST',
-        headers,
-        body: payload,
-        signal: AbortSignal.timeout(8000),
-      })
+      const forwarded = await postToWebhook(webhookUrl, headers, payload)
 
       if (forwarded.ok) {
         recentSubmissions.set(dupKey, { reference, at: Date.now() })

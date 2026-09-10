@@ -16,9 +16,13 @@ Google Apps Script setup, and the exact testing procedure.
 | Pre-filled Google Form link generation (`buildPrefillUrl`) | **IMPLEMENTED** - live in this repo, real field IDs confirmed via `listFormItems()` |
 | Central routing config (`src/content/careerFormRouting.ts`) | **IMPLEMENTED** - live in this repo |
 | Google Apps Script webhook (optional notification endpoint) | **IMPLEMENTED as code**, deployed by the client (Web App URL confirmed working) |
+| Google Sheet applicant log (`appendToSheet_` in the Apps Script router) | **IMPLEMENTED as code** - opt-in via a `SPREADSHEET_ID` Script Property; no spreadsheet is created or assumed until that's set |
+| Zoho CRM Lead creation (`src/lib/zohoCrm.ts`) | **IMPLEMENTED as code** - direct REST integration (self-client OAuth), independent of Zoho Flow; real "Leads" module confirmed live in the org via `getModules`/`getFields` |
+| Slack notification (`src/lib/slackNotify.ts`) | **IMPLEMENTED as code** - Incoming Webhook, one message per application |
+| Resend email (`src/lib/resendEmail.ts`) - internal notification + applicant confirmation | **IMPLEMENTED as code** |
 | Zoho Flow webhook + routing | **NOT USED** - see "Why a pre-filled link, not Zoho Flow -> Apps Script -> auto-submit" below |
-| Applicant confirmation email, internal notification | **REQUIRES EXTERNAL CONFIGURATION** - optional, not built |
 | End-to-end test (website -> pre-filled Google Form link -> applicant completes it -> Sheet) | **PARTIALLY VERIFIED** - `buildPrefillUrl()` output confirmed to carry the right `entry.<id>` params for real, live-inspected forms; an applicant actually completing one end-to-end has not been observed from this session. |
+| All 4 direct integrations above (Zoho CRM, Slack, Resend, Sheet log) | **CODE ONLY, UNTESTED END-TO-END** - no live credentials exist in this environment for any of them (see "What could NOT be tested" below). Each is independently env-var gated and no-ops safely when unset. |
 
 Nothing here is claimed as "connected" that hasn't actually been run and
 observed working.
@@ -58,7 +62,129 @@ POST /api/careers-application (src/app/api/careers-application/route.ts)
         forwarded to CAREERS_WEBHOOK_URL (required for this path -
         signed, retried on 5xx) for whatever downstream handling the
         client wants (a tracking Sheet, Zoho CRM, email, etc.)
+
+  +-- (every track, in parallel with the above, each independently
+        env-var gated - see "Direct integrations" below):
+        -> Zoho CRM: creates a Lead        (src/lib/zohoCrm.ts)
+        -> Slack: posts a notification     (src/lib/slackNotify.ts)
+        -> Resend: internal + applicant
+           confirmation email              (src/lib/resendEmail.ts)
+      All three are fire-and-forget - a failure is logged server-side,
+      never surfaced to the applicant and never blocks their own
+      success response.
 ```
+
+## Direct integrations (Zoho CRM, Slack, Resend, Sheet log)
+
+Four integrations run directly from the website's API route (or, for the
+Sheet log, from the existing Apps Script webhook) - independent of
+`CAREERS_WEBHOOK_URL`/Zoho Flow, and independent of each other. Each is
+purely additive: leave its env vars unset and it's a no-op, exactly like
+every other optional feature in this codebase (Paystack, Google Calendar
+booking, etc.).
+
+### Zoho CRM - creates a Lead per application
+
+`src/lib/zohoCrm.ts` posts directly to Zoho CRM's REST API using a
+self-client OAuth refresh-token flow (no SDK, no Zoho Flow hop). The real
+Leads module in the client's own Zoho CRM org (confirmed live via
+`getModules`/`getFields` - standard `Leads`, not a custom "Candidates"
+module, since none exists) receives one Lead per application: name, email,
+phone, `Designation` (role/track), and a `Description` containing the
+reference, track, role, institution, CV link, and the applicant's message.
+`Lead_Source` is deliberately left unset - none of the org's real picklist
+values ("Web Download", "Web Research", etc.) accurately describes "the
+on-site careers form," and guessing one would misrepresent the source in
+reporting.
+
+Setup:
+
+1. [api-console.zoho.com](https://api-console.zoho.com) -> **Add Client**
+   -> **Self Client**.
+2. Generate a code with scope `ZOHOCRM.modules.leads.CREATE` (10-minute
+   validity - use it right away in the next step).
+3. Exchange it once for a refresh token:
+   ```bash
+   curl -X POST https://accounts.zoho.<dc>/oauth/v2/token \
+     -d client_id=<CLIENT_ID> \
+     -d client_secret=<CLIENT_SECRET> \
+     -d code=<GRANT_CODE> \
+     -d grant_type=authorization_code
+   ```
+   The response's `refresh_token` is a one-time value - store it
+   immediately (Zoho does not show it again).
+4. Set `ZOHO_CRM_CLIENT_ID`, `ZOHO_CRM_CLIENT_SECRET`,
+   `ZOHO_CRM_REFRESH_TOKEN`, and `ZOHO_CRM_DC` (the account's data-center
+   domain suffix, e.g. `com`, `eu`, `in`) in Vercel's Production
+   environment.
+
+### Slack - one message per application
+
+`src/lib/slackNotify.ts` posts to a Slack **Incoming Webhook**. Setup:
+Slack -> **Apps** -> search "Incoming Webhooks" -> **Add to Slack** -> pick
+a channel -> copy the generated URL into `CAREERS_SLACK_WEBHOOK_URL`.
+
+### Resend - internal notification + applicant confirmation
+
+`src/lib/resendEmail.ts` sends two independent emails via the [Resend
+API](https://resend.com):
+
+- **Internal notification** (`sendInternalNotificationEmail`) - to
+  `CAREERS_NOTIFY_EMAIL`, on every application, every track. Requires
+  `RESEND_API_KEY` + `CAREERS_FROM_EMAIL` + `CAREERS_NOTIFY_EMAIL` all set.
+- **Applicant confirmation** (`sendApplicantConfirmationEmail`) - only for
+  tracks with **no** Google Form redirect (`job-openings`/
+  `nysc-placement`). Requires `RESEND_API_KEY` + `CAREERS_FROM_EMAIL`.
+
+**Duplicate-email warning**: the Apps Script webhook
+(`careerApplicationRouter.gs`), if `CAREERS_WEBHOOK_URL` is configured,
+already sends its own confirmation email via `MailApp` for every track (a
+"received" email for job-openings/nysc-placement, a "finish your
+application" reminder for the 3 Google Form tracks). That path and the
+Resend path don't know about each other - if both are active, the
+applicant gets two emails. Pick one: either leave `RESEND_API_KEY` unset
+and keep using the Apps Script's `MailApp` sends, or set it and remove the
+`sendApplicantConfirmationEmail_`/`sendContinueApplicationEmail_` calls
+from `careerApplicationRouter.gs`. The internal-notification email has no
+such overlap - nothing else currently sends one.
+
+Setup: create a Resend account, verify a sending domain (or use Resend's
+own test sender while developing), create an API key, then set
+`RESEND_API_KEY`, `CAREERS_FROM_EMAIL` (a verified sender address), and
+`CAREERS_NOTIFY_EMAIL` (where internal notifications land).
+
+### Provisioned this session (real, live resources - not invented)
+
+- **Resend**: `kellelectricals.com` was already a verified sending domain
+  in the client's Resend account. A dedicated, sending-only API key named
+  "Careers Application Pipeline" was created scoped to that domain. The
+  key itself was shown once to the user in chat and is not stored in this
+  repo - set it as `RESEND_API_KEY` in Vercel directly.
+- **Google Sheet**: created at
+  `https://docs.google.com/spreadsheets/d/1LmCOGdVL8x2RPI0rHAtqsTi1n1ZX4AtllTkO2Rj69Bc/edit`,
+  already owned by `kellelectricals@gmail.com` (same account the Apps
+  Script router deploys under - no sharing step needed). Set
+  `SPREADSHEET_ID=1LmCOGdVL8x2RPI0rHAtqsTi1n1ZX4AtllTkO2Rj69Bc` as a Script
+  Property once the updated `careerApplicationRouter.gs` (with
+  `appendToSheet_`) is redeployed.
+- **Zoho CRM self-client** and **Slack Incoming Webhook** were NOT
+  provisioned this session - both require a manual step in each service's
+  own console under an account this session doesn't have access to
+  (Zoho's API Console, Slack's App directory). See their setup steps
+  above.
+
+### Google Sheet applicant log
+
+Extends the already-deployed Apps Script webhook rather than adding a new
+one - `appendToSheet_()` in `careerApplicationRouter.gs` appends one row
+per acknowledged application (every track) to an "Applications" sheet,
+using the exact column set recommended earlier in this doc. Opt-in: set a
+`SPREADSHEET_ID` Script Property (the ID from the sheet's URL, between
+`/d/` and `/edit`) in the same Apps Script project already handling
+`CAREERS_WEBHOOK_URL`. The "Applications" tab (with a frozen header row)
+is created automatically on the first application received after this is
+set - no manual sheet setup needed beyond creating the spreadsheet itself
+and copying its ID.
 
 ### Why a pre-filled link, not Zoho Flow -> Apps Script -> auto-submit
 
@@ -136,6 +262,14 @@ specific pipeline uses:
 - `HCAPTCHA_SECRET_KEY` / `NEXT_PUBLIC_HCAPTCHA_SITE_KEY` - already shared
   with the quote and booking forms; setting them activates hCaptcha here
   too automatically.
+- `ZOHO_CRM_CLIENT_ID` / `ZOHO_CRM_CLIENT_SECRET` / `ZOHO_CRM_REFRESH_TOKEN`
+  / `ZOHO_CRM_DC` - direct Zoho CRM Lead creation, all four required
+  together. See "Direct integrations" below.
+- `CAREERS_SLACK_WEBHOOK_URL` - direct Slack notification per application.
+- `RESEND_API_KEY` / `CAREERS_FROM_EMAIL` / `CAREERS_NOTIFY_EMAIL` - direct
+  email (internal notification + applicant confirmation). See the
+  duplicate-email warning under "Direct integrations" before setting this
+  alongside an already-configured `CAREERS_WEBHOOK_URL`.
 
 None of these are set to real values anywhere in this repository or in
 this document. Set them in Vercel's dashboard, per environment
@@ -460,6 +594,17 @@ website-side tests" below.
   locally against a mock receiver).
 - hCaptcha and hCaptcha-failure paths (no real site/secret key pair
   configured in this environment).
+- **The 4 direct integrations (Zoho CRM, Slack, Resend, Sheet log) end-to-
+  end** - `npx tsc --noEmit` and `npm run build` pass with them wired in,
+  and each function's request shape was built directly from confirmed-live
+  schema (`getModules`/`getFields` against the client's actual Zoho CRM
+  org for the Leads-module mapping), but no live `ZOHO_CRM_*`,
+  `CAREERS_SLACK_WEBHOOK_URL`, `RESEND_API_KEY`, or `SPREADSHEET_ID` exists
+  in this environment to exercise a real request against. Before relying
+  on any one of them, set its env var(s) in a non-production environment
+  and submit one real test application per track, then confirm: a Lead
+  appears in Zoho CRM, a Slack message arrives, the emails send, and/or a
+  row appears in the Sheet.
 
 ### Full manual test plan (client-run, one pass before announcing live)
 

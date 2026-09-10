@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { fieldTools } from '@/content/fieldTools'
@@ -15,6 +16,16 @@ export default function FieldToolsPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-petrol text-paper">
+        <Image
+          src="/images/photos/services-substation.jpg"
+          alt=""
+          fill
+          priority
+          quality={60}
+          sizes="100vw"
+          className="object-cover object-[60%_40%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">
           <h1 className="max-w-2xl text-4xl font-semibold [text-wrap:balance] md:text-5xl">
@@ -86,6 +97,16 @@ export default function FieldToolsPage() {
               the same standard whether the visit was a load audit alone
               or a complete site assessment.
             </p>
+            <div className="relative mt-10 h-64 overflow-hidden sm:h-80">
+              <Image
+                src="/images/photos/about-blueprint-review.jpg"
+                alt="Engineers reviewing project blueprints on site"
+                fill
+                sizes="(min-width: 1024px) 700px, 100vw"
+                className="object-cover"
+              />
+            </div>
+
             <div className="mt-8">
               <Button href="/book" variant="primary">
                 Book a Site Assessment

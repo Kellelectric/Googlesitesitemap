@@ -12,13 +12,22 @@ type RevealProps = {
 
 // Scroll-triggered fade/slide-in used across landing pages. Respects
 // prefers-reduced-motion by rendering with no transform/opacity animation.
+//
+// `initial={false}` (rather than the hidden {opacity:0, y} state) is
+// deliberate: with a real initial state, Framer Motion renders that
+// opacity:0 inline on the server-rendered HTML itself, so content stays
+// genuinely invisible - not just unanimated - until client JS hydrates
+// and whileInView fires. On a slow connection, a blocked/failed script,
+// or just a slow device, that's a real "blank page" bug, verified via a
+// JS-disabled render. `initial={false}` renders content already visible
+// and still lets whileInView animate it normally once JS does load.
 export function Reveal({ children, className, delay = 0, y = 20 }: RevealProps) {
   const reduceMotion = useReducedMotion()
 
   return (
     <motion.div
       className={className}
-      initial={reduceMotion ? undefined : { opacity: 0, y }}
+      initial={false}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
@@ -44,7 +53,7 @@ export function StaggerGroup({ children, className, stagger = 0.08 }: StaggerPro
   return (
     <motion.div
       className={className}
-      initial={reduceMotion ? undefined : 'hidden'}
+      initial={false}
       whileInView={reduceMotion ? undefined : 'visible'}
       viewport={{ once: true, margin: '-80px' }}
       variants={{
@@ -57,6 +66,12 @@ export function StaggerGroup({ children, className, stagger = 0.08 }: StaggerPro
   )
 }
 
+// `initial={false}` on the parent StaggerGroup means these item variants
+// never render hidden in server HTML (see Reveal's comment above for why
+// that matters) - whileInView still applies `visible` normally once JS
+// hydrates, so the stagger/fade-up plays for real users; a JS-disabled
+// or slow-hydration visit just sees the content already at its final,
+// visible position instead of stuck invisible.
 export const staggerItem = {
   hidden: { opacity: 0, y: 16 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },

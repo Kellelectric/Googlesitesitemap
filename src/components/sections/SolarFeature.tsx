@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { getServiceBySlug } from '@/content/services'
@@ -12,7 +13,8 @@ export function SolarFeature() {
       <CircuitLines className="pointer-events-none absolute -left-32 -top-16 h-[140%] w-[70%] text-paper/5" />
       <div className="container-content relative grid grid-cols-1 gap-12 py-24 md:grid-cols-2 md:items-center">
         <Reveal>
-          <h2 className="text-3xl font-semibold md:text-4xl [text-wrap:balance]">
+          <span className="eyebrow text-yellow">Featured capability</span>
+          <h2 className="mt-3 text-3xl font-semibold md:text-4xl">
             {solar.name}
           </h2>
           <p className="mt-5 text-paper/70 leading-relaxed">
@@ -28,18 +30,27 @@ export function SolarFeature() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.12} className="border border-copper/25 bg-petrol-700/40 p-8">
-          <span className="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-copper">
-            System design covers
-          </span>
-          <ul className="mt-5 space-y-4">
-            {solar.scope.map((item) => (
-              <li key={item} className="flex gap-3 text-sm text-paper/80">
-                <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-yellow" />
-                {item}
-              </li>
-            ))}
-          </ul>
+        <Reveal delay={0.12}>
+          <div className="relative h-56 overflow-hidden border border-paper/15">
+            <Image
+              src="/images/photos/solar-roof-install.jpg"
+              alt="Technicians installing a solar panel array on a rooftop"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="border border-t-0 border-paper/15 p-8">
+            <span className="eyebrow text-paper/60">System design covers</span>
+            <ul className="mt-5 space-y-4">
+              {solar.scope.map((item) => (
+                <li key={item} className="flex gap-3 text-sm text-paper/80">
+                  <span className="mt-1 h-1.5 w-1.5 shrink-0 bg-yellow" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
         </Reveal>
       </div>
     </section>

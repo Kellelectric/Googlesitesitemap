@@ -2,29 +2,51 @@ import { Button } from '@/components/ui/Button'
 import { company } from '@/content/company'
 import { Reveal } from '@/components/ui/Reveal'
 
-export function CTASection() {
+type CTASectionProps = {
+  heading?: string
+  body?: string
+  serviceSlug?: string
+  primaryLabel?: string
+  primaryHref?: string
+  primaryExternal?: boolean
+  secondaryLabel?: string
+  secondaryHref?: string
+}
+
+export function CTASection({
+  heading = 'Scope a job with our team',
+  body = 'Tell us what you need engineered, repaired, or installed. We respond with a scoped assessment, not a guess.',
+  serviceSlug,
+  primaryLabel = 'Request a Quote',
+  primaryHref,
+  primaryExternal = false,
+  secondaryLabel,
+  secondaryHref,
+}: CTASectionProps = {}) {
+  const resolvedPrimaryHref =
+    primaryHref ?? (serviceSlug ? `/contact?service=${serviceSlug}` : '/contact')
+  const resolvedSecondaryLabel = secondaryLabel ?? `Call ${company.phone}`
+  const resolvedSecondaryHref = secondaryHref ?? company.phoneHref
+
   return (
-    <section className="bg-petrol-700 text-paper">
-      <Reveal className="container-content flex flex-col items-start gap-8 py-20 md:flex-row md:items-center md:justify-between">
+    <section className="relative overflow-hidden border-t border-paper/10 bg-petrol-700 text-paper">
+      <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-10" />
+      <Reveal className="container-content relative flex flex-col items-start gap-8 py-20 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="max-w-lg text-3xl font-semibold md:text-4xl">
-            Scope a job with our team
-          </h2>
-          <p className="mt-4 max-w-md text-paper/65">
-            Tell us what you need engineered, repaired, or installed. We
-            respond with a scoped assessment, not a guess.
-          </p>
+          <h2 className="max-w-lg text-3xl font-semibold md:text-4xl">{heading}</h2>
+          <p className="mt-4 max-w-md text-paper/65">{body}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-4">
-          <Button href="/contact" variant="primary">
-            Request a Quote
+        <div className="flex flex-wrap gap-4">
+          <Button
+            href={resolvedPrimaryHref}
+            variant="primary"
+            {...(primaryExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+          >
+            {primaryLabel}
           </Button>
-          <Button href="/book" variant="secondary">
-            Book a Site Assessment
+          <Button href={resolvedSecondaryHref} variant="secondary">
+            {resolvedSecondaryLabel}
           </Button>
-          <a href={company.phoneHref} className="link-underline text-sm text-paper/70">
-            or call {company.phone}
-          </a>
         </div>
       </Reveal>
     </section>

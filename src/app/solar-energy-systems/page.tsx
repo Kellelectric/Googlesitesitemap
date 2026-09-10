@@ -1,25 +1,33 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { company } from '@/content/company'
 import { getServiceBySlug } from '@/content/services'
 import { serviceSchema, breadcrumbSchema } from '@/lib/schema'
+import { pageMetadata } from '@/lib/metadata'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
 
-export const metadata: Metadata = {
-  title: 'Solar & Hybrid Energy Systems',
+export const metadata: Metadata = pageMetadata({
+  // "Solar Company in Abuja" - real, accurate, and the flagship solar
+  // page's own dedicated keyword target, distinct from the
+  // /services/solar-inverter-systems service listing's "Solar in Abuja"
+  // seoTitle (see services.ts) so the two pages don't cannibalize each
+  // other's ranking for near-identical phrasing.
+  title: 'Solar Company in Abuja',
   description:
-    'Load-analyzed solar and hybrid inverter systems sized for Nigeria’s grid reality — methodology, system tiers, and what a proper sizing process actually involves.',
-  alternates: { canonical: '/solar-energy-systems' },
-}
+    'Certified solar company in Abuja - load-analyzed solar and hybrid inverter systems sized for Nigeria\'s real grid, not a generic panel count.',
+  path: '/solar-energy-systems',
+  image: '/images/photos/solar-hero-panel-install.jpg',
+})
 
 const methodology = [
   {
     step: '01',
     title: 'Consumption audit',
     description:
-      'We measure actual circuit-level consumption over time — not a guess from your utility bill — to establish a real load profile, including peak demand and what runs during an outage.',
+      'We measure actual circuit-level consumption over time, not a guess from your utility bill, to establish a real load profile, including peak demand and what runs during an outage.',
   },
   {
     step: '02',
@@ -31,7 +39,7 @@ const methodology = [
     step: '03',
     title: 'Component selection',
     description:
-      'Hybrid inverter and battery chemistry selected for your duty cycle — daily cycling for backup-only systems is a different spec than a system designed to reduce generator hours materially.',
+      'Hybrid inverter and battery chemistry selected for your duty cycle. Daily cycling for backup-only systems is a different spec than a system designed to reduce generator hours materially.',
   },
   {
     step: '04',
@@ -43,7 +51,7 @@ const methodology = [
     step: '05',
     title: 'Commissioning & handover',
     description:
-      'Performance testing against the design spec, monitoring setup, and documented handover — so you know the system is delivering what it was sized to deliver.',
+      'Performance testing against the design spec, monitoring setup, and documented handover, so you know the system is delivering what it was sized to deliver.',
   },
 ]
 
@@ -51,7 +59,7 @@ const tiers = [
   {
     name: 'Backup essentials',
     summary:
-      'Keeps critical circuits running through an outage — lighting, networking, security systems, refrigeration.',
+      'Keeps critical circuits running through an outage: lighting, networking, security systems, refrigeration.',
     fit: 'Homes and small offices prioritizing outage continuity over full independence from the grid.',
   },
   {
@@ -99,6 +107,16 @@ export default function SolarEnergySystemsPage() {
       />
 
       <section className="relative overflow-hidden bg-petrol text-paper">
+        <Image
+          src="/images/photos/solar-hero-panel-install.jpg"
+          alt=""
+          fill
+          priority
+          quality={60}
+          sizes="100vw"
+          className="object-cover object-[55%_35%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-24 md:py-28">
           <span className="eyebrow text-yellow">Flagship capability</span>
@@ -127,7 +145,7 @@ export default function SolarEnergySystemsPage() {
       <section className="bg-paper py-20">
         <div className="container-content">
           <Reveal>
-            <span className="eyebrow text-petrol/60">Our sizing methodology</span>
+            <span className="eyebrow text-petrol/70">Our sizing methodology</span>
             <h2 className="mt-3 max-w-xl text-3xl font-semibold text-ink md:text-4xl">
               Measured, not estimated
             </h2>
@@ -141,7 +159,7 @@ export default function SolarEnergySystemsPage() {
           <StaggerGroup className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-5">
             {methodology.map((step) => (
               <MotionDiv key={step.step} variants={staggerItem} className="border-t-2 border-petrol pt-5">
-                <span className="font-display text-sm text-petrol/50">{step.step}</span>
+                <span className="font-display text-sm text-petrol/70">{step.step}</span>
                 <h3 className="mt-2 text-base font-semibold text-ink">{step.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-ink/65">{step.description}</p>
               </MotionDiv>
@@ -159,7 +177,7 @@ export default function SolarEnergySystemsPage() {
             </h2>
             <p className="mt-5 max-w-2xl leading-relaxed text-paper/70">
               These are starting points for the conversation, not fixed
-              packages — your exact panel count, battery capacity, and
+              packages. Your exact panel count, battery capacity, and
               inverter rating come out of the consumption audit above.
             </p>
           </Reveal>
@@ -169,7 +187,7 @@ export default function SolarEnergySystemsPage() {
               <MotionDiv key={tier.name} variants={staggerItem} className="border border-paper/15 p-6">
                 <h3 className="text-lg font-semibold text-yellow">{tier.name}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-paper/75">{tier.summary}</p>
-                <p className="mt-4 border-t border-paper/15 pt-4 text-xs uppercase tracking-[0.06em] text-paper/50">
+                <p className="mt-4 border-t border-paper/15 pt-4 text-xs uppercase tracking-[0.06em] text-paper/60">
                   Best fit
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-paper/70">{tier.fit}</p>
@@ -182,26 +200,26 @@ export default function SolarEnergySystemsPage() {
       <section className="bg-paper py-20">
         <div className="container-content">
           <Reveal className="border border-ink/10 p-8 md:p-10">
-            <span className="eyebrow text-petrol/60">Illustrative example</span>
+            <span className="eyebrow text-petrol/70">Illustrative example</span>
             <h2 className="mt-3 text-2xl font-semibold text-ink md:text-3xl">
               What the sizing process looks like in practice
             </h2>
             <p className="mt-5 max-w-2xl text-sm leading-relaxed text-ink/70">
-              Worked in general terms to show the logic — your actual
+              Worked in general terms to show the logic. Your actual
               numbers come from your own consumption audit, not this
               example.
             </p>
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
               <div>
-                <p className="eyebrow text-petrol/50">Measure</p>
+                <p className="eyebrow text-petrol/70">Measure</p>
                 <p className="mt-2 text-sm leading-relaxed text-ink/70">
                   Circuit-level monitoring identifies which loads run
-                  during a typical outage and for how long — this
+                  during a typical outage and for how long. This
                   becomes the backup load profile.
                 </p>
               </div>
               <div>
-                <p className="eyebrow text-petrol/50">Size</p>
+                <p className="eyebrow text-petrol/70">Size</p>
                 <p className="mt-2 text-sm leading-relaxed text-ink/70">
                   Battery capacity is sized to that backup load profile
                   plus a safety margin; panel array is sized to recharge
@@ -209,11 +227,11 @@ export default function SolarEnergySystemsPage() {
                 </p>
               </div>
               <div>
-                <p className="eyebrow text-petrol/50">Verify</p>
+                <p className="eyebrow text-petrol/70">Verify</p>
                 <p className="mt-2 text-sm leading-relaxed text-ink/70">
                   Commissioning tests confirm the system actually carries
                   the backup load profile for the duration it was designed
-                  for — not just that it powers on.
+                  for, not just that it powers on.
                 </p>
               </div>
             </div>

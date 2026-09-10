@@ -1,46 +1,45 @@
-'use client'
-
-import { useReducedMotion } from 'framer-motion'
-import { MeterPlate } from '@/components/ui/MeterPlate'
+import { StatCounter } from '@/components/ui/StatCounter'
 import { company } from '@/content/company'
 
+// "Instrument panel" treatment, not a plain 4-up stat grid: hairline
+// dividers between readouts (divide-x, matching the hairline-hierarchy
+// rule in DESIGN.md — no shadows, no rounding) and one stat rendered at a
+// visibly larger display size than the other three, echoing the big-numeral
+// precedent already set by TrustSection's 5★ figure. The circuit-grid
+// texture (same class combo as Hero.tsx) reinforces the electrical-engineering
+// register instead of leaving the band flat.
 export function StatsBar() {
-  const reduceMotion = useReducedMotion() ?? false
-
   return (
-    <section className="bg-petrol-600 py-16 md:py-20">
-      <div className="container-content">
-        <div className="mb-6 font-mono text-[0.7rem] uppercase tracking-[0.1em] text-paper/40">
-          Instrument reading — verified, not asserted
+    <section className="relative overflow-hidden border-y border-paper/10 bg-petrol-600">
+      <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-10" />
+      {/* divide-x only applies from md: up: below that this is a 2x2 grid, and
+          the divide utility's `border-left on every child but the first in
+          DOM order` can't tell a genuine row-start (item 3) from a mid-row
+          item (item 2) - applying it there would draw a spurious line down
+          the left of "1000+". At md: and up it's a true single row of four,
+          where that selector is always correct. */}
+      <div className="container-content relative grid grid-cols-2 gap-y-10 py-20 md:grid-cols-4 md:gap-y-0 md:divide-x md:divide-paper/10">
+        <div className="pr-6">
+          <StatCounter
+            value={company.teamExperienceYears}
+            suffix="+"
+            label="Years of combined engineering experience"
+            featured
+          />
         </div>
-
-        {/* One panel, one bezel — four gauges read off it rather than four
-            separate stat cards, and the rating (the one genuinely bounded
-            metric) leads at a larger face. */}
-        <div className="relative border border-copper/25 bg-petrol-700/50 shadow-[0_10px_30px_-16px_rgba(0,0,0,0.7)]">
-          <span className="absolute left-2.5 top-2.5 h-1 w-1 rounded-full bg-copper/60" aria-hidden="true" />
-          <span className="absolute right-2.5 top-2.5 h-1 w-1 rounded-full bg-copper/60" aria-hidden="true" />
-          <span className="absolute bottom-2.5 left-2.5 h-1 w-1 rounded-full bg-copper/60" aria-hidden="true" />
-          <span className="absolute bottom-2.5 right-2.5 h-1 w-1 rounded-full bg-copper/60" aria-hidden="true" />
-
-          <div className="grid grid-cols-1 divide-y divide-paper/10 md:grid-cols-[1.3fr_1fr_1fr_1fr] md:divide-x md:divide-y-0">
-            <MeterPlate
-              value={company.trust.googleRating}
-              decimals={1}
-              label={`Google rating · ${company.trust.googleReviewCount} reviews`}
-              ladderOf5
-              lead
-              reduceMotion={reduceMotion}
-            />
-            <MeterPlate
-              value={company.yearsExperience}
-              suffix="+"
-              label="Years of engineering experience"
-              reduceMotion={reduceMotion}
-            />
-            <MeterPlate value={company.serviceAreas.length} label="Service zones across Abuja" reduceMotion={reduceMotion} />
-            <MeterPlate value={24} suffix="/7" label="Emergency response availability" reduceMotion={reduceMotion} />
-          </div>
+        <div className="flex flex-col justify-end px-6">
+          <StatCounter
+            value={company.trust.googleRating}
+            decimals={1}
+            suffix="★"
+            label={`Google rating from ${company.trust.googleReviewCount} reviews`}
+          />
+        </div>
+        <div className="flex flex-col justify-end px-6">
+          <StatCounter value={company.trust.projectsCompleted} suffix="+" label="Projects completed across Abuja" />
+        </div>
+        <div className="flex flex-col justify-end px-6">
+          <StatCounter value={24} suffix="/7" label="Emergency response availability" />
         </div>
       </div>
     </section>

@@ -1,0 +1,218 @@
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import Image from 'next/image'
+import Link from 'next/link'
+import { CircuitLines } from '@/components/ui/CircuitLines'
+import { ServiceCard } from '@/components/ui/ServiceCard'
+import { CTASection } from '@/components/sections/CTASection'
+import { FAQSection } from '@/components/sections/FAQSection'
+import { getAreaBySlug, areas } from '@/content/areas'
+import { services } from '@/content/services'
+import { company } from '@/content/company'
+import { faqCategories } from '@/content/faqs'
+import { getResidentialTier, residentialPricing } from '@/content/inspectionPricing'
+import { breadcrumbSchema, localServiceSchema } from '@/lib/schema'
+import { pageMetadata } from '@/lib/metadata'
+import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
+
+type Props = { params: Promise<{ area: string }> }
+
+export function generateStaticParams() {
+  return areas.map((area) => ({ area: area.slug }))
+}
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
+  const area = getAreaBySlug(params.area)
+  if (!area) return {}
+  // "CBD" is the common, real-world local shorthand for Central Business
+  // District (used locally, not an invented abbreviation) — used only in
+  // the <title> tag to fit Google's ~60-char display budget; the on-page
+  // H1 below still shows the full "Central Business District" for clarity.
+  const metaAreaName = area.name === 'Central Business District' ? 'CBD' : area.name
+  return pageMetadata({
+    title: `Electrician in ${metaAreaName}, Abuja`,
+    description: `COREN and NEMSA certified electrical services in ${area.name}, Abuja - wiring, solar, CCTV, home automation, and emergency response.`,
+    path: `/electrician/${area.slug}`,
+  })
+}
+
+const faqs = [
+  ...(faqCategories.find((c) => c.category === 'General')?.items ?? []),
+  ...(faqCategories.find((c) => c.category === 'Services & scheduling')?.items ?? []),
+]
+
+export default async function AreaPage(props: Props) {
+  const params = await props.params;
+  const area = getAreaBySlug(params.area)
+  if (!area) notFound()
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbSchema([
+              { name: 'Home', url: company.domain },
+              { name: `Electrician in ${area.name}`, url: `${company.domain}/electrician/${area.slug}` },
+            ]),
+          ),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            localServiceSchema({
+              name: `Electrician in ${area.name}`,
+              description: `COREN and NEMSA certified electrical services in ${area.name}, Abuja - wiring, solar, CCTV, home automation, and emergency response.`,
+              url: `${company.domain}/electrician/${area.slug}`,
+              areaServed: [area.name],
+            }),
+          ),
+        }}
+      />
+
+      <section className="relative overflow-hidden bg-petrol text-paper">
+        <Image
+          src="/images/photos/electrician-area-hero-onsite.jpg"
+          alt=""
+          fill
+          priority
+          quality={60}
+          sizes="100vw"
+          className="object-cover object-[75%_35%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
+        <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
+        <div className="container-content relative py-20">
+          <span className="eyebrow text-yellow">{area.name}, Abuja</span>
+          <h1 className="mt-3 max-w-2xl text-4xl font-semibold md:text-5xl">
+            Electrician in {area.name}, Abuja
+          </h1>
+          <p className="mt-5 max-w-xl text-paper/70">
+            COREN and NEMSA certified electrical engineering for homes and
+            businesses in {area.name} - wiring, solar, CCTV, home
+            automation, and emergency response.
+          </p>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">Services in {area.name}</span>
+            <h2 className="mt-3 max-w-2xl text-2xl font-semibold text-ink md:text-3xl">
+              Everything we install and maintain, available across {area.name}
+            </h2>
+          </Reveal>
+          <StaggerGroup className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((service, i) => (
+              <MotionDiv key={service.slug} variants={staggerItem}>
+                <ServiceCard service={service} index={i + 1} />
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <section className="bg-petrol-700 py-20 text-paper">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-yellow">Why choose Kell Electricals</span>
+          </Reveal>
+          <StaggerGroup className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              'COREN and NEMSA certified',
+              `${company.teamExperienceYears}+ years of combined engineering experience`,
+              `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ reviews`,
+              `Emergency response ${company.emergencyResponseTarget}`,
+            ].map((item) => (
+              <MotionDiv
+                key={item}
+                variants={staggerItem}
+                className="flex gap-3 border-b border-paper/15 pb-3 text-sm text-paper/80"
+              >
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-yellow" />
+                {item}
+              </MotionDiv>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">Residential inspection pricing</span>
+            <h2 className="mt-3 max-w-2xl text-2xl font-semibold text-ink md:text-3xl">
+              What a residential inspection costs in {area.name}
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink/70">
+              {getResidentialTier(area.slug) === 'near' ? (
+                <>
+                  {area.name} falls within our near-tier coverage area, so a
+                  standard residential inspection is a flat{' '}
+                  <strong className="text-ink">
+                    ₦{residentialPricing.near.withoutReport.toLocaleString('en-NG')}
+                  </strong>{' '}
+                  (or{' '}
+                  <strong className="text-ink">
+                    ₦{residentialPricing.near.withReport.toLocaleString('en-NG')}
+                  </strong>{' '}
+                  with a custom written report) — no distance surcharge.
+                </>
+              ) : (
+                <>
+                  {area.name} falls within our far-tier coverage area, so a
+                  standard residential inspection runs{' '}
+                  <strong className="text-ink">
+                    ₦{residentialPricing.far.min.toLocaleString('en-NG')} - ₦
+                    {residentialPricing.far.max.toLocaleString('en-NG')}
+                  </strong>
+                  , reflecting the extra distance from our base.
+                </>
+              )}{' '}
+              Commercial, industrial, and full electrical audit pricing is the
+              same across all of Abuja, regardless of area - see{' '}
+              <Link href="/book-appointment" className="link-underline font-semibold">
+                Book an Appointment
+              </Link>{' '}
+              for the full breakdown and to schedule one for {area.name}.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      <FAQSection items={faqs} viewAllHref="/faq" />
+
+      <section className="bg-paper pb-20">
+        <div className="container-content">
+          <Reveal>
+            <span className="eyebrow text-petrol/70">Other areas we serve</span>
+          </Reveal>
+          <StaggerGroup className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {areas
+              .filter((other) => other.slug !== area.slug)
+              .map((other) => (
+                <MotionDiv key={other.slug} variants={staggerItem}>
+                  <Link
+                    href={`/electrician/${other.slug}`}
+                    className="link-underline block border border-ink/10 p-5 text-sm font-medium text-ink hover:border-petrol"
+                  >
+                    {other.name}
+                  </Link>
+                </MotionDiv>
+              ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      <CTASection
+        heading={`Need an electrician in ${area.name}?`}
+        body="Tell us the details and we'll respond with a scoped assessment."
+      />
+    </>
+  )
+}

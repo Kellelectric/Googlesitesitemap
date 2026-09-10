@@ -1,42 +1,46 @@
 'use client'
 
-import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import { useReducedMotion } from 'framer-motion'
 import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { company } from '@/content/company'
 import { motion, staggerItem } from '@/components/ui/Reveal'
 
-// Loaded client-only, no SSR: the 3D hero circuit (see Circuit Map spec,
-// beat 01) is a progressive enhancement over the CircuitLines SVG below —
-// it decides for itself whether to mount based on viewport width and
-// prefers-reduced-motion, and renders nothing while that decision and the
-// WebGL context are still being set up, so the SVG is always the visible
-// frame until the live scene is actually ready to draw.
-const HeroScene = dynamic(() => import('@/components/three/HeroScene').then((m) => m.HeroScene), {
-  ssr: false,
-})
-
 export function Hero() {
   const reduceMotion = useReducedMotion()
 
   return (
     <section className="relative overflow-hidden bg-petrol text-paper">
-      <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-40" />
+      <Image
+        src="/images/photos/hero-control-panel.jpg"
+        alt=""
+        fill
+        priority
+        quality={60}
+        sizes="100vw"
+        className="object-cover object-[70%_50%]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
+      <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-20" />
       <CircuitLines className="pointer-events-none absolute -right-24 top-0 h-full w-[60%] text-paper/10 motion-safe:animate-[reveal-up_1.1s_ease-out]" />
-      <div className="absolute -right-10 top-0 hidden h-full w-[55%] lg:block">
-        <HeroScene />
-      </div>
 
       <motion.div
         className="container-content relative py-24 md:py-32"
-        initial={reduceMotion ? undefined : 'hidden'}
+        initial={false}
         animate={reduceMotion ? undefined : 'visible'}
         variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.1, delayChildren: 0.05 } } }}
       >
+        <motion.span
+          variants={staggerItem}
+          className="eyebrow inline-block border border-paper/20 px-3 py-1.5 text-yellow"
+        >
+          RC {company.rcNumber} · {company.certifications.map((c) => c.name).join(' & ')} Certified
+        </motion.span>
+
         <motion.h1
           variants={staggerItem}
-          className="max-w-3xl font-display text-[clamp(2.75rem,6vw,5.25rem)] font-semibold leading-[0.98] tracking-[-0.01em] text-paper [text-wrap:balance]"
+          className="mt-8 max-w-3xl font-display text-[clamp(2.5rem,5vw,4.5rem)] font-semibold leading-[1.05] text-paper"
         >
           {company.tagline}
         </motion.h1>
@@ -54,21 +58,16 @@ export function Hero() {
           </Button>
         </motion.div>
 
-        {/* Credential readout — an instrument label, not a marketing kicker:
-            sits below the ask, in the mono face reserved for data, echoing
-            a panel nameplate rather than a badge above the headline. */}
         <motion.div
           variants={staggerItem}
-          className="mt-16 inline-flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-copper/30 pt-6 font-mono text-[0.8125rem] text-paper/70"
+          className="mt-16 flex flex-wrap gap-x-10 gap-y-4 border-t border-paper/10 pt-8 text-sm text-paper/60"
         >
-          <span className="text-copper">RC {company.rcNumber}</span>
-          <span>{company.certifications.map((c) => c.name).join(' · ')} CERTIFIED</span>
-          <span>{company.yearsExperience}+ YRS</span>
+          <span>{company.teamExperienceYears}+ years of combined engineering experience</span>
           <span>
-            {company.trust.googleRating.toFixed(1)}★ / {company.trust.googleReviewCount} REVIEWS
+            {company.trust.googleRating}★ rating · {company.trust.googleReviewCount} Google reviews
           </span>
-          <span>{company.serviceAreas.length} ZONES</span>
-          <span className="text-yellow">24/7 RESPONSE</span>
+          <span>Serving all of Abuja</span>
+          <span>24/7 emergency response</span>
         </motion.div>
       </motion.div>
     </section>

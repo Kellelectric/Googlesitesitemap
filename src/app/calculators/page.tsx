@@ -1,0 +1,138 @@
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import { CircuitLines } from '@/components/ui/CircuitLines'
+import { CTASection } from '@/components/sections/CTASection'
+import { FAQSection } from '@/components/sections/FAQSection'
+import { LoadCalculator } from '@/components/calculators/LoadCalculator'
+import { SolarSizingCalculator } from '@/components/calculators/SolarSizingCalculator'
+import { GeneratorSizingCalculator } from '@/components/calculators/GeneratorSizingCalculator'
+import { VoltageDropCalculator } from '@/components/calculators/VoltageDropCalculator'
+import { CableSizeCalculator } from '@/components/calculators/CableSizeCalculator'
+import { BatteryRuntimeCalculator } from '@/components/calculators/BatteryRuntimeCalculator'
+import { BreakerSizeCalculator } from '@/components/calculators/BreakerSizeCalculator'
+import { GeneratorRunningCostCalculator } from '@/components/calculators/GeneratorRunningCostCalculator'
+import { company } from '@/content/company'
+import { calculatorsFAQs } from '@/content/faqs'
+import { breadcrumbSchema } from '@/lib/schema'
+import { pageMetadata } from '@/lib/metadata'
+import { Reveal } from '@/components/ui/Reveal'
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Electrical & Solar Sizing Calculators',
+  description:
+    'Free load, solar, generator sizing and running cost, voltage drop, cable size, battery runtime, and breaker size calculators for Abuja - indicative estimates.',
+  path: '/calculators',
+})
+
+export default function CalculatorsPage() {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbSchema([
+              { name: 'Home', url: company.domain },
+              { name: 'Calculators', url: `${company.domain}/calculators` },
+            ]),
+          ),
+        }}
+      />
+
+      <section className="relative overflow-hidden bg-petrol text-paper">
+        <Image
+          src="/images/photos/calculators-hero-planning.jpg"
+          alt=""
+          fill
+          priority
+          quality={60}
+          sizes="100vw"
+          className="object-cover object-[65%_30%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
+        <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
+        <div className="container-content relative py-20">
+          <span className="eyebrow text-yellow">Free tools</span>
+          <h1 className="mt-3 max-w-2xl text-4xl font-semibold md:text-5xl">
+            Electrical &amp; Solar Sizing Calculators
+          </h1>
+          <p className="mt-5 max-w-xl text-paper/70">
+            Eight quick planning tools covering connected load, solar and
+            battery sizing, backup generators (sizing and running cost),
+            voltage drop, cable sizing, battery runtime, and breaker
+            sizing. All are indicative estimates - we still run a real
+            load assessment before quoting any job.
+          </p>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <LoadCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-petrol-700 py-20 text-paper">
+        <div className="container-content">
+          <Reveal>
+            <SolarSizingCalculator dark />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <GeneratorSizingCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <GeneratorRunningCostCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <VoltageDropCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <CableSizeCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <BatteryRuntimeCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="bg-paper py-20">
+        <div className="container-content">
+          <Reveal>
+            <BreakerSizeCalculator />
+          </Reveal>
+        </div>
+      </section>
+
+      <FAQSection items={calculatorsFAQs} viewAllHref="/faq" />
+
+      <CTASection />
+    </>
+  )
+}

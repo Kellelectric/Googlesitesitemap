@@ -12,18 +12,21 @@ export function ServicesPreview() {
     <section className="bg-paper py-24">
       <div className="container-content">
         <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-          <h2 className="max-w-xl text-3xl font-semibold text-ink md:text-4xl [text-wrap:balance]">
-            16 service lines, one engineering process
-          </h2>
+          <div>
+            <span className="eyebrow text-petrol/70">What we do</span>
+            <h2 className="mt-3 max-w-xl text-3xl font-semibold text-ink md:text-4xl">
+              16 service lines, one engineering process
+            </h2>
+          </div>
           <Button href="/services" variant="secondary" data-on-light="true">
             View all services
           </Button>
         </Reveal>
 
         <StaggerGroup className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((service) => (
+          {featured.map((service, i) => (
             <MotionDiv key={service.slug} variants={staggerItem}>
-              <ServiceCard service={service} />
+              <ServiceCard service={service} index={i + 1} />
             </MotionDiv>
           ))}
         </StaggerGroup>

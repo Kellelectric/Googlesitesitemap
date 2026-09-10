@@ -1,19 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { randomUUID } from 'node:crypto'
+import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
+import { verifyHCaptcha } from '@/lib/hcaptcha'
+import { verifyPaystackTransaction } from '@/lib/paystack'
+import { createCalendarEvent, getBusyPeriods, isCalendarConfigured } from '@/lib/googleCalendar'
+import { computeAvailableSlots, isDateBookable, localSlotToDate, SLOT_MINUTES } from '@/lib/bookingSlots'
+import {
+  computeExactPrice,
+  describePrice,
+  type ServiceCategory,
+  type ReportChoice,
+} from '@/content/inspectionPricing'
 
 export const runtime = 'nodejs'
 
+function generateBookingReference(): string {
+  const year = new Date().getFullYear()
+  const suffix = randomUUID().replace(/-/g, '').slice(0, 6).toUpperCase()
+  return `KE-APPT-${year}-${suffix}`
+}
+
+const VALID_CATEGORIES: ServiceCategory[] = [
+  'residential',
+  'commercial',
+  'industrial',
+  'electrical-audit',
+]
+
 type BookingPayload = {
   name: string
-  company?: string
   phone: string
-  email?: string
-  engagementSlug: string
-  siteAddress: string
-  preferredDate: string // ISO date, yyyy-mm-dd
-  preferredTimeSlotId: string
+  email: string
+  address: string
   notes?: string
+  date: string // YYYY-MM-DD, Africa/Lagos
+  time: string // HH:mm, Africa/Lagos
+  serviceCategory?: ServiceCategory
+  areaSlug?: string
+  reportChoice?: ReportChoice
+  paystackReference?: string
   website?: string // honeypot — real users never fill this in
+  renderedAt?: number
+  captchaToken?: string
 }
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const TIME_RE = /^\d{2}:\d{2}$/
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function isValidPayload(body: unknown): body is BookingPayload {
   if (!body || typeof body !== 'object') return false
@@ -23,22 +56,38 @@ function isValidPayload(body: unknown): body is BookingPayload {
     b.name.trim().length > 0 &&
     typeof b.phone === 'string' &&
     /^[+0-9\s()-]{7,}$/.test(b.phone.trim()) &&
-    typeof b.engagementSlug === 'string' &&
-    b.engagementSlug.trim().length > 0 &&
-    typeof b.siteAddress === 'string' &&
-    b.siteAddress.trim().length > 0 &&
-    typeof b.preferredDate === 'string' &&
-    /^\d{4}-\d{2}-\d{2}$/.test(b.preferredDate) &&
-    typeof b.preferredTimeSlotId === 'string' &&
-    b.preferredTimeSlotId.trim().length > 0
+    typeof b.email === 'string' &&
+    EMAIL_RE.test(b.email.trim()) &&
+    typeof b.address === 'string' &&
+    b.address.trim().length > 0 &&
+    typeof b.date === 'string' &&
+    DATE_RE.test(b.date) &&
+    typeof b.time === 'string' &&
+    TIME_RE.test(b.time) &&
+    (b.serviceCategory === undefined ||
+      (typeof b.serviceCategory === 'string' &&
+        VALID_CATEGORIES.includes(b.serviceCategory as ServiceCategory)))
   )
 }
 
-// Forwards validated appointment requests to a configurable webhook.
-// Reuses QUOTE_WEBHOOK_URL by default (same downstream destination as the
-// quote form) unless a dedicated BOOKING_WEBHOOK_URL is set — either way
-// the payload is tagged so the receiving system can route it separately.
+const MIN_SUBMIT_SECONDS = 3
+const isRateLimited = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 5 })
+
+// Creates a real event on the business's Google Calendar for a slot the
+// visitor picked on /book-appointment - see lib/googleCalendar.ts for the
+// service-account setup this depends on, and lib/bookingSlots.ts for how
+// slots are generated from company.businessHours. Inert (503
+// not_configured) until GOOGLE_CALENDAR_* env vars are set.
 export async function POST(request: NextRequest) {
+  const ip = getClientIp(request)
+  if (isRateLimited(ip)) {
+    return NextResponse.json({ ok: false, reason: 'rate_limited' }, { status: 429 })
+  }
+
+  if (!isCalendarConfigured()) {
+    return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
+  }
+
   let body: unknown
   try {
     body = await request.json()
@@ -50,40 +99,143 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'invalid_payload' }, { status: 422 })
   }
 
-  // Honeypot: bots tend to fill every field, real users never see this one.
   if (body.website && body.website.trim().length > 0) {
     return NextResponse.json({ ok: true })
   }
 
-  const webhookUrl = process.env.BOOKING_WEBHOOK_URL || process.env.QUOTE_WEBHOOK_URL
-  if (!webhookUrl) {
-    console.error(
-      'BOOKING_WEBHOOK_URL / QUOTE_WEBHOOK_URL is not configured — booking request was received but not forwarded anywhere.',
-    )
-    return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
+  if (typeof body.renderedAt === 'number') {
+    const elapsedSeconds = (Date.now() - body.renderedAt) / 1000
+    if (elapsedSeconds < MIN_SUBMIT_SECONDS) {
+      return NextResponse.json({ ok: true })
+    }
+  }
+
+  // Fails open, not closed, when no token is present at all: the client
+  // only omits one when its hCaptcha script never loaded (ad blocker,
+  // privacy extension, a network that blocks hcaptcha.com outright — all
+  // observed in the field), and rejecting those bookings would lock real
+  // customers out entirely. A token that *is* present but invalid/expired
+  // is still rejected - this only softens the "script never loaded" case,
+  // which the honeypot/time-trap/rate-limit checks above still guard.
+  const hcaptchaSecret = process.env.HCAPTCHA_SECRET_KEY
+  if (hcaptchaSecret) {
+    const token = typeof body.captchaToken === 'string' ? body.captchaToken : ''
+    if (token && !(await verifyHCaptcha(token, hcaptchaSecret))) {
+      return NextResponse.json({ ok: false, reason: 'captcha_failed' }, { status: 422 })
+    }
+  }
+
+  if (!isDateBookable(body.date)) {
+    return NextResponse.json({ ok: false, reason: 'date_closed' }, { status: 422 })
+  }
+
+  // Payment gate: only applies when (a) PAYSTACK_SECRET_KEY is configured
+  // and (b) the visitor's selection pins down one exact fee (currently
+  // only the residential near-tier, with a with/without-report choice
+  // made - see computeExactPrice's own comment for why range-priced
+  // categories/tiers don't get a payment gate at all). Everything else
+  // books exactly as it did before payment was added.
+  const paystackSecret = process.env.PAYSTACK_SECRET_KEY
+  const exactPrice =
+    body.serviceCategory && body.reportChoice
+      ? computeExactPrice(body.serviceCategory, body.areaSlug ?? null, body.reportChoice)
+      : null
+
+  if (paystackSecret && exactPrice !== null) {
+    if (!body.paystackReference) {
+      return NextResponse.json({ ok: false, reason: 'payment_required' }, { status: 402 })
+    }
+    const verification = await verifyPaystackTransaction(body.paystackReference, paystackSecret)
+    const expectedKobo = exactPrice * 100
+    if (
+      !verification.ok ||
+      verification.currency !== 'NGN' ||
+      verification.amountKobo !== expectedKobo
+    ) {
+      console.error('Paystack verification failed or amount mismatch', {
+        reference: body.paystackReference,
+        expectedKobo,
+        got: verification,
+      })
+      return NextResponse.json({ ok: false, reason: 'payment_failed' }, { status: 402 })
+    }
   }
 
   try {
-    const forwarded = await fetch(webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type: 'site_assessment_booking',
-        source: 'kellelectricals.com booking form',
-        submittedAt: new Date().toISOString(),
-        ...body,
-      }),
-      signal: AbortSignal.timeout(8000),
-    })
-
-    if (!forwarded.ok) {
-      console.error('Booking webhook forward failed', forwarded.status, await forwarded.text())
-      return NextResponse.json({ ok: false, reason: 'forward_failed' }, { status: 502 })
+    // Re-check the calendar's real availability right before booking,
+    // not just trusting whatever the visitor's browser last fetched -
+    // closes the race window between two people viewing the same open
+    // slot and one of them being seconds slower to submit.
+    const dayStart = localSlotToDate(body.date, 0).toISOString()
+    const dayEnd = localSlotToDate(body.date, 24 * 60).toISOString()
+    const busy = await getBusyPeriods(dayStart, dayEnd)
+    const stillAvailable = computeAvailableSlots(body.date, busy).includes(body.time)
+    if (!stillAvailable) {
+      return NextResponse.json({ ok: false, reason: 'slot_taken' }, { status: 409 })
     }
 
-    return NextResponse.json({ ok: true })
+    const [hour, minute] = body.time.split(':').map(Number)
+    const startDate = localSlotToDate(body.date, hour * 60 + minute)
+    const endDate = new Date(startDate.getTime() + SLOT_MINUTES * 60 * 1000)
+
+    const reference = generateBookingReference()
+    const priceDescription = body.serviceCategory
+      ? describePrice(body.serviceCategory, body.areaSlug ?? null, body.reportChoice ?? null)
+      : null
+    const descriptionLines = [
+      `Reference: ${reference}`,
+      `Phone: ${body.phone}`,
+      `Email: ${body.email}`,
+      `Address: ${body.address}`,
+      body.serviceCategory ? `Service type: ${body.serviceCategory}` : null,
+      priceDescription ? `Price: ${priceDescription}` : null,
+      exactPrice !== null ? `Paid via Paystack: ${body.paystackReference}` : null,
+      body.notes ? `Notes: ${body.notes}` : null,
+      'Booked via kellelectricals.com',
+    ].filter((line): line is string => line !== null)
+
+    const event = await createCalendarEvent({
+      startIso: startDate.toISOString(),
+      endIso: endDate.toISOString(),
+      summary: `Appointment - ${body.name}`,
+      description: descriptionLines.join('\n'),
+      attendeeEmail: body.email,
+    })
+
+    // Best-effort: also forward to the same lead webhook quote requests
+    // use, so bookings show up alongside quotes in whatever CRM
+    // QUOTE_WEBHOOK_URL points at. Never blocks or fails the booking
+    // itself - the calendar event is the source of truth here.
+    const webhookUrl = process.env.QUOTE_WEBHOOK_URL
+    if (webhookUrl) {
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reference,
+          source: 'kellelectricals.com appointment booking',
+          submittedAt: new Date().toISOString(),
+          name: body.name,
+          phone: body.phone,
+          email: body.email,
+          address: body.address,
+          notes: body.notes,
+          appointmentDate: body.date,
+          appointmentTime: body.time,
+          serviceCategory: body.serviceCategory,
+          areaSlug: body.areaSlug,
+          price: priceDescription,
+          paidExactAmount: exactPrice,
+          paystackReference: body.paystackReference,
+          calendarEventId: event.id,
+        }),
+        signal: AbortSignal.timeout(8000),
+      }).catch((error) => console.error('Booking webhook forward failed (non-fatal)', error))
+    }
+
+    return NextResponse.json({ ok: true, reference })
   } catch (error) {
-    console.error('Booking webhook forward errored', error)
-    return NextResponse.json({ ok: false, reason: 'forward_errored' }, { status: 502 })
+    console.error('Booking failed', error)
+    return NextResponse.json({ ok: false, reason: 'booking_failed' }, { status: 502 })
   }
 }

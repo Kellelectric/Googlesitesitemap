@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
+import { trackEvent } from '@/lib/analytics'
 
 type BaseProps = {
   variant?: 'primary' | 'secondary' | 'ghost'
@@ -35,11 +38,24 @@ export function Button({
   const classes = `${base} ${variantClasses[variant]} ${className}`
 
   if (href) {
+    // Conversion touchpoints (call/WhatsApp) aren't page views, so they'd
+    // otherwise be invisible in GA4 — fire an event on click without
+    // blocking the tel:/wa.me navigation itself.
+    const conversionChannel = href.startsWith('tel:')
+      ? 'phone'
+      : href.includes('wa.me')
+        ? 'whatsapp'
+        : null
+
     return (
       <Link
         href={href}
         className={classes}
-        {...(rest as Omit<ComponentPropsWithoutRef<typeof Link>, 'href'>)}
+        onClick={(e) => {
+          if (conversionChannel) trackEvent('contact', { channel: conversionChannel })
+          ;(rest as { onClick?: (e: React.MouseEvent) => void }).onClick?.(e)
+        }}
+        {...(rest as Omit<ComponentPropsWithoutRef<typeof Link>, 'href' | 'onClick'>)}
       >
         {children}
       </Link>

@@ -2,34 +2,25 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { primaryNav } from '@/content/nav'
 import { company } from '@/content/company'
 import { Button } from '@/components/ui/Button'
+import { SearchOverlay } from '@/components/search/SearchOverlay'
+import { trackEvent } from '@/lib/analytics'
 
 export function Header() {
   const [open, setOpen] = useState(false)
-  // Transparent over the hero scene, solidifying once the page has
-  // scrolled past it — see Circuit Map spec, "Global scaffolding".
-  const [solid, setSolid] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setSolid(window.scrollY > 120)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
-        solid || open
-          ? 'border-paper/10 bg-petrol'
-          : 'border-transparent bg-petrol/0'
-      }`}
-    >
+    <header className="sticky top-0 z-50 border-b border-paper/10 bg-petrol">
+      {/* Row 1 (lg+): logo, phone, primary CTA. Below lg — phones, tablets,
+          and narrow laptop windows — this collapses to logo + hamburger,
+          since the full nav plus phone plus CTA no longer fits one row
+          once there are this many primary links; a squeezed single row
+          was pushing the CTA off to the side rather than staying usable. */}
       <div className="container-content flex h-20 items-center justify-between">
-        <Link href="/" className="flex items-center" aria-label={`${company.name} — home`}>
+        <Link href="/" className="flex items-center" aria-label={`${company.name} home`}>
           <Image
             src="/brand/logo-on-dark.png"
             alt={company.name}
@@ -40,22 +31,11 @@ export function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          {primaryNav.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="link-underline eyebrow text-paper/80 hover:text-paper"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-4 lg:flex">
           <a
             href={company.phoneHref}
-            className="eyebrow text-paper/80 hover:text-paper"
+            onClick={() => trackEvent('contact', { channel: 'phone' })}
+            className="eyebrow inline-flex items-center px-1 py-2 text-paper/80 outline-offset-2 hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow"
           >
             {company.phone}
           </a>
@@ -64,13 +44,21 @@ export function Header() {
           </Button>
         </div>
 
-        <button
-          type="button"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
-          onClick={() => setOpen((v) => !v)}
-        >
+        {/* One SearchOverlay instance, visible at every breakpoint (not
+            inside the lg:flex/lg:hidden split above) so there's only ever
+            one modal in the DOM - Ctrl/Cmd+K stays a single global listener
+            instead of duplicating across a desktop and a mobile instance. */}
+        <div className="flex items-center gap-2">
+          <SearchOverlay />
+
+          <button
+            type="button"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
+            className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow lg:hidden"
+            onClick={() => setOpen((v) => !v)}
+          >
           <span
             className={`h-[2px] w-6 bg-paper transition-transform duration-200 ${open ? 'translate-y-2 rotate-45' : ''}`}
           />
@@ -80,23 +68,44 @@ export function Header() {
           <span
             className={`h-[2px] w-6 bg-paper transition-transform duration-200 ${open ? '-translate-y-2 -rotate-45' : ''}`}
           />
-        </button>
+          </button>
+        </div>
       </div>
 
+      {/* Row 2 (lg+ only): full-width nav on its own line below the logo
+          row, instead of squeezed to one side of it. */}
+      <nav className="hidden border-t border-paper/10 lg:block">
+        <div className="container-content flex h-14 items-center justify-center gap-4 xl:gap-8">
+          {primaryNav.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="link-underline eyebrow inline-flex items-center px-1 py-2 text-paper/80 hover:text-paper"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
+
       {open && (
-        <div className="border-t border-paper/10 bg-petrol md:hidden">
+        <div id="mobile-nav" className="border-t border-paper/10 bg-petrol lg:hidden">
           <nav className="container-content flex flex-col gap-1 py-4">
             {primaryNav.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="eyebrow py-3 text-paper/80"
+                className="eyebrow flex items-center py-3 text-paper/80 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow"
               >
                 {link.label}
               </Link>
             ))}
-            <a href={company.phoneHref} className="eyebrow py-3 text-paper/80">
+            <a
+              href={company.phoneHref}
+              onClick={() => trackEvent('contact', { channel: 'phone' })}
+              className="eyebrow flex items-center py-3 text-paper/80 outline-offset-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow"
+            >
               {company.phone}
             </a>
             <Button href="/contact" variant="primary" className="mt-2 w-fit">

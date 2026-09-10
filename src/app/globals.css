@@ -13,10 +13,18 @@
   h2,
   h3,
   h4 {
-    @apply font-display;
+    @apply font-display tracking-tight;
   }
   ::selection {
     @apply bg-yellow text-ink;
+  }
+  /* Chromium/WebKit render a native blue clear-button on type="search"
+     inputs (e.g. the site search box) that clashes with the petrol/yellow
+     palette - hide it, the input still clears normally by selecting and
+     deleting the text. */
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
   }
 }
 
@@ -30,7 +38,7 @@
   }
 
   .link-underline {
-    @apply relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-yellow after:transition-[width] after:duration-300 hover:after:w-full;
+    @apply relative outline-offset-2 after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-yellow after:transition-[width] after:duration-300 hover:after:w-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow;
   }
 }
 
@@ -40,5 +48,19 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* PartnerLogos' marquee is meant to keep sliding on desktop even when the
+   visitor's OS has reduced-motion on (per client direction - see that
+   component's own comment) - only its mobile fallback (a static wrapped
+   list, no animation involved) respects the preference. The blanket reset
+   above is !important, so it silently froze the desktop marquee too; this
+   re-enables it above the md breakpoint using --marquee-duration, the same
+   value PartnerLogos already computes and sets inline. */
+@media (prefers-reduced-motion: reduce) and (min-width: 768px) {
+  .animate-marquee {
+    animation-duration: var(--marquee-duration, 30s) !important;
+    animation-iteration-count: infinite !important;
   }
 }

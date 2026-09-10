@@ -1,22 +1,50 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import { QuoteForm } from '@/components/sections/QuoteForm'
 import { CircuitLines } from '@/components/ui/CircuitLines'
+import { TrackedLink } from '@/components/ui/TrackedLink'
+import { Button } from '@/components/ui/Button'
 import { company } from '@/content/company'
+import { getServiceBySlug } from '@/content/services'
+import { pageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Contact & Request a Quote',
   description:
-    'Request a quote from Kell Electricals Ltd — COREN and NEMSA certified electrical engineers serving Wuse 2, Gwarinpa, Maitama, Asokoro, Guzape, Katampe, and wider Nigeria.',
-  alternates: { canonical: '/contact' },
-}
+    'Request a quote from Kell Electricals Ltd, COREN and NEMSA certified electrical engineers serving Wuse 2, Gwarinpa, Maitama, Asokoro, and wider Abuja.',
+  path: '/contact',
+  image: '/images/photos/contact-hero-consultation.jpg',
+})
 
-export default function ContactPage() {
+// Lets "Request a Quote" buttons elsewhere on the site (service pages,
+// industry pages) land here with that service already selected, instead of
+// dumping the visitor into a blank form and making them re-pick it — one
+// less step between intent and a submitted lead.
+export default async function ContactPage(
+  props: {
+    searchParams: Promise<{ service?: string }>
+  }
+) {
+  const searchParams = await props.searchParams;
+  const prefillService = getServiceBySlug(searchParams.service ?? '')?.slug ?? ''
+
   return (
     <>
       <section className="relative overflow-hidden bg-petrol text-paper">
+        <Image
+          src="/images/photos/contact-hero-consultation.jpg"
+          alt=""
+          fill
+          priority
+          quality={60}
+          sizes="100vw"
+          className="object-cover object-[60%_30%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-petrol via-petrol/95 to-petrol/60" />
         <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
         <div className="container-content relative py-20">
-          <h1 className="max-w-2xl text-4xl font-semibold [text-wrap:balance] md:text-5xl">
+          <span className="eyebrow text-yellow">Contact</span>
+          <h1 className="mt-3 max-w-2xl text-4xl font-semibold md:text-5xl">
             Scope your job with our team
           </h1>
           <p className="mt-5 max-w-xl text-paper/70">
@@ -26,37 +54,47 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section className="bg-paper py-20">
+      <section id="quote-form" className="scroll-mt-16 bg-paper py-20">
         <div className="container-content grid grid-cols-1 gap-16 lg:grid-cols-[1fr,380px]">
-          <QuoteForm />
+          <QuoteForm initialServiceSlug={prefillService} />
 
           <aside className="space-y-8">
             <div className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/60">Direct contact</span>
+              <span className="eyebrow text-petrol/70">Prefer a fixed time?</span>
+              <p className="mt-3 text-sm leading-relaxed text-ink/70">
+                Skip the form and pick a slot directly on our calendar.
+              </p>
+              <Button href="/book-appointment" variant="secondary" className="mt-4 w-full" data-on-light="true">
+                Book an Appointment
+              </Button>
+            </div>
+
+            <div className="border border-ink/10 p-6">
+              <span className="eyebrow text-petrol/70">Direct contact</span>
               <div className="mt-4 space-y-4 text-sm">
                 <div>
                   <p className="font-semibold text-ink">Phone</p>
-                  <a href={company.phoneHref} className="link-underline text-ink/70">
+                  <TrackedLink channel="phone" href={company.phoneHref} className="link-underline text-ink/70">
                     {company.phone}
-                  </a>
+                  </TrackedLink>
                 </div>
                 <div>
                   <p className="font-semibold text-ink">WhatsApp</p>
-                  <a href={company.whatsappHref} className="link-underline text-ink/70">
+                  <TrackedLink channel="whatsapp" href={company.whatsappHref} className="link-underline text-ink/70">
                     Message us on WhatsApp
-                  </a>
+                  </TrackedLink>
                 </div>
                 <div>
                   <p className="font-semibold text-ink">Email</p>
-                  <a href={`mailto:${company.email}`} className="link-underline text-ink/70">
+                  <TrackedLink channel="email" href={`mailto:${company.email}`} className="link-underline text-ink/70">
                     {company.email}
-                  </a>
+                  </TrackedLink>
                 </div>
               </div>
             </div>
 
             <div className="border border-ink/10 p-6">
-              <span className="eyebrow text-petrol/60">Office</span>
+              <span className="eyebrow text-petrol/70">Office</span>
               <address className="mt-4 text-sm not-italic leading-relaxed text-ink/70">
                 {company.address.street}
                 <br />
@@ -64,17 +102,42 @@ export default function ContactPage() {
                 <br />
                 {company.address.country}
               </address>
-              <p className="mt-4 text-xs text-ink/50">
+              <p className="mt-4 text-xs text-ink/65">
                 RC {company.rcNumber} · {company.certifications.map((c) => c.name).join(' & ')} certified
               </p>
             </div>
 
+            <div className="border border-ink/10 p-6">
+              <span className="eyebrow text-petrol/70">Business hours</span>
+              <ul className="mt-4 space-y-2 text-sm text-ink/70">
+                {company.businessHours.map((entry) => (
+                  <li key={entry.days} className="flex justify-between gap-4">
+                    <span>{entry.days}</span>
+                    <span className="text-ink/65">{entry.hours}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
             <div className="border border-orange/30 bg-orange/5 p-6">
-              <span className="eyebrow text-orange">Emergency?</span>
+              <span className="eyebrow text-ink">Emergency?</span>
               <p className="mt-3 text-sm leading-relaxed text-ink/75">
-                For active electrical hazards — sparking, burning smell,
-                exposed live wiring — call {company.phone} directly rather
+                For active electrical hazards (sparking, burning smell,
+                exposed live wiring), call {company.phone} directly rather
                 than submitting the form.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-ink/75">
+                Email:{' '}
+                <TrackedLink
+                  channel="email"
+                  href={`mailto:${company.emergencyEmail}`}
+                  className="link-underline text-ink"
+                >
+                  {company.emergencyEmail}
+                </TrackedLink>
+                <br />
+                We aim to respond {company.emergencyResponseTarget} for
+                emergency cases.
               </p>
             </div>
           </aside>

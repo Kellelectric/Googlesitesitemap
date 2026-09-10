@@ -9,14 +9,14 @@ import { trackEvent } from '@/lib/analytics'
 
 declare global {
   interface Window {
-    hcaptcha?: {
+    turnstile?: {
       getResponse: (widgetId?: string) => string
       reset: (widgetId?: string) => void
     }
   }
 }
 
-const HCAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 // Nigeria's 36 states + the FCT, for the "current state" field shown when
 // a track is Abuja-only (see careers.ts's `abujaOnly` field). "FCT (Abuja)"
@@ -104,9 +104,9 @@ export function CareerApplicationForm({
   const startedTracked = useRef(false)
 
   useEffect(() => {
-    if (!HCAPTCHA_SITE_KEY) return
+    if (!TURNSTILE_SITE_KEY) return
     const timer = setTimeout(() => {
-      if (!window.hcaptcha) setCaptchaLoadFailed(true)
+      if (!window.turnstile) setCaptchaLoadFailed(true)
     }, 6000)
     return () => clearTimeout(timer)
   }, [])
@@ -140,8 +140,8 @@ export function CareerApplicationForm({
     setErrors(next)
 
     let captchaOk = true
-    if (HCAPTCHA_SITE_KEY && !captchaLoadFailed) {
-      const token = window.hcaptcha?.getResponse()
+    if (TURNSTILE_SITE_KEY && !captchaLoadFailed) {
+      const token = window.turnstile?.getResponse()
       captchaOk = !!token
       setCaptchaError(captchaOk ? undefined : "Verify you're not a robot")
     }
@@ -156,7 +156,7 @@ export function CareerApplicationForm({
     setStatus('submitting')
     trackEvent('career_application_submitted', { track: trackSlug })
     try {
-      const captchaToken = HCAPTCHA_SITE_KEY ? window.hcaptcha?.getResponse() : undefined
+      const captchaToken = TURNSTILE_SITE_KEY ? window.turnstile?.getResponse() : undefined
       const res = await fetch('/api/careers-application', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -166,7 +166,7 @@ export function CareerApplicationForm({
       const resBody = await res.json().catch(() => null)
 
       if (!res.ok) {
-        window.hcaptcha?.reset()
+        window.turnstile?.reset()
         setStatus(
           resBody?.reason === 'not_configured'
             ? 'not_configured'
@@ -347,16 +347,16 @@ export function CareerApplicationForm({
         />
       </Field>
 
-      {HCAPTCHA_SITE_KEY && !captchaLoadFailed && (
+      {TURNSTILE_SITE_KEY && !captchaLoadFailed && (
         <div>
           <Script
-            src="https://js.hcaptcha.com/1/api.js"
+            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
             strategy="afterInteractive"
             async
             defer
             onError={() => setCaptchaLoadFailed(true)}
           />
-          <div className="h-captcha" data-sitekey={HCAPTCHA_SITE_KEY} />
+          <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} />
           {captchaError && (
             <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">
               {captchaError}

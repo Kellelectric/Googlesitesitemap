@@ -259,9 +259,9 @@ specific pipeline uses:
 - `CAREERS_ALLOWED_ORIGINS` - optional comma-separated origin allowlist
   (e.g. `https://kellelectricals.com,https://www.kellelectricals.com`).
   Unset by default (no enforcement change from before this round).
-- `HCAPTCHA_SECRET_KEY` / `NEXT_PUBLIC_HCAPTCHA_SITE_KEY` - already shared
-  with the quote and booking forms; setting them activates hCaptcha here
-  too automatically.
+- `TURNSTILE_SECRET_KEY` / `NEXT_PUBLIC_TURNSTILE_SITE_KEY` - already shared
+  with the quote and booking forms; setting them activates Cloudflare
+  Turnstile here too automatically.
 - `ZOHO_CRM_CLIENT_ID` / `ZOHO_CRM_CLIENT_SECRET` / `ZOHO_CRM_REFRESH_TOKEN`
   / `ZOHO_CRM_DC` - direct Zoho CRM Lead creation, all four required
   together. See "Direct integrations" below.
@@ -517,8 +517,8 @@ the team:
 - **Rate limiting**: 5 requests / 10 minutes per IP (in-memory, resets on
   cold start - stops a single script hammering the endpoint, not a
   distributed attack; see `src/lib/rateLimit.ts`'s own header comment).
-- **hCaptcha**: active once `HCAPTCHA_SECRET_KEY` /
-  `NEXT_PUBLIC_HCAPTCHA_SITE_KEY` are both set; inert (no widget shown,
+- **Cloudflare Turnstile**: active once `TURNSTILE_SECRET_KEY` /
+  `NEXT_PUBLIC_TURNSTILE_SITE_KEY` are both set; inert (no widget shown,
   no token required) until then.
 - **Honeypot**: a hidden `website` field - a bot filling it in gets a
   silent `{ ok: true }` with nothing forwarded anywhere.

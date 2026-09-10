@@ -49,7 +49,7 @@ function isEmergencyText(text: string): boolean {
 
 // Rough keyword routing to real service/industry summaries so quick-reply
 // topics have a grounded fallback answer even when the LLM isn't configured
-// (no ANTHROPIC_API_KEY set) — never invents content, only quotes summaries
+// (no GROQ_API_KEY set) — never invents content, only quotes summaries
 // that already exist in the site's own content files.
 function findRelevantSummaries(topic: string): string {
   const lower = topic.toLowerCase()

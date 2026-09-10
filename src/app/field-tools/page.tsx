@@ -4,17 +4,32 @@ import { Button } from '@/components/ui/Button'
 import { CircuitLines } from '@/components/ui/CircuitLines'
 import { fieldTools } from '@/content/fieldTools'
 import { company } from '@/content/company'
+import { breadcrumbSchema } from '@/lib/schema'
+import { pageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: 'Field Engineering Tools',
   description:
     'The four capabilities behind every Kell Electricals site visit — load audits, cable & protection sizing, solar & generator sizing, and standards-referenced inspections.',
-  alternates: { canonical: '/field-tools' },
-}
+  path: '/field-tools',
+  image: '/images/photos/services-substation.jpg',
+})
 
 export default function FieldToolsPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            breadcrumbSchema([
+              { name: 'Home', url: company.domain },
+              { name: 'Field Engineering Tools', url: `${company.domain}/field-tools` },
+            ]),
+          ),
+        }}
+      />
+
       <section className="relative overflow-hidden bg-petrol text-paper">
         <Image
           src="/images/photos/services-substation.jpg"

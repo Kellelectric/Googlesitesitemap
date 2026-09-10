@@ -39,6 +39,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/faq`, priority: 0.6, changeFrequency: 'monthly' },
     { url: `${base}/testimonials`, priority: 0.6, changeFrequency: 'weekly' },
     { url: `${base}/calculators`, priority: 0.6, changeFrequency: 'monthly' },
+    { url: `${base}/field-tools`, priority: 0.5, changeFrequency: 'monthly' },
     { url: `${base}/book-appointment`, priority: 0.7, changeFrequency: 'monthly' },
     { url: `${base}/careers`, priority: 0.5, changeFrequency: 'monthly' },
     { url: `${base}/contact`, priority: 0.8, changeFrequency: 'monthly' },

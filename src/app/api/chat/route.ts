@@ -117,7 +117,11 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
+        // Groq deprecated the Llama 3.3 70B model on 2026-08-16; this is
+        // their recommended migration target - still open-weight, still
+        // hosted on Groq, just not Llama-branded. See
+        // https://console.groq.com/docs/deprecations for current status.
+        model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
         max_tokens: 400,
         messages: [{ role: 'system', content: buildSystemPrompt() }, ...body.messages],
       }),

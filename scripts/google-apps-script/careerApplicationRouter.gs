@@ -122,9 +122,19 @@ function doPost(e) {
     }
 
     cache.put(cacheKey, '1', 6 * 60 * 60)
+    // Driven by body.redirectUrl, not FORM_CONFIG - FORM_CONFIG here is
+    // only ever used by listFormItems() as a diagnostic helper, never for
+    // functional routing (this webhook never submits into a Google Form
+    // itself - see the file header). Checking FORM_CONFIG[trackSlug]
+    // instead would silently go stale the moment a track's Google Form
+    // status changes on the website side (careerFormRouting.ts) without a
+    // matching edit here - exactly what happened when nysc-placement
+    // later got a real form: FORM_CONFIG never listed it, so this log
+    // line was reporting "stays on-site" for applicants who were actually
+    // already being redirected to a real form by the website.
     Logger.log(
       'Application ' + reference + ' (' + trackSlug + ') acknowledged. ' +
-        (FORM_CONFIG[trackSlug]
+        (body.redirectUrl
           ? 'Applicant was sent a pre-filled link to this track\'s Google Form by the website directly.'
           : 'No Google Form for this track - stays on-site.'),
     )

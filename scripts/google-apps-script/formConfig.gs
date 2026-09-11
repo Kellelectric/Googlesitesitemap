@@ -58,12 +58,21 @@ var FORM_CONFIG = {
       message: 'REPLACE_ME_MESSAGE_ITEM_ID',
     },
   },
-  // 'job-openings' and 'nysc-placement' are both deliberately absent -
-  // neither goes to a Google Form. Job applications never have (see
-  // docs/careers-automation.md); the client has directed NYSC Placement
-  // to be treated the same way "for now" (client-confirmed - previously
-  // it pointed incorrectly at the Internship form). Revisit if the
-  // client later wants NYSC routed to its own form.
+  // 'job-openings' has no Google Form and stays on-site - it's absent
+  // from FORM_CONFIG for that reason.
+  //
+  // 'nysc-placement' now DOES have a real, client-supplied Google Form
+  // (see careerFormRouting.ts on the website side), but it's still
+  // absent here on purpose: FORM_CONFIG in this file is only ever read
+  // by listFormItems() as a diagnostic helper - this webhook never
+  // submits into any Google Form itself (see careerApplicationRouter.gs's
+  // header comment), so an entry here isn't required for the pre-filled
+  // link to work. The NYSC form's real entry.<id> field mappings already
+  // live in the website's careerFormRouting.ts, sourced directly from the
+  // client's own "Get pre-filled link" export rather than from
+  // listFormItems() run against this form. Add an entry here only if
+  // someone needs to run listFormItems() against the NYSC form later
+  // (e.g. to map more fields than the 4 currently prefilled).
 }
 
 /**

@@ -11,26 +11,31 @@
 //     it), when the client has confirmed Internship has its own form.
 //   - `job-openings` and `nysc-placement` were both pointing at what is
 //     actually the Internship form, when neither should redirect to a
-//     training-programme form at all - job-openings never has (it stays
-//     on-site), and the client has directed nysc-placement to be treated
-//     the same way "for now".
-// The three Google Form URLs below were supplied directly by the client.
+//     training-programme form at all.
+// `job-openings` still has no Google Form and stays on the on-site
+// pipeline only. `nysc-placement` originally matched that treatment "for
+// now," but the client has since supplied a real, dedicated NYSC
+// Placement Google Form (see its entry below) - it's routed the same way
+// as the other 3 form-backed tracks now.
 //
 // ROUTING MECHANISM — pre-filled link, not Apps Script auto-submit:
-// listFormItems() (see scripts/google-apps-script/) revealed each of
-// these 3 forms is a full 40-50 question application with several
-// REQUIRED file-upload questions (passport photo, ID, CV, certificates)
-// and other required non-text questions (DOB, consent checkboxes,
-// signature). Google Apps Script's Forms API has no method to submit a
-// file-upload answer at all, and FormResponse.submit() throws if any
-// required question is unanswered - so silently auto-submitting the
-// website's short form into these forms would fail on every real
-// application. Instead, the applicant is handed a Google Forms
-// "pre-filled link" (native Google feature: ?entry.<itemId>=value query
-// params) with the fields we collected already filled in, and finishes
-// the rest (photo, DOB, consent, signature) on Google's own page. The
-// form's own linked Sheet is the resulting record - no Apps Script
-// submission step is needed for these 3 tracks.
+// listFormItems() (see scripts/google-apps-script/) revealed the
+// apprenticeship/industrial-training/internship forms are each a full
+// 40-50 question application with several REQUIRED file-upload questions
+// (passport photo, ID, CV, certificates) and other required non-text
+// questions (DOB, consent checkboxes, signature). Google Apps Script's
+// Forms API has no method to submit a file-upload answer at all, and
+// FormResponse.submit() throws if any required question is unanswered -
+// so silently auto-submitting the website's short form into these forms
+// would fail on every real application. Instead, the applicant is handed
+// a Google Forms "pre-filled link" (native Google feature:
+// ?entry.<itemId>=value query params) with the fields we collected
+// already filled in, and finishes the rest (photo, DOB, consent,
+// signature) on Google's own page. The form's own linked Sheet is the
+// resulting record - no Apps Script submission step is needed for any of
+// the 4 form-backed tracks. The NYSC Placement form is new enough that
+// its question item IDs haven't been mapped yet (see that entry's own
+// comment below), so it currently gets the plain link with no prefill.
 export type CareerFormFieldKey = 'fullName' | 'email' | 'phone' | 'institution'
 
 export type CareerFormRoute = {
@@ -94,14 +99,20 @@ export const careerFormRouting: CareerFormRoute[] = [
     googleFormUrl: null,
   },
   {
-    // Client-confirmed direction: "Use the Job Openings [treatment] for
-    // now" - same as job-openings, no Google Form, stays in the on-site
-    // pipeline only. Previously (incorrectly, in the now-removed
-    // applicationFormUrl field) pointed at the Internship form - that
-    // mismatch is gone. Revisit if the client later wants NYSC routed
-    // somewhere specific (its own form, Zoho CRM, etc).
+    // Client-supplied real NYSC Placement Google Form (shortlink
+    // https://forms.gle/rnGjtFtRYMZy8Ufr5, resolved to its canonical
+    // /viewform URL below - buildPrefillUrl appends query params, which a
+    // shortlink redirect isn't guaranteed to preserve). No prefillEntryIds
+    // yet - this is a fresh form and its question item IDs haven't been
+    // mapped (see listFormItems() in scripts/google-apps-script/ for how
+    // the other 3 forms' entry IDs were found), so applicants currently
+    // land on a blank form rather than one pre-filled from the site's
+    // short application. Add prefillEntryIds here once those IDs are
+    // pulled, matching the apprenticeship/industrial-training/internship
+    // pattern above.
     trackSlug: 'nysc-placement',
-    googleFormUrl: null,
+    googleFormUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLSciHkZ1zMLeIvGXkmoqRSISSaWV2JuhbzTxI6oyMQ-xXEkVGQ/viewform',
   },
 ]
 

@@ -86,6 +86,16 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
     const timer = setTimeout(() => {
       if (!window.turnstile) setCaptchaLoadFailed(true)
     }, 6000)
+    // Covers the other half of "fail open, not closed" above: that timer
+    // only catches the script never loading at all. A widget that loads
+    // but then can't complete (wrong domain registered in the Cloudflare
+    // Turnstile dashboard, a network hiccup mid-challenge) leaves
+    // window.turnstile defined but getResponse() permanently empty -
+    // silently blocking every submission with no way out for the visitor.
+    // data-error-callback below reports that failure directly instead of
+    // leaving it to a client-side guess.
+    ;(window as unknown as Record<string, () => void>).__quoteTurnstileError = () =>
+      setCaptchaLoadFailed(true)
     return () => clearTimeout(timer)
   }, [])
 
@@ -310,7 +320,11 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
             defer
             onError={() => setCaptchaLoadFailed(true)}
           />
-          <div className="cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} />
+          <div
+            className="cf-turnstile"
+            data-sitekey={TURNSTILE_SITE_KEY}
+            data-error-callback="__quoteTurnstileError"
+          />
           {captchaError && (
             <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">
               {captchaError}

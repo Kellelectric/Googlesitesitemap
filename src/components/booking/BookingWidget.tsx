@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { cloneElement, useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import { company } from '@/content/company'
 import { isDateBookable } from '@/lib/bookingSlots'
@@ -17,10 +17,6 @@ import {
 
 declare global {
   interface Window {
-    turnstile?: {
-      getResponse: (widgetId?: string) => string
-      reset: (widgetId?: string) => void
-    }
     PaystackPop?: {
       setup: (options: {
         key: string
@@ -35,7 +31,6 @@ declare global {
   }
 }
 
-const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 const PAYSTACK_PUBLIC_KEY = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY
 
 // Step order: what do you need service for (and its price) comes first,
@@ -99,39 +94,30 @@ export function BookingWidget() {
   const [website, setWebsite] = useState('') // honeypot
   const [renderedAt] = useState(() => Date.now())
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
-  const [captchaError, setCaptchaError] = useState<string | undefined>()
-  const [captchaLoadFailed, setCaptchaLoadFailed] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [reference, setReference] = useState<string | null>(null)
+  const [showValidationSummary, setShowValidationSummary] = useState(false)
+  const widgetRef = useRef<HTMLDivElement>(null)
 
   const days = nextDays(10)
 
-  // Fail open, not closed: if the Turnstile script never loads (ad blocker,
-  // privacy extension, a network that blocks challenges.cloudflare.com
-  // outright — all observed in the field), window.turnstile stays
-  // undefined forever and a real customer would be stuck unable to book at
-  // all. Losing bot protection to an infrastructure hiccup is a far
-  // smaller cost than losing a real booking, and the honeypot/time-trap/
-  // rate-limit checks still apply either way. Mirrors QuoteForm.tsx's same
-  // fix.
+  // Scrolls to/focuses the first invalid field once a failed validate()
+  // attempt has actually committed fieldErrors to the DOM (an effect, not
+  // inline where validate() is called - querying aria-invalid right after
+  // setFieldErrors() would still see last render's DOM). Without this, a
+  // visitor who fills the last details-step field but leaves an earlier
+  // one blank taps "Continue to Payment"/"Confirm Booking" and nothing
+  // visibly happens - indistinguishable from a broken button, same issue
+  // fixed in QuoteForm.tsx/CareerApplicationForm.tsx.
   useEffect(() => {
-    if (!TURNSTILE_SITE_KEY) return
-    const timer = setTimeout(() => {
-      if (!window.turnstile) setCaptchaLoadFailed(true)
-    }, 6000)
-    // Covers the other half of "fail open, not closed" above: that timer
-    // only catches the script never loading at all. A widget that loads
-    // but then can't complete (wrong domain registered in the Cloudflare
-    // Turnstile dashboard, a network hiccup mid-challenge) leaves
-    // window.turnstile defined but getResponse() permanently empty -
-    // silently blocking every booking with no way out for the visitor.
-    // data-error-callback below reports that failure directly instead of
-    // leaving it to a client-side guess.
-    ;(window as unknown as Record<string, () => void>).__bookingTurnstileError = () =>
-      setCaptchaLoadFailed(true)
-    return () => clearTimeout(timer)
-  }, [])
+    if (!showValidationSummary) return
+    const firstInvalid = widgetRef.current?.querySelector<HTMLElement>(
+      '[aria-invalid="true"]',
+    )
+    firstInvalid?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    firstInvalid?.focus()
+  }, [showValidationSummary, fieldErrors])
 
   // Probe availability for the first bookable day to learn whether the
   // calendar backend is configured at all, before showing any UI that
@@ -190,14 +176,7 @@ export function BookingWidget() {
     if (!address.trim()) next.address = 'Enter the job location'
     setFieldErrors(next)
 
-    let captchaOk = true
-    if (TURNSTILE_SITE_KEY && !captchaLoadFailed) {
-      const token = window.turnstile?.getResponse()
-      captchaOk = !!token
-      setCaptchaError(captchaOk ? undefined : "Verify you're not a robot")
-    }
-
-    return Object.keys(next).length === 0 && captchaOk
+    return Object.keys(next).length === 0
   }
 
   // Only the residential near tier (with a with/without-report choice
@@ -209,12 +188,15 @@ export function BookingWidget() {
 
   async function handleSubmit(paystackReference?: string) {
     if (!selectedDate || !selectedTime) return
-    if (!paystackReference && !validate()) return
+    if (!paystackReference && !validate()) {
+      setShowValidationSummary(true)
+      return
+    }
 
+    setShowValidationSummary(false)
     setSubmitting(true)
     setSubmitError(null)
     try {
-      const captchaToken = TURNSTILE_SITE_KEY ? window.turnstile?.getResponse() : undefined
       const res = await fetch('/api/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -232,21 +214,15 @@ export function BookingWidget() {
           paystackReference,
           website,
           renderedAt,
-          captchaToken,
         }),
       })
       const data = await res.json().catch(() => null)
-      window.turnstile?.reset()
 
       if (!res.ok) {
         if (data?.reason === 'slot_taken') {
           setSubmitError('That time was just booked by someone else - pick another.')
           setStep('time')
           selectDate(selectedDate)
-          return
-        }
-        if (data?.reason === 'captcha_failed') {
-          setCaptchaError('Verification failed - please try again')
           return
         }
         if (data?.reason === 'not_configured') {
@@ -285,7 +261,11 @@ export function BookingWidget() {
       handleSubmit()
       return
     }
-    if (!validate()) return
+    if (!validate()) {
+      setShowValidationSummary(true)
+      return
+    }
+    setShowValidationSummary(false)
     setPayError(null)
     setStep('payment')
   }
@@ -436,7 +416,7 @@ export function BookingWidget() {
   const categoryComplete = category !== null && (category !== 'residential' || areaSlug !== null)
 
   return (
-    <div className="border border-ink/10 bg-paper p-6 sm:p-8">
+    <div ref={widgetRef} className="border border-ink/10 bg-paper p-6 sm:p-8">
       <div>
         <span className="eyebrow text-petrol/70">Step 1 - What do you need service for?</span>
         <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -644,31 +624,17 @@ export function BookingWidget() {
             />
           </BookingField>
 
-          {TURNSTILE_SITE_KEY && !captchaLoadFailed && (
-            <div>
-              <Script
-                src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-                strategy="afterInteractive"
-                async
-                defer
-                onError={() => setCaptchaLoadFailed(true)}
-              />
-              <div
-                className="cf-turnstile"
-                data-sitekey={TURNSTILE_SITE_KEY}
-                data-error-callback="__bookingTurnstileError"
-              />
-              {captchaError && (
-                <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">
-                  {captchaError}
-                </span>
-              )}
-            </div>
+          {showValidationSummary && Object.keys(fieldErrors).length > 0 && (
+            <p role="alert" className="text-sm font-semibold text-orange">
+              Please fix the highlighted field{Object.keys(fieldErrors).length > 1 ? 's' : ''}{' '}
+              above before continuing.
+            </p>
           )}
 
           <button
             type="button"
             disabled={submitting}
+            aria-busy={submitting}
             onClick={() => continueFromDetails()}
             className="inline-flex items-center justify-center rounded bg-yellow px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-yellow/90 disabled:opacity-60"
           >
@@ -699,12 +665,14 @@ function BookingField({
 }: {
   label: string
   error?: string
-  children: React.ReactNode
+  children: React.ReactElement<any>
 }) {
   return (
     <label className="block">
       <span className="eyebrow text-ink/60">{label}</span>
-      <span className="mt-2 block">{children}</span>
+      <span className="mt-2 block">
+        {cloneElement(children, { 'aria-invalid': !!error })}
+      </span>
       {error && <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">{error}</span>}
     </label>
   )

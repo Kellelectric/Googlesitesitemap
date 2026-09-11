@@ -1,6 +1,6 @@
-// Server-side verification of a Paystack transaction - mirrors
-// lib/turnstile.ts's shape. Used by app/api/book/route.ts to confirm a
-// payment actually succeeded (and for the right amount/currency) before
+// Server-side verification of a Paystack transaction. Used by
+// app/api/book/route.ts to confirm a payment actually succeeded (and for
+// the right amount/currency) before
 // creating the calendar event, rather than trusting the client's
 // "payment succeeded" callback alone - that callback fires in the
 // visitor's own browser and could be spoofed.

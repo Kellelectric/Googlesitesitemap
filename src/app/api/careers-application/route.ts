@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHash, createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
-import { verifyTurnstile } from '@/lib/turnstile'
 import { getCareerTrackBySlug } from '@/content/careers'
 import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting'
 import { createCareerLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
@@ -81,7 +80,6 @@ type ApplicationPayload = {
   message: string
   website?: string // honeypot
   renderedAt?: number
-  captchaToken?: string
 }
 
 // The outgoing shape sent to CAREERS_WEBHOOK_URL (Zoho Flow, or directly a
@@ -244,14 +242,6 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY
-  if (turnstileSecret) {
-    const token = typeof body.captchaToken === 'string' ? body.captchaToken : ''
-    if (token && !(await verifyTurnstile(token, turnstileSecret))) {
-      return NextResponse.json({ ok: false, reason: 'captcha_failed' }, { status: 422 })
-    }
-  }
-
   // Best-effort duplicate guard, keyed on track + email + phone (see
   // findRecentDuplicate's comment) - a double-click, a slow-network retry,
   // or the applicant re-submitting the same details within the window
@@ -281,11 +271,10 @@ export async function POST(request: NextRequest) {
       })
     : null
 
-  // Built explicitly (not `...body`) so the honeypot field, the raw
-  // hCaptcha response token, and renderedAt never leak into the
-  // downstream payload - none of that is useful downstream, and the spec
-  // this pipeline follows is explicit that only the fields actually
-  // needed should be sent.
+  // Built explicitly (not `...body`) so the honeypot field and renderedAt
+  // never leak into the downstream payload - none of that is useful
+  // downstream, and the spec this pipeline follows is explicit that only
+  // the fields actually needed should be sent.
   const webhookPayload: CareerApplicationWebhookPayload = {
     reference,
     source: 'kellelectricals.com careers application form',

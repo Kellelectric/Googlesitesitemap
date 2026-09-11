@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
-import { verifyTurnstile } from '@/lib/turnstile'
 
 export const runtime = 'nodejs'
 
@@ -35,7 +34,6 @@ type QuotePayload = {
   details: string
   website?: string // honeypot — real users never fill this in
   renderedAt?: number // client timestamp when the form mounted
-  captchaToken?: string // Turnstile response token, only present when configured
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -100,24 +98,6 @@ export async function POST(request: NextRequest) {
     const elapsedSeconds = (Date.now() - body.renderedAt) / 1000
     if (elapsedSeconds < MIN_SUBMIT_SECONDS) {
       return NextResponse.json({ ok: true })
-    }
-  }
-
-  // Turnstile: only enforced once a real secret key is configured, so this
-  // stays a no-op (form works exactly as before) until then. Fails open,
-  // not closed, when no token is present at all: the client only omits one
-  // when its Turnstile script never loaded (ad blocker, privacy extension,
-  // a network that blocks challenges.cloudflare.com outright — all observed
-  // in the field), and rejecting those submissions would lock real
-  // customers out of the form entirely. A token that *is* present but
-  // invalid/expired is still rejected — this only softens the
-  // "script never loaded" case, which the honeypot/time-trap/rate-limit
-  // checks above still guard.
-  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY
-  if (turnstileSecret) {
-    const token = typeof body.captchaToken === 'string' ? body.captchaToken : ''
-    if (token && !(await verifyTurnstile(token, turnstileSecret))) {
-      return NextResponse.json({ ok: false, reason: 'captcha_failed' }, { status: 422 })
     }
   }
 

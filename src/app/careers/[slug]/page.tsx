@@ -7,6 +7,7 @@ import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { CareerApplicationForm } from '@/components/careers/CareerApplicationForm'
 import { careerTracks, getCareerTrackBySlug } from '@/content/careers'
+import { getCareerFormRoute } from '@/content/careerFormRouting'
 import { company } from '@/content/company'
 import { breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
@@ -36,6 +37,13 @@ export default async function CareerTrackPage(props: Props) {
   if (!track) notFound()
 
   const isJobOpenings = track.slug === 'job-openings'
+  // Apprenticeship/Industrial Training/Internship/NYSC Placement each hand
+  // the applicant off to a second, official Google Form after the site's
+  // short form (see careerFormRouting.ts) - "How to apply" says so
+  // explicitly for those 4, since the site's own form alone doesn't
+  // complete the application. Job Openings has no second-stage form (its
+  // route has no googleFormUrl), so it keeps the simpler copy below.
+  const hasFormBackedApplication = Boolean(getCareerFormRoute(track.slug)?.googleFormUrl)
   // Job openings lists full descriptive strings ("Licensed Electrician
   // (Journeyman level) - residential & commercial installation..."), so
   // the role picker in the application form only needs the label before
@@ -184,17 +192,41 @@ export default async function CareerTrackPage(props: Props) {
           <aside>
             <div className="border border-ink/10 p-6">
               <span className="eyebrow text-petrol/70">How to apply</span>
-              <p className="mt-4 text-sm leading-relaxed text-ink/75">
-                Apply directly below - the whole process, from application
-                to confirmation, is handled online. Programme specifics
-                (duration, schedule, and current availability) are
-                confirmed directly once we hear from you. You can also
-                reach us by email at{' '}
-                <a href={`mailto:${company.email}`} className="link-underline font-semibold text-ink">
-                  {company.email}
-                </a>
-                .
-              </p>
+              {hasFormBackedApplication ? (
+                <div className="mt-4 space-y-3 text-sm leading-relaxed text-ink/75">
+                  <p>
+                    Apply directly by completing the application form
+                    below. After submitting the form, follow the
+                    application link provided on the thank-you page to
+                    complete the next stage of the application process.
+                  </p>
+                  <p>
+                    The whole process, from application to confirmation,
+                    is handled online. Programme specifics, including
+                    duration, schedule, and current availability, are
+                    confirmed directly once we receive your application.
+                  </p>
+                  <p>
+                    You can also reach us by email at{' '}
+                    <a href={`mailto:${company.email}`} className="link-underline font-semibold text-ink">
+                      {company.email}
+                    </a>
+                    .
+                  </p>
+                </div>
+              ) : (
+                <p className="mt-4 text-sm leading-relaxed text-ink/75">
+                  Apply directly below - the whole process, from application
+                  to confirmation, is handled online. Programme specifics
+                  (duration, schedule, and current availability) are
+                  confirmed directly once we hear from you. You can also
+                  reach us by email at{' '}
+                  <a href={`mailto:${company.email}`} className="link-underline font-semibold text-ink">
+                    {company.email}
+                  </a>
+                  .
+                </p>
+              )}
               {track.applicationChecklist && track.applicationChecklist.length > 0 && (
                 <div className="mt-5 border-t border-ink/10 pt-4">
                   <span className="text-xs font-semibold uppercase tracking-wide text-ink/60">

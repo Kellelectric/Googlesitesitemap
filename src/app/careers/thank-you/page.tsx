@@ -48,10 +48,13 @@ export default async function CareersThankYouPage(
     <section className="relative overflow-hidden bg-petrol text-paper">
       <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
       <div className="container-content relative py-24">
-        <span className="eyebrow text-yellow">Application received</span>
+        <span className="eyebrow text-yellow">
+          {continueUrl ? 'One step left' : 'Application received'}
+        </span>
         <h1 className="mt-3 max-w-xl text-3xl font-semibold md:text-4xl">
-          Thanks{track ? ` for applying to ${track.name}` : ''} - our team will review your
-          application and get back to you.
+          {continueUrl
+            ? `Thanks${track ? ` for starting your application to ${track.name}` : ''} - one more step to go.`
+            : `Thanks${track ? ` for applying to ${track.name}` : ''} - our team will review your application and get back to you.`}
         </h1>
         {reference && (
           <p className="mt-4 text-sm text-paper/60">
@@ -63,10 +66,11 @@ export default async function CareersThankYouPage(
           <div className="mt-8 max-w-lg border border-yellow/40 bg-yellow/10 p-6">
             <p className="text-sm font-semibold text-paper">One more step</p>
             <p className="mt-2 text-sm leading-relaxed text-paper/75">
-              Your details have been pre-filled into our official{' '}
-              {track ? track.name : 'programme'} application form - please open it now to
-              finish (photo, ID/documents, and your signature are required
-              there).
+              Your application isn&rsquo;t complete yet. Your details have
+              been pre-filled into our official{' '}
+              {track ? track.name : 'programme'} application form - please
+              open it now to finish (photo, ID/documents, and your
+              signature are required there).
             </p>
             <Button href={continueUrl} className="mt-4" target="_blank" rel="noopener noreferrer">
               Continue to the application form

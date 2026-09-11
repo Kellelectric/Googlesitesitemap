@@ -33,9 +33,8 @@
 // already filled in, and finishes the rest (photo, DOB, consent,
 // signature) on Google's own page. The form's own linked Sheet is the
 // resulting record - no Apps Script submission step is needed for any of
-// the 4 form-backed tracks. The NYSC Placement form is new enough that
-// its question item IDs haven't been mapped yet (see that entry's own
-// comment below), so it currently gets the plain link with no prefill.
+// the 4 form-backed tracks. All 4 now have prefillEntryIds mapped (see
+// each entry's own comment below for how its IDs were sourced).
 export type CareerFormFieldKey = 'fullName' | 'email' | 'phone' | 'institution'
 
 export type CareerFormRoute = {
@@ -102,17 +101,24 @@ export const careerFormRouting: CareerFormRoute[] = [
     // Client-supplied real NYSC Placement Google Form (shortlink
     // https://forms.gle/rnGjtFtRYMZy8Ufr5, resolved to its canonical
     // /viewform URL below - buildPrefillUrl appends query params, which a
-    // shortlink redirect isn't guaranteed to preserve). No prefillEntryIds
-    // yet - this is a fresh form and its question item IDs haven't been
-    // mapped (see listFormItems() in scripts/google-apps-script/ for how
-    // the other 3 forms' entry IDs were found), so applicants currently
-    // land on a blank form rather than one pre-filled from the site's
-    // short application. Add prefillEntryIds here once those IDs are
-    // pulled, matching the apprenticeship/industrial-training/internship
-    // pattern above.
+    // shortlink redirect isn't guaranteed to preserve). Entry IDs below
+    // came from the client's own "Get pre-filled link" export (not
+    // listFormItems(), which needs Apps Script access to this specific
+    // form) - matched by the sample values they filled into each field
+    // when generating that link. This form also asks for a state of
+    // origin, address, emergency contact, NYSC call-up number, batch,
+    // and several NYSC-specific questions with no equivalent field on
+    // the site's short application - left unmapped rather than guessed,
+    // same as the other 3 form-backed tracks above.
     trackSlug: 'nysc-placement',
     googleFormUrl:
       'https://docs.google.com/forms/d/e/1FAIpQLSciHkZ1zMLeIvGXkmoqRSISSaWV2JuhbzTxI6oyMQ-xXEkVGQ/viewform',
+    prefillEntryIds: {
+      fullName: '1004492518', // "Full Name"
+      phone: '455131045', // "Phone Number"
+      email: '1630505554', // "Email Address"
+      institution: '31462287', // Institution/school field
+    },
   },
 ]
 

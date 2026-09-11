@@ -114,13 +114,25 @@ export default async function ProjectDetailPage(props: Props) {
                 <div className="mt-4 grid grid-cols-2 gap-4">
                   <div>
                     <div className="relative aspect-[4/3] overflow-hidden border border-ink/10">
-                      <Image src={project.beforeImage} alt="" fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />
+                      <Image
+                        src={project.beforeImage}
+                        alt={`${project.title} - before`}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, 50vw"
+                        className="object-cover"
+                      />
                     </div>
                     <span className="mt-2 block text-xs font-semibold uppercase tracking-wide text-ink/50">Before</span>
                   </div>
                   <div>
                     <div className="relative aspect-[4/3] overflow-hidden border border-ink/10">
-                      <Image src={project.afterImage} alt="" fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" />
+                      <Image
+                        src={project.afterImage}
+                        alt={`${project.title} - after`}
+                        fill
+                        sizes="(min-width: 1024px) 33vw, 50vw"
+                        className="object-cover"
+                      />
                     </div>
                     <span className="mt-2 block text-xs font-semibold uppercase tracking-wide text-ink/50">After</span>
                   </div>

@@ -100,8 +100,10 @@ export function CareerApplicationForm({
   const [captchaError, setCaptchaError] = useState<string | undefined>()
   const [captchaLoadFailed, setCaptchaLoadFailed] = useState(false)
   const [status, setStatus] = useState<FormStatus>('idle')
+  const [showValidationSummary, setShowValidationSummary] = useState(false)
   const renderedAt = useFormRenderedAt()
   const startedTracked = useRef(false)
+  const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
     if (!TURNSTILE_SITE_KEY) return
@@ -120,6 +122,18 @@ export function CareerApplicationForm({
       setCaptchaLoadFailed(true)
     return () => clearTimeout(timer)
   }, [])
+
+  // Runs after errors/showValidationSummary have actually committed to the
+  // DOM (an effect, not inline in handleSubmit - see its comment), so the
+  // aria-invalid="true" attributes this queries for are guaranteed present.
+  useEffect(() => {
+    if (!showValidationSummary) return
+    const firstInvalid = formRef.current?.querySelector<HTMLElement>(
+      '[aria-invalid="true"]',
+    )
+    firstInvalid?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    firstInvalid?.focus()
+  }, [showValidationSummary, errors])
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     if (!startedTracked.current) {
@@ -161,8 +175,24 @@ export function CareerApplicationForm({
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    if (!validate()) return
+    if (!validate()) {
+      // Without this, an invalid field above the fold (Full name, Phone,
+      // Email - all higher up than the message field/submit button on a
+      // long form) fails validation silently: errors[] updates, but
+      // nothing visible happens anywhere near the button the applicant
+      // just tapped. On mobile especially, that reads as "the submit
+      // button doesn't work" rather than "a field above needs fixing" -
+      // this is a real reported symptom, not a hypothetical. Setting this
+      // flag triggers the scroll-to-first-invalid-field effect below
+      // (deferred to an effect, not done here, since setErrors() inside
+      // validate() hasn't committed to the DOM yet at this point in the
+      // same event handler - querying aria-invalid synchronously here
+      // would always miss, finding last render's DOM).
+      setShowValidationSummary(true)
+      return
+    }
 
+    setShowValidationSummary(false)
     setStatus('submitting')
     trackEvent('career_application_submitted', { track: trackSlug })
     try {
@@ -239,7 +269,7 @@ export function CareerApplicationForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-6">
+    <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-6">
       <input
         type="text"
         name="website"
@@ -387,6 +417,13 @@ export function CareerApplicationForm({
         </Link>
         .
       </p>
+
+      {showValidationSummary && Object.keys(errors).length > 0 && (
+        <p role="alert" className="text-sm font-semibold text-orange">
+          Please fix the highlighted field{Object.keys(errors).length > 1 ? 's' : ''}{' '}
+          above before submitting.
+        </p>
+      )}
 
       <button
         type="submit"

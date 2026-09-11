@@ -2,21 +2,9 @@
 
 import { cloneElement, FormEvent, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Script from 'next/script'
 import Link from 'next/link'
 import { company } from '@/content/company'
 import { trackEvent } from '@/lib/analytics'
-
-declare global {
-  interface Window {
-    turnstile?: {
-      getResponse: (widgetId?: string) => string
-      reset: (widgetId?: string) => void
-    }
-  }
-}
-
-const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 // Nigeria's 36 states + the FCT, for the "current state" field shown when
 // a track is Abuja-only (see careers.ts's `abujaOnly` field). "FCT (Abuja)"
@@ -79,8 +67,9 @@ type CareerApplicationFormProps = {
 
 // Collects the fields common to every career track on-site. Follows the
 // same submit/spam-protection pattern as QuoteForm.tsx (see
-// app/api/careers-application/route.ts): honeypot, time-trap, optional
-// hCaptcha.
+// app/api/careers-application/route.ts): honeypot + time-trap. No captcha -
+// deliberately removed (see git history) after it was blocking legitimate
+// applicants from submitting.
 //
 // For apprenticeship/industrial-training/internship, the API route hands
 // back a pre-filled link to that track's official Google Form (see
@@ -97,31 +86,11 @@ export function CareerApplicationForm({
   const router = useRouter()
   const [form, setForm] = useState<FormState>(makeInitialState)
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
-  const [captchaError, setCaptchaError] = useState<string | undefined>()
-  const [captchaLoadFailed, setCaptchaLoadFailed] = useState(false)
   const [status, setStatus] = useState<FormStatus>('idle')
   const [showValidationSummary, setShowValidationSummary] = useState(false)
   const renderedAt = useFormRenderedAt()
   const startedTracked = useRef(false)
   const formRef = useRef<HTMLFormElement>(null)
-
-  useEffect(() => {
-    if (!TURNSTILE_SITE_KEY) return
-    const timer = setTimeout(() => {
-      if (!window.turnstile) setCaptchaLoadFailed(true)
-    }, 6000)
-    // Covers the other half of "fail open, not closed": the script above
-    // only catches the script never loading at all. A widget that loads
-    // but then can't complete (wrong domain registered in the Cloudflare
-    // Turnstile dashboard, a network hiccup mid-challenge) leaves
-    // window.turnstile defined but getResponse() permanently empty -
-    // silently blocking every submission with no way out for the
-    // applicant. data-error-callback below reports that failure directly
-    // instead of leaving it to a client-side guess.
-    ;(window as unknown as Record<string, () => void>).__careerTurnstileError = () =>
-      setCaptchaLoadFailed(true)
-    return () => clearTimeout(timer)
-  }, [])
 
   // Runs after errors/showValidationSummary have actually committed to the
   // DOM (an effect, not inline in handleSubmit - see its comment), so the
@@ -163,14 +132,7 @@ export function CareerApplicationForm({
     if (!form.message.trim()) next.message = 'Add a short note on why you’re applying'
     setErrors(next)
 
-    let captchaOk = true
-    if (TURNSTILE_SITE_KEY && !captchaLoadFailed) {
-      const token = window.turnstile?.getResponse()
-      captchaOk = !!token
-      setCaptchaError(captchaOk ? undefined : "Verify you're not a robot")
-    }
-
-    return Object.keys(next).length === 0 && captchaOk
+    return Object.keys(next).length === 0
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -196,27 +158,23 @@ export function CareerApplicationForm({
     setStatus('submitting')
     trackEvent('career_application_submitted', { track: trackSlug })
     try {
-      const captchaToken = TURNSTILE_SITE_KEY ? window.turnstile?.getResponse() : undefined
       const res = await fetch('/api/careers-application', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, trackSlug, renderedAt, captchaToken }),
+        body: JSON.stringify({ ...form, trackSlug, renderedAt }),
       })
 
       const resBody = await res.json().catch(() => null)
 
       if (!res.ok) {
-        window.turnstile?.reset()
         setStatus(
           resBody?.reason === 'not_configured'
             ? 'not_configured'
-            : resBody?.reason === 'captcha_failed' || resBody?.reason === 'not_abuja'
+            : resBody?.reason === 'not_abuja'
               ? 'idle'
               : 'error',
         )
-        if (resBody?.reason === 'captcha_failed') {
-          setCaptchaError('Verification failed - please try again')
-        } else if (resBody?.reason === 'not_abuja') {
+        if (resBody?.reason === 'not_abuja') {
           // Defense-in-depth: the client-side gate in validate() already
           // stops this in the normal flow - this only fires if that check
           // was somehow bypassed (stale state, a direct API call).
@@ -386,28 +344,6 @@ export function CareerApplicationForm({
           placeholder="A short note on your background and why you're applying."
         />
       </Field>
-
-      {TURNSTILE_SITE_KEY && !captchaLoadFailed && (
-        <div>
-          <Script
-            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-            strategy="afterInteractive"
-            async
-            defer
-            onError={() => setCaptchaLoadFailed(true)}
-          />
-          <div
-            className="cf-turnstile"
-            data-sitekey={TURNSTILE_SITE_KEY}
-            data-error-callback="__careerTurnstileError"
-          />
-          {captchaError && (
-            <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">
-              {captchaError}
-            </span>
-          )}
-        </div>
-      )}
 
       <p className="text-xs leading-relaxed text-ink/60">
         By submitting, you agree that the information above is collected to

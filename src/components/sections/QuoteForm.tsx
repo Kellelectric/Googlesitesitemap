@@ -2,29 +2,9 @@
 
 import { cloneElement, FormEvent, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Script from 'next/script'
 import { services } from '@/content/services'
 import { company } from '@/content/company'
 import { trackEvent } from '@/lib/analytics'
-
-// Turnstile exposes itself as a global once its script loads, not an npm
-// package — matches this file's existing pattern of talking to gtag
-// (see lib/analytics.ts) the same way.
-declare global {
-  interface Window {
-    turnstile?: {
-      getResponse: (widgetId?: string) => string
-      reset: (widgetId?: string) => void
-    }
-  }
-}
-
-// Only set once a real Turnstile site key exists in the deployment env —
-// see docs/next-steps.md. Undefined here means the widget doesn't render
-// and the server doesn't require a token either (see TURNSTILE_SECRET_KEY
-// in app/api/quote/route.ts), so the form works exactly as before until
-// both are configured.
-const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 // Set once on mount and sent back with the submission. The API rejects
 // submissions completed faster than a human plausibly could — see
@@ -69,37 +49,10 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
   const router = useRouter()
   const [form, setForm] = useState<FormState>(() => makeInitialState(initialServiceSlug))
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
-  const [captchaError, setCaptchaError] = useState<string | undefined>()
-  const [captchaLoadFailed, setCaptchaLoadFailed] = useState(false)
   const [status, setStatus] = useState<FormStatus>('idle')
   const [showValidationSummary, setShowValidationSummary] = useState(false)
   const renderedAt = useFormRenderedAt()
   const formRef = useRef<HTMLFormElement>(null)
-
-  // Fail open, not closed: if the Turnstile script never loads (ad blocker,
-  // privacy extension, a network that blocks challenges.cloudflare.com
-  // outright — all observed in the field), window.turnstile stays
-  // undefined forever and a real customer would be stuck unable to submit
-  // at all. Losing bot protection to an infrastructure hiccup is a far
-  // smaller cost than losing a real lead, and the honeypot/time-trap/
-  // rate-limit checks still apply either way.
-  useEffect(() => {
-    if (!TURNSTILE_SITE_KEY) return
-    const timer = setTimeout(() => {
-      if (!window.turnstile) setCaptchaLoadFailed(true)
-    }, 6000)
-    // Covers the other half of "fail open, not closed" above: that timer
-    // only catches the script never loading at all. A widget that loads
-    // but then can't complete (wrong domain registered in the Cloudflare
-    // Turnstile dashboard, a network hiccup mid-challenge) leaves
-    // window.turnstile defined but getResponse() permanently empty -
-    // silently blocking every submission with no way out for the visitor.
-    // data-error-callback below reports that failure directly instead of
-    // leaving it to a client-side guess.
-    ;(window as unknown as Record<string, () => void>).__quoteTurnstileError = () =>
-      setCaptchaLoadFailed(true)
-    return () => clearTimeout(timer)
-  }, [])
 
   // Scrolls to/focuses the first invalid field once a failed submit
   // attempt has actually committed its errors to the DOM (an effect, not
@@ -136,14 +89,7 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
     if (!form.details.trim()) next.details = 'Add a short description of the job'
     setErrors(next)
 
-    let captchaOk = true
-    if (TURNSTILE_SITE_KEY && !captchaLoadFailed) {
-      const token = window.turnstile?.getResponse()
-      captchaOk = !!token
-      setCaptchaError(captchaOk ? undefined : "Verify you're not a robot")
-    }
-
-    return Object.keys(next).length === 0 && captchaOk
+    return Object.keys(next).length === 0
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -156,29 +102,16 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
     setShowValidationSummary(false)
     setStatus('submitting')
     try {
-      const captchaToken = TURNSTILE_SITE_KEY ? window.turnstile?.getResponse() : undefined
       const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, renderedAt, captchaToken }),
+        body: JSON.stringify({ ...form, renderedAt }),
       })
 
       const resBody = await res.json().catch(() => null)
 
       if (!res.ok) {
-        // A used/expired token can't be resubmitted — reset so the next
-        // attempt (whatever the failure reason) gets a fresh one.
-        window.turnstile?.reset()
-        setStatus(
-          resBody?.reason === 'not_configured'
-            ? 'not_configured'
-            : resBody?.reason === 'captcha_failed'
-              ? 'idle'
-              : 'error',
-        )
-        if (resBody?.reason === 'captcha_failed') {
-          setCaptchaError('Verification failed - please try again')
-        }
+        setStatus(resBody?.reason === 'not_configured' ? 'not_configured' : 'error')
         return
       }
 
@@ -333,28 +266,6 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
           live wiring), call {company.phone} directly rather than waiting
           for a form response.
         </p>
-      )}
-
-      {TURNSTILE_SITE_KEY && !captchaLoadFailed && (
-        <div>
-          <Script
-            src="https://challenges.cloudflare.com/turnstile/v0/api.js"
-            strategy="afterInteractive"
-            async
-            defer
-            onError={() => setCaptchaLoadFailed(true)}
-          />
-          <div
-            className="cf-turnstile"
-            data-sitekey={TURNSTILE_SITE_KEY}
-            data-error-callback="__quoteTurnstileError"
-          />
-          {captchaError && (
-            <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">
-              {captchaError}
-            </span>
-          )}
-        </div>
       )}
 
       {showValidationSummary && Object.keys(errors).length > 0 && (

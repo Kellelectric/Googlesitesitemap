@@ -1,6 +1,6 @@
 'use client'
 
-import { cloneElement, FormEvent, useEffect, useState } from 'react'
+import { cloneElement, FormEvent, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Script from 'next/script'
 import { services } from '@/content/services'
@@ -72,7 +72,9 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
   const [captchaError, setCaptchaError] = useState<string | undefined>()
   const [captchaLoadFailed, setCaptchaLoadFailed] = useState(false)
   const [status, setStatus] = useState<FormStatus>('idle')
+  const [showValidationSummary, setShowValidationSummary] = useState(false)
   const renderedAt = useFormRenderedAt()
+  const formRef = useRef<HTMLFormElement>(null)
 
   // Fail open, not closed: if the Turnstile script never loads (ad blocker,
   // privacy extension, a network that blocks challenges.cloudflare.com
@@ -98,6 +100,24 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
       setCaptchaLoadFailed(true)
     return () => clearTimeout(timer)
   }, [])
+
+  // Scrolls to/focuses the first invalid field once a failed submit
+  // attempt has actually committed its errors to the DOM (an effect, not
+  // inline in handleSubmit - querying aria-invalid synchronously right
+  // after setErrors() would still see last render's DOM). Without this, a
+  // customer who fills the last field (Job details) but leaves an earlier
+  // one blank (Name, Phone, Email) taps Submit and sees nothing happen
+  // anywhere near the button - indistinguishable from "the button is
+  // broken," especially on mobile. See CareerApplicationForm.tsx for the
+  // same fix, applied there first from a real reported case.
+  useEffect(() => {
+    if (!showValidationSummary) return
+    const firstInvalid = formRef.current?.querySelector<HTMLElement>(
+      '[aria-invalid="true"]',
+    )
+    firstInvalid?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    firstInvalid?.focus()
+  }, [showValidationSummary, errors])
 
   function update<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((prev) => ({ ...prev, [key]: value }))
@@ -128,8 +148,12 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    if (!validate()) return
+    if (!validate()) {
+      setShowValidationSummary(true)
+      return
+    }
 
+    setShowValidationSummary(false)
     setStatus('submitting')
     try {
       const captchaToken = TURNSTILE_SITE_KEY ? window.turnstile?.getResponse() : undefined
@@ -194,7 +218,7 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="space-y-6">
+    <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-6">
       <input
         type="text"
         name="website"
@@ -333,9 +357,17 @@ export function QuoteForm({ initialServiceSlug = '' }: { initialServiceSlug?: st
         </div>
       )}
 
+      {showValidationSummary && Object.keys(errors).length > 0 && (
+        <p role="alert" className="text-sm font-semibold text-orange">
+          Please fix the highlighted field{Object.keys(errors).length > 1 ? 's' : ''}{' '}
+          above before submitting.
+        </p>
+      )}
+
       <button
         type="submit"
         disabled={status === 'submitting'}
+        aria-busy={status === 'submitting'}
         className="inline-flex items-center justify-center rounded bg-yellow px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-yellow/90 disabled:opacity-60"
       >
         {status === 'submitting' ? 'Submitting…' : 'Submit Request'}

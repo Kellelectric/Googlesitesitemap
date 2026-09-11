@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { cloneElement, useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
 import { company } from '@/content/company'
 import { isDateBookable } from '@/lib/bookingSlots'
@@ -104,6 +104,8 @@ export function BookingWidget() {
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [reference, setReference] = useState<string | null>(null)
+  const [showValidationSummary, setShowValidationSummary] = useState(false)
+  const widgetRef = useRef<HTMLDivElement>(null)
 
   const days = nextDays(10)
 
@@ -132,6 +134,23 @@ export function BookingWidget() {
       setCaptchaLoadFailed(true)
     return () => clearTimeout(timer)
   }, [])
+
+  // Scrolls to/focuses the first invalid field once a failed validate()
+  // attempt has actually committed fieldErrors to the DOM (an effect, not
+  // inline where validate() is called - querying aria-invalid right after
+  // setFieldErrors() would still see last render's DOM). Without this, a
+  // visitor who fills the last details-step field but leaves an earlier
+  // one blank taps "Continue to Payment"/"Confirm Booking" and nothing
+  // visibly happens - indistinguishable from a broken button, same issue
+  // fixed in QuoteForm.tsx/CareerApplicationForm.tsx.
+  useEffect(() => {
+    if (!showValidationSummary) return
+    const firstInvalid = widgetRef.current?.querySelector<HTMLElement>(
+      '[aria-invalid="true"]',
+    )
+    firstInvalid?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    firstInvalid?.focus()
+  }, [showValidationSummary, fieldErrors])
 
   // Probe availability for the first bookable day to learn whether the
   // calendar backend is configured at all, before showing any UI that
@@ -209,8 +228,12 @@ export function BookingWidget() {
 
   async function handleSubmit(paystackReference?: string) {
     if (!selectedDate || !selectedTime) return
-    if (!paystackReference && !validate()) return
+    if (!paystackReference && !validate()) {
+      setShowValidationSummary(true)
+      return
+    }
 
+    setShowValidationSummary(false)
     setSubmitting(true)
     setSubmitError(null)
     try {
@@ -285,7 +308,11 @@ export function BookingWidget() {
       handleSubmit()
       return
     }
-    if (!validate()) return
+    if (!validate()) {
+      setShowValidationSummary(true)
+      return
+    }
+    setShowValidationSummary(false)
     setPayError(null)
     setStep('payment')
   }
@@ -436,7 +463,7 @@ export function BookingWidget() {
   const categoryComplete = category !== null && (category !== 'residential' || areaSlug !== null)
 
   return (
-    <div className="border border-ink/10 bg-paper p-6 sm:p-8">
+    <div ref={widgetRef} className="border border-ink/10 bg-paper p-6 sm:p-8">
       <div>
         <span className="eyebrow text-petrol/70">Step 1 - What do you need service for?</span>
         <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -666,9 +693,17 @@ export function BookingWidget() {
             </div>
           )}
 
+          {showValidationSummary && Object.keys(fieldErrors).length > 0 && (
+            <p role="alert" className="text-sm font-semibold text-orange">
+              Please fix the highlighted field{Object.keys(fieldErrors).length > 1 ? 's' : ''}{' '}
+              above before continuing.
+            </p>
+          )}
+
           <button
             type="button"
             disabled={submitting}
+            aria-busy={submitting}
             onClick={() => continueFromDetails()}
             className="inline-flex items-center justify-center rounded bg-yellow px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-yellow/90 disabled:opacity-60"
           >
@@ -699,12 +734,14 @@ function BookingField({
 }: {
   label: string
   error?: string
-  children: React.ReactNode
+  children: React.ReactElement<any>
 }) {
   return (
     <label className="block">
       <span className="eyebrow text-ink/60">{label}</span>
-      <span className="mt-2 block">{children}</span>
+      <span className="mt-2 block">
+        {cloneElement(children, { 'aria-invalid': !!error })}
+      </span>
       {error && <span role="alert" className="mt-1.5 block text-xs font-semibold text-ink">{error}</span>}
     </label>
   )

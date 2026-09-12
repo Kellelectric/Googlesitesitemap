@@ -18,6 +18,10 @@ const NIGERIAN_STATES = [
 ]
 
 const ABUJA_STATE_VALUE = 'FCT (Abuja)'
+// Applied to the "Why do you want to join Kell Electricals for X?" field -
+// stops a one-word non-answer ("Money", "Job") from passing as a real
+// motivation statement, without demanding an essay.
+const MIN_MESSAGE_LENGTH = 50
 
 function useFormRenderedAt() {
   const [renderedAt] = useState(() => Date.now())
@@ -129,7 +133,9 @@ export function CareerApplicationForm({
     if (roleOptions && roleOptions.length > 0 && !form.roleAppliedFor) {
       next.roleAppliedFor = 'Select the role you’re applying for'
     }
-    if (!form.message.trim()) next.message = 'Add a short note on why you’re applying'
+    if (form.message.trim().length < MIN_MESSAGE_LENGTH) {
+      next.message = `Tell us a bit more - at least ${MIN_MESSAGE_LENGTH} characters (${form.message.trim().length}/${MIN_MESSAGE_LENGTH} so far)`
+    }
     setErrors(next)
 
     return Object.keys(next).length === 0
@@ -340,10 +346,16 @@ export function CareerApplicationForm({
           value={form.message}
           onChange={(e) => update('message', e.target.value)}
           rows={5}
+          minLength={MIN_MESSAGE_LENGTH}
           className={inputClass(!!errors.message)}
           placeholder="A short note on your background and why you're applying."
         />
       </Field>
+      {!errors.message && (
+        <p className="-mt-3 text-xs text-ink/50">
+          {form.message.trim().length}/{MIN_MESSAGE_LENGTH} characters minimum
+        </p>
+      )}
 
       <p className="text-xs leading-relaxed text-ink/60">
         By submitting, you agree that the information above is collected to

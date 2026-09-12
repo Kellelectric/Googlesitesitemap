@@ -5,6 +5,14 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     formats: ['image/avif', 'image/webp'],
+    // Next.js 16 only serves quality=75 unless the exact values requested
+    // elsewhere are allow-listed here (silently clamps to 75 otherwise,
+    // with no warning) - confirmed via a live production HTML fetch that
+    // every quality={60}/{65}/{70} Image prop across the site (hero photos
+    // included) was actually being served at 75 the whole time, needlessly
+    // inflating LCP/bandwidth. Keep this list in sync with every distinct
+    // quality={N} value used in src/ (`grep -rn "quality={" src` to check).
+    qualities: [60, 65, 70, 75],
   },
   async headers() {
     return [

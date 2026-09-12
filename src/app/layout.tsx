@@ -6,7 +6,7 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { MobileCallBar } from '@/components/layout/MobileCallBar'
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics'
-import { KellAssist } from '@/components/chatbot/KellAssist'
+import { KellAssistLoader } from '@/components/chatbot/KellAssistLoader'
 import { company } from '@/content/company'
 import { organizationSchema } from '@/lib/schema'
 
@@ -111,7 +111,7 @@ export default function RootLayout({
             component (src/components/chat/ZohoSalesIQ.tsx,
             docs/zoho-salesiq-zobot.md) are left in the repo, not
             deleted, in case either is wanted again later. */}
-        <KellAssist />
+        <KellAssistLoader />
         <SpeedInsights />
       </body>
     </html>

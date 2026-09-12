@@ -150,6 +150,10 @@ async function markRecentSubmission(key: string, reference: string): Promise<voi
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+// Re-checks CareerApplicationForm's own client-side minimum (see
+// MIN_MESSAGE_LENGTH there) - a client-side check alone can always be
+// bypassed by posting directly to this endpoint.
+const MIN_MESSAGE_LENGTH = 50
 
 function isValidPayload(body: unknown): body is ApplicationPayload {
   if (!body || typeof body !== 'object') return false
@@ -164,7 +168,7 @@ function isValidPayload(body: unknown): body is ApplicationPayload {
     typeof b.phone === 'string' &&
     /^[+0-9\s()-]{7,}$/.test(b.phone.trim()) &&
     typeof b.message === 'string' &&
-    b.message.trim().length > 0
+    b.message.trim().length >= MIN_MESSAGE_LENGTH
   )
 }
 

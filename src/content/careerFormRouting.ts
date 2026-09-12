@@ -12,11 +12,10 @@
 //   - `job-openings` and `nysc-placement` were both pointing at what is
 //     actually the Internship form, when neither should redirect to a
 //     training-programme form at all.
-// `job-openings` still has no Google Form and stays on the on-site
-// pipeline only. `nysc-placement` originally matched that treatment "for
-// now," but the client has since supplied a real, dedicated NYSC
-// Placement Google Form (see its entry below) - it's routed the same way
-// as the other 3 form-backed tracks now.
+// `nysc-placement` has since been given a real, dedicated NYSC Placement
+// Google Form (see its entry below). `job-openings` genuinely does share
+// Internship's form now (see that entry's own comment) - client-confirmed
+// as intentional and temporary, not a repeat of the mistake above.
 //
 // ROUTING MECHANISM — pre-filled link, not Apps Script auto-submit:
 // listFormItems() (see scripts/google-apps-script/) revealed the
@@ -33,8 +32,8 @@
 // already filled in, and finishes the rest (photo, DOB, consent,
 // signature) on Google's own page. The form's own linked Sheet is the
 // resulting record - no Apps Script submission step is needed for any of
-// the 4 form-backed tracks. All 4 now have prefillEntryIds mapped (see
-// each entry's own comment below for how its IDs were sourced).
+// the 5 form-backed tracks. All of them now have prefillEntryIds mapped
+// (see each entry's own comment below for how its IDs were sourced).
 export type CareerFormFieldKey = 'fullName' | 'email' | 'phone' | 'institution'
 
 export type CareerFormRoute = {
@@ -94,8 +93,23 @@ export const careerFormRouting: CareerFormRoute[] = [
     },
   },
   {
+    // Client-confirmed: job-openings deliberately shares Internship's form
+    // for now (client-supplied link https://forms.gle/M9tZZvN6QJLkYbSz6
+    // resolves to the exact same form ID as the internship entry above -
+    // confirmed with the client this is intentional, not a copy-paste
+    // mix-up, unlike the earlier now-fixed bug this file's header
+    // describes). A dedicated Job Openings form is planned later - when
+    // that exists, update googleFormUrl/prefillEntryIds below to point at
+    // it instead of Internship's.
     trackSlug: 'job-openings',
-    googleFormUrl: null,
+    googleFormUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLScrGwqdcA3rzUVRhHl2kt7afhOGNB9InZsdAmZ7gsG5tXr3eQ/viewform',
+    prefillEntryIds: {
+      fullName: '322884199', // "Full Legal Name"
+      email: '1049550588', // "Email"
+      phone: '118987505', // "Phone number"
+      institution: '96946990', // "Most Recent Institution Attended"
+    },
   },
   {
     // Client-supplied real NYSC Placement Google Form (shortlink

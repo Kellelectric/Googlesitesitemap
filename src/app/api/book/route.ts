@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { verifyPaystackTransaction } from '@/lib/paystack'
+import { createBookingLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
 import { createCalendarEvent, getBusyPeriods, isCalendarConfigured } from '@/lib/googleCalendar'
 import { computeAvailableSlots, isDateBookable, localSlotToDate, SLOT_MINUTES } from '@/lib/bookingSlots'
 import {
@@ -184,6 +185,25 @@ export async function POST(request: NextRequest) {
       description: descriptionLines.join('\n'),
       attendeeEmail: body.email,
     })
+
+    // Best-effort, fire-and-forget - never blocks or fails the booking
+    // itself (the calendar event above is the source of truth).
+    if (isZohoCrmConfigured()) {
+      createBookingLead({
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        address: body.address,
+        date: body.date,
+        time: body.time,
+        serviceCategory: body.serviceCategory,
+        priceDescription,
+        notes: body.notes,
+        reference,
+      }).catch((error) => {
+        console.error('Zoho CRM lead create (best-effort, booking) failed', error)
+      })
+    }
 
     // Best-effort: also forward to the same lead webhook quote requests
     // use, so bookings show up alongside quotes in whatever CRM

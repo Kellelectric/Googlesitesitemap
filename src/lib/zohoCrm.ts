@@ -70,6 +70,32 @@ export type CareerLeadInput = {
   reference: string
 }
 
+export type QuoteLeadInput = {
+  name: string
+  email: string
+  phone: string
+  serviceSlug: string
+  serviceName: string
+  propertyType: string
+  urgency?: string
+  location: string
+  details: string
+  reference: string
+}
+
+export type BookingLeadInput = {
+  name: string
+  email: string
+  phone: string
+  address: string
+  date: string
+  time: string
+  serviceCategory?: string
+  priceDescription?: string | null
+  notes?: string
+  reference: string
+}
+
 // Splits on the last space - Zoho CRM's Leads module requires Last_Name,
 // so a single-word name goes entirely into Last_Name rather than being
 // dropped or guessed at.
@@ -80,23 +106,25 @@ function splitName(fullName: string): { firstName?: string; lastName: string } {
   return { firstName: trimmed.slice(0, lastSpace), lastName: trimmed.slice(lastSpace + 1) }
 }
 
-// Best-effort - throws on failure so the caller decides how to log/ignore
-// it; never blocks the applicant's own submission response.
-export async function createCareerLead(input: CareerLeadInput): Promise<void> {
+type GenericLeadFields = {
+  fullName: string
+  email: string
+  phone: string
+  company: string
+  designation: string
+  description: string
+}
+
+// Shared by createCareerLead/createQuoteLead/createBookingLead below -
+// same Leads-module POST, three different field mappings for what each
+// form actually collects. Best-effort - throws on failure so the caller
+// decides how to log/ignore it; never blocks the visitor's own submission
+// response (see each call site's fire-and-forget .catch()).
+async function createLead(fields: GenericLeadFields): Promise<void> {
   const dc = process.env.ZOHO_CRM_DC
   if (!dc) throw new Error('ZOHO_CRM_DC not set')
   const token = await getAccessToken()
-  const { firstName, lastName } = splitName(input.fullName)
-
-  const descriptionLines = [
-    `Application reference: ${input.reference}`,
-    `Career track: ${input.trackName}`,
-    input.roleAppliedFor ? `Role applied for: ${input.roleAppliedFor}` : null,
-    input.courseOrInstitution ? `Course / institution: ${input.courseOrInstitution}` : null,
-    input.cvLink ? `CV link: ${input.cvLink}` : null,
-    '',
-    input.message,
-  ].filter((line): line is string => line !== null)
+  const { firstName, lastName } = splitName(fields.fullName)
 
   const res = await fetch(`https://www.zohoapis.${dc}/crm/v2/Leads`, {
     method: 'POST',
@@ -109,15 +137,15 @@ export async function createCareerLead(input: CareerLeadInput): Promise<void> {
         {
           First_Name: firstName,
           Last_Name: lastName,
-          Email: input.email,
-          Phone: input.phone,
-          Company: 'Kell Electricals Ltd - Applicant',
-          Designation: input.roleAppliedFor || input.trackName,
+          Email: fields.email,
+          Phone: fields.phone,
+          Company: fields.company,
+          Designation: fields.designation,
           // Lead_Source deliberately left unset - none of this org's real
           // picklist values ("Web Download", "Web Research", etc.) is an
-          // accurate match for "submitted the on-site careers form", and
-          // guessing one would misrepresent the source in reporting.
-          Description: descriptionLines.join('\n'),
+          // accurate match for "submitted an on-site form", and guessing
+          // one would misrepresent the source in reporting.
+          Description: fields.description,
         },
       ],
     }),
@@ -132,4 +160,66 @@ export async function createCareerLead(input: CareerLeadInput): Promise<void> {
   if (body.data?.[0]?.status !== 'success') {
     throw new Error(`Zoho CRM lead create rejected: ${JSON.stringify(body.data?.[0])}`)
   }
+}
+
+export async function createCareerLead(input: CareerLeadInput): Promise<void> {
+  const descriptionLines = [
+    `Application reference: ${input.reference}`,
+    `Career track: ${input.trackName}`,
+    input.roleAppliedFor ? `Role applied for: ${input.roleAppliedFor}` : null,
+    input.courseOrInstitution ? `Course / institution: ${input.courseOrInstitution}` : null,
+    input.cvLink ? `CV link: ${input.cvLink}` : null,
+    '',
+    input.message,
+  ].filter((line): line is string => line !== null)
+
+  await createLead({
+    fullName: input.fullName,
+    email: input.email,
+    phone: input.phone,
+    company: 'Kell Electricals Ltd - Applicant',
+    designation: input.roleAppliedFor || input.trackName,
+    description: descriptionLines.join('\n'),
+  })
+}
+
+export async function createQuoteLead(input: QuoteLeadInput): Promise<void> {
+  const descriptionLines = [
+    `Quote reference: ${input.reference}`,
+    `Service: ${input.serviceName}`,
+    `Property type: ${input.propertyType}`,
+    input.urgency ? `Urgency: ${input.urgency}` : null,
+    `Location: ${input.location}`,
+    '',
+    input.details,
+  ].filter((line): line is string => line !== null)
+
+  await createLead({
+    fullName: input.name,
+    email: input.email,
+    phone: input.phone,
+    company: 'Kell Electricals Ltd - Quote Request',
+    designation: input.serviceName,
+    description: descriptionLines.join('\n'),
+  })
+}
+
+export async function createBookingLead(input: BookingLeadInput): Promise<void> {
+  const descriptionLines = [
+    `Booking reference: ${input.reference}`,
+    `Date/time: ${input.date} ${input.time} (Africa/Lagos)`,
+    `Address: ${input.address}`,
+    input.serviceCategory ? `Service category: ${input.serviceCategory}` : null,
+    input.priceDescription ? `Price: ${input.priceDescription}` : null,
+    input.notes ? `Notes: ${input.notes}` : null,
+  ].filter((line): line is string => line !== null)
+
+  await createLead({
+    fullName: input.name,
+    email: input.email,
+    phone: input.phone,
+    company: 'Kell Electricals Ltd - Appointment Booking',
+    designation: input.serviceCategory || 'Appointment Booking',
+    description: descriptionLines.join('\n'),
+  })
 }

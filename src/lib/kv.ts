@@ -1,11 +1,10 @@
 import { Redis } from '@upstash/redis'
 
 // Optional durable store, backing rate limiting (src/lib/rateLimit.ts) and
-// the careers-application duplicate-submission guard/pending-application
-// stash. Without a Redis REST URL+token available (either naming below),
-// all three fall back to their previous in-memory-only behavior
-// (documented in each call site's own comment) - this file existing
-// changes nothing until one of those is set.
+// the careers-application duplicate-submission guard. Without a Redis REST
+// URL+token available (either naming below), both fall back to their
+// previous in-memory-only behavior (documented in each call site's own
+// comment) - this file existing changes nothing until one of those is set.
 //
 // Setup: upstash.com -> create a Redis database (the free tier is enough
 // for this site's volume) -> REST API section has UPSTASH_REDIS_REST_URL/
@@ -56,53 +55,4 @@ export async function markDuplicateReference(
   const redis = getRedis()
   if (!redis) return
   await redis.set(key, reference, { ex: ttlSeconds })
-}
-
-// Holds the data needed to send an applicant "your application has been
-// received" confirmation email once they finish the embedded Google Form
-// on the thank-you page (see careers-application/route.ts and
-// careers/thank-you/page.tsx) - the initial form-submission response never
-// carries the applicant's email/name back to the browser, so this is
-// looked up server-side by reference instead of round-tripping PII through
-// a URL query string. Requires Redis - without it, the confirmation email
-// is simply not sent (the on-page "received" message still shows either
-// way), same no-op-until-configured shape as everything else in kv.ts.
-export type PendingCareerApplication = {
-  reference: string
-  trackName: string
-  fullName: string
-  email: string
-  phone: string
-  courseOrInstitution?: string
-  roleAppliedFor?: string
-  cvLink?: string
-  message: string
-  submittedAt: string
-}
-
-function pendingCareerApplicationKey(reference: string): string {
-  return `pending-career-app:${reference}`
-}
-
-export async function getPendingCareerApplication(
-  reference: string,
-): Promise<PendingCareerApplication | null> {
-  const redis = getRedis()
-  if (!redis) return null
-  return redis.get<PendingCareerApplication>(pendingCareerApplicationKey(reference))
-}
-
-export async function markPendingCareerApplication(
-  data: PendingCareerApplication,
-  ttlSeconds: number,
-): Promise<void> {
-  const redis = getRedis()
-  if (!redis) return
-  await redis.set(pendingCareerApplicationKey(data.reference), data, { ex: ttlSeconds })
-}
-
-export async function clearPendingCareerApplication(reference: string): Promise<void> {
-  const redis = getRedis()
-  if (!redis) return
-  await redis.del(pendingCareerApplicationKey(reference))
 }

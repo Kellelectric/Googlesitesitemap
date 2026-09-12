@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHash, createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
-import {
-  getDuplicateReference,
-  markDuplicateReference,
-  markPendingCareerApplication,
-} from '@/lib/kv'
+import { getDuplicateReference, markDuplicateReference } from '@/lib/kv'
 import { getCareerTrackBySlug } from '@/content/careers'
 import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting'
 import { createCareerLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
@@ -13,6 +9,7 @@ import { sendCareerSlackNotification, isSlackNotifyConfigured } from '@/lib/slac
 import { sendWhatsAppNotification, isWhatsAppConfigured } from '@/lib/whatsapp'
 import {
   sendApplicantConfirmationEmail,
+  sendContinueApplicationEmail,
   sendInternalNotificationEmail,
   isResendConfigured,
   isCareerNotifyEmailConfigured,
@@ -108,11 +105,11 @@ type CareerApplicationWebhookPayload = {
   submittedAt: string
   userAgent?: string
   ipHash?: string
-  // Only present for apprenticeship/industrial-training/internship - lets
-  // the Apps Script webhook send a "continue your application" email with
-  // the same pre-filled link the applicant already sees on the thank-you
-  // page, instead of a misleading "application received" (they haven't
-  // finished the real form yet at this point).
+  // Present for apprenticeship/industrial-training/internship/
+  // nysc-placement - forwarded to CAREERS_WEBHOOK_URL for its own Sheet
+  // log/notification purposes only; it's the site's own
+  // sendContinueApplicationEmail (resendEmail.ts), not this webhook, that
+  // actually emails the applicant this same pre-filled link.
   redirectUrl?: string
 }
 
@@ -126,12 +123,6 @@ type CareerApplicationWebhookPayload = {
 // markRecentSubmission() calls below) - a genuine failure shouldn't block
 // a real retry.
 const DUPLICATE_WINDOW_SECONDS = 2 * 60
-// How long an applicant has to finish the embedded Google Form on the
-// thank-you page (see PendingCareerApplication in kv.ts) before the
-// "application received" confirmation email can no longer be sent for it
-// - generous, since these forms require a photo, ID/documents, and a
-// signature that not everyone has ready immediately.
-const PENDING_APPLICATION_TTL_SECONDS = 48 * 60 * 60
 const recentSubmissions = new Map<string, { reference: string; at: number }>()
 
 function duplicateKey(trackSlug: string, email: string, phone: string): string {
@@ -316,15 +307,13 @@ export async function POST(request: NextRequest) {
   }
   // Direct integrations, independent of CAREERS_WEBHOOK_URL - each one is
   // env-var gated (see src/lib/zohoCrm.ts, slackNotify.ts, resendEmail.ts)
-  // and fires for every track, not just job-openings/nysc-placement, since
-  // a CRM record / team notification is useful regardless of whether the
-  // applicant also gets redirected to a Google Form. Fire-and-forget -
-  // never awaited, never blocks or fails the applicant's own response.
-  // hasFormRedirect (kept before webhookPayload was built - see
-  // `redirectUrl` above) governs whether an *applicant-confirmation* email
-  // makes sense here (the Apps Script webhook, if configured, sends its
-  // own "finish the form" email instead for that path - see careers-
-  // automation.md's duplicate-email note in careerApplicationRouter.gs).
+  // and fires for every track, since a CRM record / team notification is
+  // useful regardless of whether the applicant still has a Google Form to
+  // finish. Fire-and-forget - never awaited, never blocks or fails the
+  // applicant's own response. `redirectUrl` (below) governs only which of
+  // the two applicant-confirmation emails makes sense - see
+  // sendContinueApplicationEmail vs. sendApplicantConfirmationEmail in
+  // resendEmail.ts.
   if (isZohoCrmConfigured()) {
     createCareerLead({
       fullName: body.fullName,
@@ -382,25 +371,42 @@ export async function POST(request: NextRequest) {
     })
   }
 
-  if (isResendConfigured() && !redirectUrl) {
-    // Only for tracks without a Google Form redirect - the redirect
-    // tracks' own applicant email is "finish your application", sent by
-    // the Apps Script webhook if configured, not "received" (they haven't
-    // finished yet). See the duplicate-email note above.
-    sendApplicantConfirmationEmail({
-      reference,
-      trackName: track.name,
-      fullName: body.fullName,
-      email: body.email,
-      phone: body.phone,
-      courseOrInstitution: body.courseOrInstitution,
-      roleAppliedFor: body.roleAppliedFor,
-      cvLink: body.cvLink,
-      message: body.message,
-      submittedAt: webhookPayload.submittedAt,
-    }).catch((error) => {
-      console.error('Applicant confirmation email (best-effort) failed', error)
-    })
+  if (isResendConfigured()) {
+    if (redirectUrl) {
+      // Google-Form-backed tracks: "one step left," not "received" - the
+      // applicant hasn't actually finished applying yet at this point (see
+      // sendContinueApplicationEmail's own comment).
+      sendContinueApplicationEmail({
+        reference,
+        trackName: track.name,
+        fullName: body.fullName,
+        email: body.email,
+        phone: body.phone,
+        courseOrInstitution: body.courseOrInstitution,
+        roleAppliedFor: body.roleAppliedFor,
+        cvLink: body.cvLink,
+        message: body.message,
+        submittedAt: webhookPayload.submittedAt,
+        redirectUrl,
+      }).catch((error) => {
+        console.error('Continue-application email (best-effort) failed', error)
+      })
+    } else {
+      sendApplicantConfirmationEmail({
+        reference,
+        trackName: track.name,
+        fullName: body.fullName,
+        email: body.email,
+        phone: body.phone,
+        courseOrInstitution: body.courseOrInstitution,
+        roleAppliedFor: body.roleAppliedFor,
+        cvLink: body.cvLink,
+        message: body.message,
+        submittedAt: webhookPayload.submittedAt,
+      }).catch((error) => {
+        console.error('Applicant confirmation email (best-effort) failed', error)
+      })
+    }
   }
 
   const payload = JSON.stringify(webhookPayload)
@@ -432,28 +438,6 @@ export async function POST(request: NextRequest) {
       })
     }
     await markRecentSubmission(dupKey, reference)
-    // Best-effort - if Redis isn't configured this simply means the
-    // "application received" email (POST /api/careers-application/
-    // form-submitted, triggered once the applicant finishes the embedded
-    // Google Form on the thank-you page) won't be sent; the on-page
-    // confirmation still shows either way.
-    markPendingCareerApplication(
-      {
-        reference,
-        trackName: track.name,
-        fullName: body.fullName,
-        email: body.email,
-        phone: body.phone,
-        courseOrInstitution: body.courseOrInstitution,
-        roleAppliedFor: body.roleAppliedFor,
-        cvLink: body.cvLink,
-        message: body.message,
-        submittedAt: webhookPayload.submittedAt,
-      },
-      PENDING_APPLICATION_TTL_SECONDS,
-    ).catch((error) => {
-      console.error('Storing pending career application (best-effort) failed', error)
-    })
     return NextResponse.json({ ok: true, reference, redirectUrl })
   }
 

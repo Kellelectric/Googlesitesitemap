@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { TrackedLink } from '@/components/ui/TrackedLink'
 import { CircuitLines } from '@/components/ui/CircuitLines'
-import { EmbeddedApplicationForm } from '@/components/careers/EmbeddedApplicationForm'
 import { company } from '@/content/company'
 import { getCareerTrackBySlug } from '@/content/careers'
 import { pageMetadata } from '@/lib/metadata'
@@ -49,24 +48,36 @@ export default async function CareersThankYouPage(
     <section className="relative overflow-hidden bg-petrol text-paper">
       <CircuitLines className="pointer-events-none absolute -right-24 -top-10 h-full w-1/2 text-paper/10" />
       <div className="container-content relative py-24">
+        <span className="eyebrow text-yellow">
+          {continueUrl ? 'One step left' : 'Application received'}
+        </span>
+        <h1 className="mt-3 max-w-xl text-3xl font-semibold md:text-4xl">
+          {continueUrl
+            ? `Thanks${track ? ` for starting your application to ${track.name}` : ''} - one more step to go.`
+            : `Thanks${track ? ` for applying to ${track.name}` : ''} - our team will review your application and get back to you.`}
+        </h1>
+
         {continueUrl ? (
-          <EmbeddedApplicationForm
-            formUrl={continueUrl}
-            reference={reference}
-            trackName={track?.name}
-          />
-        ) : (
-          <>
-            <span className="eyebrow text-yellow">Application received</span>
-            <h1 className="mt-3 max-w-xl text-3xl font-semibold md:text-4xl">
-              {`Thanks${track ? ` for applying to ${track.name}` : ''} - our team will review your application and get back to you.`}
-            </h1>
-            <p className="mt-5 max-w-lg text-paper/70">
-              We review applications directly - no automated filter. If your
-              background fits what we&rsquo;re looking for, we&rsquo;ll follow
-              up by phone or email.
+          <div className="mt-8 max-w-lg border border-yellow/40 bg-yellow/10 p-6">
+            <p className="text-sm font-semibold text-paper">One more step</p>
+            <p className="mt-2 text-sm leading-relaxed text-paper/75">
+              Your application isn&rsquo;t complete yet. Your details have
+              been pre-filled into our official{' '}
+              {track ? track.name : 'programme'} application form - please
+              open it now to finish (photo, ID/documents, and your
+              signature are required there). We&rsquo;ve also emailed you
+              this same link in case you need it later.
             </p>
-          </>
+            <Button href={continueUrl} className="mt-4" target="_blank" rel="noopener noreferrer">
+              Continue to the application form
+            </Button>
+          </div>
+        ) : (
+          <p className="mt-5 max-w-lg text-paper/70">
+            We review applications directly - no automated filter. If your
+            background fits what we&rsquo;re looking for, we&rsquo;ll follow
+            up by phone or email.
+          </p>
         )}
 
         {reference && (

@@ -92,6 +92,31 @@ export async function sendApplicantConfirmationEmail(input: CareerEmailInput): P
   })
 }
 
+// For apprenticeship/industrial-training/internship/nysc-placement - the
+// applicant hasn't actually finished their application yet at this point
+// (they still need to complete the official Google Form linked on the
+// thank-you page), so this deliberately says "one step left," not
+// "received" (see sendApplicantConfirmationEmail above, used for the
+// tracks with no second-stage form instead).
+export async function sendContinueApplicationEmail(
+  input: CareerEmailInput & { redirectUrl: string },
+): Promise<void> {
+  const html = `
+    <p>Thanks for starting your application for <strong>${escapeHtml(input.trackName)}</strong> at ${escapeHtml(company.name)}.</p>
+    <p>One step left: please open the link below to complete the official application form (you'll need a passport photo, means of ID, and a few more details).</p>
+    <p><a href="${escapeHtml(input.redirectUrl)}">${escapeHtml(input.redirectUrl)}</a></p>
+    <p><strong>Reference:</strong> ${escapeHtml(input.reference)}</p>
+    <p>If you've already completed it, no further action is needed.</p>
+    <p>— ${escapeHtml(company.name)}</p>
+  `.trim()
+
+  await sendEmail({
+    to: input.email,
+    subject: `${company.name} — Finish your ${input.trackName} application | ${input.reference}`,
+    html,
+  })
+}
+
 export async function sendInternalNotificationEmail(input: CareerEmailInput): Promise<void> {
   const notifyEmail = process.env.CAREERS_NOTIFY_EMAIL
   if (!notifyEmail) throw new Error('CAREERS_NOTIFY_EMAIL not set')

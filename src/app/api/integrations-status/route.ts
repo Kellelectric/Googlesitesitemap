@@ -5,6 +5,7 @@ import { isResendConfigured, isCareerNotifyEmailConfigured } from '@/lib/resendE
 import { isCalendarConfigured } from '@/lib/googleCalendar'
 import { isGoogleBusinessProfileConfigured } from '@/lib/googleBusinessProfile'
 import { isRedisConfigured } from '@/lib/kv'
+import { isWhatsAppConfigured } from '@/lib/whatsapp'
 
 export const runtime = 'nodejs'
 
@@ -34,5 +35,6 @@ export async function GET() {
     sentry: Boolean(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN),
     durableRateLimit: isRedisConfigured(),
     googleBusinessProfileLiveRating: isGoogleBusinessProfileConfigured(),
+    whatsappNotify: isWhatsAppConfigured(),
   })
 }

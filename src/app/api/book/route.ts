@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { verifyPaystackTransaction } from '@/lib/paystack'
 import { createBookingLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
+import { sendWhatsAppNotification, isWhatsAppConfigured } from '@/lib/whatsapp'
 import { createCalendarEvent, getBusyPeriods, isCalendarConfigured } from '@/lib/googleCalendar'
 import { computeAvailableSlots, isDateBookable, localSlotToDate, SLOT_MINUTES } from '@/lib/bookingSlots'
 import {
@@ -202,6 +203,16 @@ export async function POST(request: NextRequest) {
         reference,
       }).catch((error) => {
         console.error('Zoho CRM lead create (best-effort, booking) failed', error)
+      })
+    }
+
+    // Same independence/fire-and-forget shape as Zoho CRM above - see
+    // src/lib/whatsapp.ts for setup.
+    if (isWhatsAppConfigured()) {
+      sendWhatsAppNotification({
+        summary: `New appointment booking: ${body.name} - ${body.date} ${body.time}. ${body.phone}. Ref ${reference}`,
+      }).catch((error) => {
+        console.error('WhatsApp notification (best-effort, booking) failed', error)
       })
     }
 

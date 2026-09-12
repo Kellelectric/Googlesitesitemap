@@ -21,9 +21,20 @@
  * the applicant a confirmation email - CAREERS_WEBHOOK_URL is REQUIRED
  * for job-openings/nysc-placement (no Google Form, this is their only
  * delivery path) and OPTIONAL/best-effort for the 3 Google Form tracks
- * (email still sends if it's configured, it's just not the applicant's
- * only path to the form - the website's own thank-you page already shows
- * the same link directly).
+ * (purely for the Sheet log below - no email is sent from here for these
+ * anymore).
+ *
+ * UPDATE - the 4 Google-Form-backed tracks (apprenticeship,
+ * industrial-training, internship, nysc-placement) no longer send the
+ * applicant off-site at all: the pre-filled Google Form is embedded
+ * directly on the website's own thank-you page (src/components/careers/
+ * EmbeddedApplicationForm.tsx), and the website sends its own
+ * "application received" email once the applicant finishes that embedded
+ * form (POST /api/careers-application/form-submitted), not at the point
+ * this webhook fires (they haven't finished yet then). This webhook's
+ * sendContinueApplicationEmail_() below is consequently unused - kept only
+ * so a rollback to the old off-site-link flow doesn't require rewriting
+ * it, and is intentionally never called from doPost() anymore.
  *
  * EMAIL QUOTA: MailApp.sendEmail() is capped by Google's daily quota -
  * 100/day for a plain @gmail.com account, higher for Google Workspace
@@ -135,13 +146,16 @@ function doPost(e) {
     Logger.log(
       'Application ' + reference + ' (' + trackSlug + ') acknowledged. ' +
         (body.redirectUrl
-          ? 'Applicant was sent a pre-filled link to this track\'s Google Form by the website directly.'
+          ? 'Applicant is completing this track\'s Google Form embedded on the website\'s own thank-you page; the website sends the "received" email once they finish it.'
           : 'No Google Form for this track - stays on-site.'),
     )
 
-    if (body.redirectUrl) {
-      sendContinueApplicationEmail_(body)
-    } else {
+    // Only job-openings/nysc-placement-without-a-form-style tracks (no
+    // redirectUrl) get their "received" confirmation from here - the
+    // Google-Form-backed tracks get theirs from the website itself, after
+    // the applicant actually finishes the embedded form (see the UPDATE
+    // note in this file's header).
+    if (!body.redirectUrl) {
       sendApplicantConfirmationEmail_(body)
     }
 

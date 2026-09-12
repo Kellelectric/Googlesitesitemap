@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHash, createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
-import { getDuplicateReference, markDuplicateReference } from '@/lib/kv'
+import {
+  getDuplicateReference,
+  markDuplicateReference,
+  markPendingCareerApplication,
+} from '@/lib/kv'
 import { getCareerTrackBySlug } from '@/content/careers'
 import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting'
 import { createCareerLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
@@ -121,6 +125,12 @@ type CareerApplicationWebhookPayload = {
 // markRecentSubmission() calls below) - a genuine failure shouldn't block
 // a real retry.
 const DUPLICATE_WINDOW_SECONDS = 2 * 60
+// How long an applicant has to finish the embedded Google Form on the
+// thank-you page (see PendingCareerApplication in kv.ts) before the
+// "application received" confirmation email can no longer be sent for it
+// - generous, since these forms require a photo, ID/documents, and a
+// signature that not everyone has ready immediately.
+const PENDING_APPLICATION_TTL_SECONDS = 48 * 60 * 60
 const recentSubmissions = new Map<string, { reference: string; at: number }>()
 
 function duplicateKey(trackSlug: string, email: string, phone: string): string {
@@ -411,6 +421,28 @@ export async function POST(request: NextRequest) {
       })
     }
     await markRecentSubmission(dupKey, reference)
+    // Best-effort - if Redis isn't configured this simply means the
+    // "application received" email (POST /api/careers-application/
+    // form-submitted, triggered once the applicant finishes the embedded
+    // Google Form on the thank-you page) won't be sent; the on-page
+    // confirmation still shows either way.
+    markPendingCareerApplication(
+      {
+        reference,
+        trackName: track.name,
+        fullName: body.fullName,
+        email: body.email,
+        phone: body.phone,
+        courseOrInstitution: body.courseOrInstitution,
+        roleAppliedFor: body.roleAppliedFor,
+        cvLink: body.cvLink,
+        message: body.message,
+        submittedAt: webhookPayload.submittedAt,
+      },
+      PENDING_APPLICATION_TTL_SECONDS,
+    ).catch((error) => {
+      console.error('Storing pending career application (best-effort) failed', error)
+    })
     return NextResponse.json({ ok: true, reference, redirectUrl })
   }
 

@@ -1,24 +1,35 @@
 import { Redis } from '@upstash/redis'
 
 // Optional durable store, backing rate limiting (src/lib/rateLimit.ts) and
-// the careers-application duplicate-submission guard. Without
-// UPSTASH_REDIS_REST_URL/UPSTASH_REDIS_REST_TOKEN set, both fall back to
-// their previous in-memory-only behavior (documented in each call site's
-// own comment) - this file existing changes nothing until those two env
-// vars are set.
+// the careers-application duplicate-submission guard/pending-application
+// stash. Without a Redis REST URL+token available (either naming below),
+// all three fall back to their previous in-memory-only behavior
+// (documented in each call site's own comment) - this file existing
+// changes nothing until one of those is set.
 //
 // Setup: upstash.com -> create a Redis database (the free tier is enough
-// for this site's volume) -> REST API section has both values, or install
-// the "Upstash Redis" integration directly from the Vercel Marketplace,
-// which sets both automatically.
+// for this site's volume) -> REST API section has UPSTASH_REDIS_REST_URL/
+// TOKEN. OR: Vercel dashboard -> Storage -> Marketplace Database Providers
+// -> "Upstash Redis" (or "Redis") -> once connected, Vercel instead sets
+// KV_REST_API_URL/KV_REST_API_TOKEN (its own long-standing naming from the
+// original first-party Vercel KV product, carried over to the Marketplace
+// integration that replaced it) - accepted here as a fallback so either
+// setup path works without hand-copying values into a second pair of vars.
 let cached: Redis | null | undefined
 
 export function getRedis(): Redis | null {
   if (cached !== undefined) return cached
-  const url = process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+  const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN
   cached = url && token ? new Redis({ url, token }) : null
   return cached
+}
+
+export function isRedisConfigured(): boolean {
+  return Boolean(
+    (process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL) &&
+      (process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN),
+  )
 }
 
 // Backs the careers-application duplicate-submission guard (a double-

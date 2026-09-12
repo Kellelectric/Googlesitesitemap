@@ -4,6 +4,7 @@ import { isSlackNotifyConfigured } from '@/lib/slackNotify'
 import { isResendConfigured, isCareerNotifyEmailConfigured } from '@/lib/resendEmail'
 import { isCalendarConfigured } from '@/lib/googleCalendar'
 import { isGoogleBusinessProfileConfigured } from '@/lib/googleBusinessProfile'
+import { isRedisConfigured } from '@/lib/kv'
 
 export const runtime = 'nodejs'
 
@@ -31,9 +32,7 @@ export async function GET() {
     zohoSalesIq: Boolean(process.env.NEXT_PUBLIC_ZOHOSALESIQ_WIDGET_CODE),
     ga4: Boolean(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID),
     sentry: Boolean(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN),
-    durableRateLimit: Boolean(
-      process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
-    ),
+    durableRateLimit: isRedisConfigured(),
     googleBusinessProfileLiveRating: isGoogleBusinessProfileConfigured(),
   })
 }

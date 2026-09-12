@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHash, createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
+import { getDuplicateReference, markDuplicateReference } from '@/lib/kv'
 import { getCareerTrackBySlug } from '@/content/careers'
 import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting'
 import { createCareerLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
@@ -110,31 +111,40 @@ type CareerApplicationWebhookPayload = {
   redirectUrl?: string
 }
 
-// Best-effort duplicate guard: the same in-memory-cache tradeoff as
-// createRateLimiter in lib/rateLimit.ts - resets on cold start, not shared
-// across serverless instances, so it stops a double-click or an
-// impatient-retry resubmit from one warm instance, not a determined
-// distributed replay. A durable guard (Vercel KV, Zoho Flow's own
-// dedupe-by-field feature, or a check inside the Google Apps Script
-// against its response sheet) is the real fix if this becomes load-bearing -
-// see docs/careers-automation.md.
-const DUPLICATE_WINDOW_MS = 2 * 60 * 1000
+// Duplicate guard: Redis-backed (src/lib/kv.ts) when UPSTASH_REDIS_REST_URL/
+// TOKEN are set - durable across serverless instances and cold starts, so
+// it actually stops a double-click or impatient-retry resubmit no matter
+// which instance handles which request. Falls back to the original
+// in-memory Map otherwise (resets on cold start, not shared across
+// instances - stops the same abuse from one warm instance, nothing more).
+// Only marked as seen after a successful downstream forward (see the two
+// markRecentSubmission() calls below) - a genuine failure shouldn't block
+// a real retry.
+const DUPLICATE_WINDOW_SECONDS = 2 * 60
 const recentSubmissions = new Map<string, { reference: string; at: number }>()
 
 function duplicateKey(trackSlug: string, email: string, phone: string): string {
   return createHash('sha256')
-    .update(`${trackSlug}|${email.trim().toLowerCase()}|${phone.trim()}`)
+    .update(`dupguard|${trackSlug}|${email.trim().toLowerCase()}|${phone.trim()}`)
     .digest('hex')
 }
 
-function findRecentDuplicate(key: string): string | null {
+async function findRecentDuplicate(key: string): Promise<string | null> {
+  const redisValue = await getDuplicateReference(key)
+  if (redisValue !== null) return redisValue
+
   const entry = recentSubmissions.get(key)
   if (!entry) return null
-  if (Date.now() - entry.at > DUPLICATE_WINDOW_MS) {
+  if (Date.now() - entry.at > DUPLICATE_WINDOW_SECONDS * 1000) {
     recentSubmissions.delete(key)
     return null
   }
   return entry.reference
+}
+
+async function markRecentSubmission(key: string, reference: string): Promise<void> {
+  await markDuplicateReference(key, reference, DUPLICATE_WINDOW_SECONDS)
+  recentSubmissions.set(key, { reference, at: Date.now() })
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -180,7 +190,7 @@ function isAllowedOrigin(request: NextRequest): boolean {
 // still needs external configuration.
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request)
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ip)) {
     return NextResponse.json({ ok: false, reason: 'rate_limited' }, { status: 429 })
   }
 
@@ -248,7 +258,7 @@ export async function POST(request: NextRequest) {
   // returns the existing reference instead of creating a second downstream
   // application.
   const dupKey = duplicateKey(body.trackSlug, body.email, body.phone)
-  const existingReference = findRecentDuplicate(dupKey)
+  const existingReference = await findRecentDuplicate(dupKey)
   if (existingReference) {
     return NextResponse.json({ ok: true, duplicate: true, reference: existingReference })
   }
@@ -400,7 +410,7 @@ export async function POST(request: NextRequest) {
         console.error('Careers webhook forward (best-effort, Google Form track) failed', error)
       })
     }
-    recentSubmissions.set(dupKey, { reference, at: Date.now() })
+    await markRecentSubmission(dupKey, reference)
     return NextResponse.json({ ok: true, reference, redirectUrl })
   }
 
@@ -421,7 +431,7 @@ export async function POST(request: NextRequest) {
       const forwarded = await postToWebhook(webhookUrl, headers, payload)
 
       if (forwarded.ok) {
-        recentSubmissions.set(dupKey, { reference, at: Date.now() })
+        await markRecentSubmission(dupKey, reference)
         return NextResponse.json({ ok: true, reference })
       }
 

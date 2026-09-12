@@ -1,5 +1,6 @@
 import { StatCounter } from '@/components/ui/StatCounter'
 import { company } from '@/content/company'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 
 // "Instrument panel" treatment, not a plain 4-up stat grid: hairline
 // dividers between readouts (divide-x, matching the hairline-hierarchy
@@ -8,7 +9,8 @@ import { company } from '@/content/company'
 // precedent already set by TrustSection's 5★ figure. The circuit-grid
 // texture (same class combo as Hero.tsx) reinforces the electrical-engineering
 // register instead of leaving the band flat.
-export function StatsBar() {
+export async function StatsBar() {
+  const trust = await getTrustStats()
   return (
     <section className="relative overflow-hidden border-y border-paper/10 bg-petrol-600">
       <div className="absolute inset-0 bg-circuit-grid bg-grid opacity-10" />
@@ -29,10 +31,10 @@ export function StatsBar() {
         </div>
         <div className="flex flex-col justify-end px-6">
           <StatCounter
-            value={company.trust.googleRating}
+            value={trust.googleRating}
             decimals={1}
             suffix="★"
-            label={`Google rating from ${company.trust.googleReviewCount} reviews`}
+            label={`Google rating from ${trust.googleReviewCount} reviews`}
           />
         </div>
         <div className="flex flex-col justify-end px-6">

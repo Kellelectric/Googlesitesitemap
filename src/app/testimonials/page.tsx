@@ -11,6 +11,7 @@ import { company } from '@/content/company'
 import { breadcrumbSchema } from '@/lib/schema'
 import { pageMetadata } from '@/lib/metadata'
 import { Reveal } from '@/components/ui/Reveal'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 
 export const metadata: Metadata = {
   ...pageMetadata({
@@ -26,15 +27,15 @@ export const metadata: Metadata = {
 const carouselItems = testimonials
 const gridItems = testimonials
 
-const trustSignals = [
-  `${company.teamExperienceYears}+ Years Combined Experience`,
-  `${company.trust.googleRating}★ Google Rating`,
-  `${company.trust.googleReviewCount}+ Google Reviews`,
-  `${company.certifications.map((c) => c.name).join(' & ')} Certified`,
-  'Residential • Commercial • Industrial',
-]
-
-export default function TestimonialsPage() {
+export default async function TestimonialsPage() {
+  const trust = await getTrustStats()
+  const trustSignals = [
+    `${company.teamExperienceYears}+ Years Combined Experience`,
+    `${trust.googleRating}★ Google Rating`,
+    `${trust.googleReviewCount}+ Google Reviews`,
+    `${company.certifications.map((c) => c.name).join(' & ')} Certified`,
+    'Residential • Commercial • Industrial',
+  ]
   return (
     <>
       <script
@@ -72,8 +73,8 @@ export default function TestimonialsPage() {
           </p>
 
           <ReviewSummary
-            rating={company.trust.googleRating}
-            reviewCount={company.trust.googleReviewCount}
+            rating={trust.googleRating}
+            reviewCount={trust.googleReviewCount}
             dark
             className="mt-10"
           />

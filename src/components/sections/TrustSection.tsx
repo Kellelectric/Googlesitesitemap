@@ -1,7 +1,9 @@
 import { company } from '@/content/company'
 import { Reveal } from '@/components/ui/Reveal'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 
-export function TrustSection() {
+export async function TrustSection() {
+  const trust = await getTrustStats()
   return (
     <section className="bg-paper py-24">
       <h2 className="sr-only">Why clients trust us</h2>
@@ -10,10 +12,10 @@ export function TrustSection() {
           <span className="eyebrow text-petrol/70">Verified track record</span>
           <div className="mt-5 flex items-baseline gap-3">
             <span className="font-display text-5xl font-semibold text-petrol">
-              {company.trust.googleRating}★
+              {trust.googleRating}★
             </span>
             <span className="text-sm text-ink/60">
-              across {company.trust.googleReviewCount} Google reviews
+              across {trust.googleReviewCount} Google reviews
             </span>
           </div>
           <p className="mt-5 text-sm leading-relaxed text-ink/70">

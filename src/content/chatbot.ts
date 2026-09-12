@@ -3,6 +3,7 @@ import { services } from '@/content/services'
 import { industries } from '@/content/industries'
 import { faqCategories } from '@/content/faqs'
 import { careerTracks } from '@/content/careers'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 
 // Structured knowledge base for the Kell Assist chatbot. This is the ONLY
 // source of factual content the chatbot's system prompt is built from — it
@@ -91,7 +92,8 @@ export const solarAssessmentDisclaimer =
 // Composed knowledge sections — assembled once, not per-request, and passed
 // into the chat API's system prompt. Keep this in sync with the site: it IS
 // the site's content, restated for the model rather than duplicated.
-export function buildKnowledgeBase() {
+export async function buildKnowledgeBase() {
+  const trust = await getTrustStats()
   const serviceLines = services.map(
     (s) => `- ${s.name} (${s.slug}): ${s.summary}`,
   )
@@ -121,8 +123,8 @@ export function buildKnowledgeBase() {
       emergencyEmail: company.emergencyEmail,
       emergencyResponseTarget: company.emergencyResponseTarget,
       whatsappHref: company.whatsappHref,
-      googleRating: company.trust.googleRating,
-      googleReviewCount: company.trust.googleReviewCount,
+      googleRating: trust.googleRating,
+      googleReviewCount: trust.googleReviewCount,
     },
     serviceLines,
     industryLines,

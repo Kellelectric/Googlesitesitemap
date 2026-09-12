@@ -2,11 +2,12 @@ import { Button } from '@/components/ui/Button'
 import { ReviewSummary } from '@/components/ui/ReviewSummary'
 import { TestimonialCard } from '@/components/sections/TestimonialCard'
 import { testimonials } from '@/content/testimonials'
-import { company } from '@/content/company'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 
-export function TestimonialsPreview() {
+export async function TestimonialsPreview() {
   const featured = testimonials.filter((t) => t.featured).slice(0, 3)
+  const trust = await getTrustStats()
 
   return (
     <section className="bg-paper py-24">
@@ -18,8 +19,8 @@ export function TestimonialsPreview() {
               Real experiences, not marketing copy
             </h2>
             <ReviewSummary
-              rating={company.trust.googleRating}
-              reviewCount={company.trust.googleReviewCount}
+              rating={trust.googleRating}
+              reviewCount={trust.googleReviewCount}
               className="mt-6"
             />
           </div>

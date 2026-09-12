@@ -4,9 +4,11 @@ import { company } from '@/content/company'
 import { services } from '@/content/services'
 import { footerNav, legalNav } from '@/content/nav'
 import { TrackedLink } from '@/components/ui/TrackedLink'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 
-export function Footer() {
+export async function Footer() {
   const year = new Date().getFullYear()
+  const trust = await getTrustStats()
 
   return (
     <footer className="border-t border-paper/10 bg-petrol-700 text-paper">
@@ -120,7 +122,7 @@ export function Footer() {
           <div className="flex flex-wrap gap-6">
             <span>{company.address.city}, {company.address.country}</span>
             <span>
-              {company.trust.googleRating}★ · {company.trust.googleReviewCount} Google reviews
+              {trust.googleRating}★ · {trust.googleReviewCount} Google reviews
             </span>
             {legalNav.map((link) => (
               <Link

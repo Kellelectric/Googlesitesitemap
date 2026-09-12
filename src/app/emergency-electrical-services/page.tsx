@@ -7,6 +7,7 @@ import { TrackedLink } from '@/components/ui/TrackedLink'
 import { CTASection } from '@/components/sections/CTASection'
 import { FAQSection } from '@/components/sections/FAQSection'
 import { company } from '@/content/company'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 import { getServiceBySlug } from '@/content/services'
 import { faqCategories } from '@/content/faqs'
 import { industries } from '@/content/industries'
@@ -86,11 +87,12 @@ const technicalConsiderations = [
   },
 ]
 
-export default function EmergencyElectricalServicesPage() {
+export default async function EmergencyElectricalServicesPage() {
   const emergencyService = getServiceBySlug('emergency-electrical-response')
   const faultFinding = getServiceBySlug('fault-finding-diagnostics')
   const panelRepair = getServiceBySlug('panel-repair-upgrades')
   const emergencyFaqs = faqCategories.find((c) => c.category === 'Emergency & safety')?.items ?? []
+  const trust = await getTrustStats()
 
   return (
     <>
@@ -249,7 +251,7 @@ export default function EmergencyElectricalServicesPage() {
               `COREN and NEMSA certified`,
               `${company.teamExperienceYears}+ years of combined engineering experience`,
               `Target emergency response: ${company.emergencyResponseTarget}`,
-              `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ reviews`,
+              `${trust.googleRating}★ Google rating from ${trust.googleReviewCount}+ reviews`,
             ].map((item) => (
               <MotionDiv key={item} variants={staggerItem} className="flex gap-3 border-b border-ink/10 pb-3 text-sm text-ink/75">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-petrol" />

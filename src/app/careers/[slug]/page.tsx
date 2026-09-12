@@ -95,9 +95,6 @@ export default async function CareerTrackPage(props: Props) {
             <Button href="#apply" variant="primary">
               Apply Now
             </Button>
-            <Button href={company.phoneHref} variant="secondary">
-              Call {company.phone}
-            </Button>
           </div>
         </div>
       </section>

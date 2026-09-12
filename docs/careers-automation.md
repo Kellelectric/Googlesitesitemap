@@ -50,30 +50,25 @@ POST /api/careers-application (src/app/api/careers-application/route.ts)
   |     buildPrefillUrl() (src/content/careerFormRouting.ts) builds a
   |     Google Forms pre-filled link for that track using real
   |     entry.<itemId> values, and the response hands it back as
-  |     `redirectUrl`. Rather than sending the applicant off-site,
-  |     /careers/thank-you EMBEDS that pre-filled form directly on the
-  |     page (src/components/careers/EmbeddedApplicationForm.tsx, iframe
-  |     with ?embedded=true) so they never leave kellelectricals.com.
-  |     markPendingCareerApplication() (src/lib/kv.ts, Redis-backed)
-  |     stashes the applicant's details, keyed by reference, since the
-  |     initial response never carries their email/name back to the
-  |     browser. CAREERS_WEBHOOK_URL, if set, also gets a best-effort
-  |     (non-blocking) copy of the payload for internal notification/Sheet-
-  |     log purposes only - it no longer sends the applicant any email for
-  |     this path (see careerApplicationRouter.gs's own header note).
-  |     Applicant finishes the form in the embed (required photo/ID/CV
-  |     uploads, DOB, consent, signature) -> Google Forms writes the row
-  |     to that form's own linked Sheet AND reloads the iframe to its own
-  |     confirmation page. The site detects that reload (the iframe's
-  |     second `load` event - the strongest signal available without
-  |     reading its cross-origin contents) and calls
-  |     POST /api/careers-application/form-submitted with the reference,
-  |     which looks up the stashed details and sends the applicant an
-  |     "application received" email via Resend - the same one the
-  |     on-site-only tracks get immediately, just deferred until they've
-  |     actually finished applying.
+  |     `redirectUrl`. /careers/thank-you shows it as a "one more step" CTA
+  |     linking off to Google's own page - NOT embedded (an earlier version
+  |     of this pipeline embedded the form in an iframe; abandoned after
+  |     confirming it breaks on mobile Safari, whose "Allow Google Forms
+  |     access to your necessary cookies" cross-site-cookie prompt reloads
+  |     the iframe on tap, which both looks broken - a blank iframe - and
+  |     falsely looked like a completed submission to the load-count
+  |     heuristic that used to detect it). Resend's sendContinueApplication
+  |     Email (src/lib/resendEmail.ts) emails the applicant this same link
+  |     immediately, in case they don't click through right away.
+  |     CAREERS_WEBHOOK_URL, if set, also gets a best-effort (non-blocking)
+  |     copy of the payload for internal notification/Sheet-log purposes
+  |     only - it no longer sends the applicant any email for this path
+  |     (see careerApplicationRouter.gs's own header note).
+  |     Applicant clicks through -> finishes the form on Google's own page
+  |     (required photo/ID/CV uploads, DOB, consent, signature) -> Google
+  |     Forms writes the row to that form's own linked Sheet.
   |
-  +-- job-openings / nysc-placement (no Google Form):
+  +-- job-openings (no Google Form):
         forwarded to CAREERS_WEBHOOK_URL (required for this path -
         signed, retried on 5xx) for whatever downstream handling the
         client wants (a tracking Sheet, Zoho CRM, email, etc.)
@@ -147,29 +142,25 @@ API](https://resend.com):
 - **Internal notification** (`sendInternalNotificationEmail`) - to
   `CAREERS_NOTIFY_EMAIL`, on every application, every track. Requires
   `RESEND_API_KEY` + `CAREERS_FROM_EMAIL` + `CAREERS_NOTIFY_EMAIL` all set.
-- **Applicant confirmation** (`sendApplicantConfirmationEmail`) - fires
-  from two places now: immediately, for tracks with **no** Google Form
-  (`job-openings`); and from `POST /api/careers-application/form-submitted`
-  for the 4 Google-Form-backed tracks, once the applicant finishes the
-  form embedded on `/careers/thank-you` (see the flow diagram above).
-  Requires `RESEND_API_KEY` + `CAREERS_FROM_EMAIL` either way; the embedded-
-  form path additionally requires `UPSTASH_REDIS_REST_URL`/
-  `UPSTASH_REDIS_REST_TOKEN` (src/lib/kv.ts) to stash the applicant's
-  details between the two requests - without Redis, that email is simply
-  never sent (no error, no duplicate; the on-page confirmation still
-  shows).
+- **Applicant confirmation** - two variants, both firing immediately at
+  submission (not deferred): `sendApplicantConfirmationEmail` ("received")
+  for tracks with **no** Google Form (`job-openings`), and
+  `sendContinueApplicationEmail` ("one step left," with the pre-filled
+  link) for the 4 Google-Form-backed tracks. Requires `RESEND_API_KEY` +
+  `CAREERS_FROM_EMAIL` for either.
 
 **Duplicate-email warning**: the Apps Script webhook
 (`careerApplicationRouter.gs`), if `CAREERS_WEBHOOK_URL` is configured,
 still sends its own "received" confirmation via `MailApp` for
 `job-openings` (its `sendContinueApplicationEmail_` for the 4 Google-Form
 tracks is no longer called from `doPost` - see that file's header note,
-since the website's embedded-form flow now owns that email). That leaves
-one remaining overlap: for `job-openings`, both `MailApp` (Apps Script) and
-Resend can send a "received" email if both are configured at once. Pick
-one: either leave `RESEND_API_KEY` unset and keep using the Apps Script's
-`MailApp` send, or set it and remove the `sendApplicantConfirmationEmail_`
-call from `careerApplicationRouter.gs`. The internal-notification email has
+since the website's own `sendContinueApplicationEmail` now owns that
+email). That leaves one remaining overlap: for `job-openings`, both
+`MailApp` (Apps Script) and Resend can send a "received" email if both are
+configured at once. Pick one: either leave `RESEND_API_KEY` unset and keep
+using the Apps Script's `MailApp` send, or set it and remove the
+`sendApplicantConfirmationEmail_` call from `careerApplicationRouter.gs`.
+The internal-notification email has
 no such overlap - nothing else currently sends one.
 
 Setup: create a Resend account, verify a sending domain (or use Resend's
@@ -628,20 +619,16 @@ website-side tests" below.
 
 1. **Apprenticeship / Industrial Training / Internship / NYSC Placement** -
    submit the on-site form for each track. Expect: website redirects to
-   `/careers/thank-you`, which embeds the real Google Form (Full
-   Name/Email/Phone, and Institution where mapped, already filled in)
-   directly on the page -> complete the remaining required fields (photo,
-   DOB, consent, signature, etc.) and submit inside the embed -> confirm
-   (a) a new row appears in that form's own linked Google Sheet, (b) the
-   page swaps to the "Application received" panel without a full
-   navigation, and (c) an "application received" email arrives at the
-   applicant's address (requires `UPSTASH_REDIS_REST_URL`/
-   `UPSTASH_REDIS_REST_TOKEN` and `RESEND_API_KEY`/`CAREERS_FROM_EMAIL` set
-   - without Redis configured, the on-page confirmation still shows, just
-   without the email, since there's nowhere to durably stash the
-   applicant's details between the two requests).
+   `/careers/thank-you` showing a "Continue to the application form" CTA
+   that opens the real Google Form in a new tab (Full Name/Email/Phone, and
+   Institution where mapped, already filled in) -> complete the remaining
+   required fields (photo, DOB, consent, signature, etc.) and submit ->
+   confirm (a) a new row appears in that form's own linked Google Sheet,
+   and (b) a "finish your application" email with the same link arrives at
+   the applicant's address (requires `RESEND_API_KEY`/`CAREERS_FROM_EMAIL`
+   set).
 2. **Job Openings** - submit with `trackSlug=job-openings`. Expect: no
-   Google Form embed (there isn't one for this track) - if
+   Google Form CTA (there isn't one for this track) - if
    `CAREERS_WEBHOOK_URL` is set, confirm the configured downstream
    (tracking Sheet, Zoho CRM, etc.) received it; if unset, confirm the
    applicant sees the "email/call us instead" fallback rather than a
@@ -650,9 +637,7 @@ website-side tests" below.
    (point `CAREERS_WEBHOOK_URL` at a URL that 404s, confirm the
    retry-then-502 behavior), invalid webhook signature (send a request to
    the Apps Script URL directly with a wrong signature and confirm 401
-   `invalid_signature`), and `POST /api/careers-application/form-submitted`
-   with a made-up/expired reference (expect a plain `{ok:true}` with no
-   email sent, never an error).
+   `invalid_signature`).
 
 ### Reproducing the website-side tests locally
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { createQuoteLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
+import { createQuoteEstimate, isZohoBooksConfigured } from '@/lib/zohoBooks'
 import { sendWhatsAppNotification, isWhatsAppConfigured } from '@/lib/whatsapp'
 import { getServiceBySlug } from '@/content/services'
 
@@ -128,6 +129,25 @@ export async function POST(request: NextRequest) {
       reference,
     }).catch((error) => {
       console.error('Zoho CRM lead create (best-effort, quote) failed', error)
+    })
+  }
+
+  // Same independence/fire-and-forget shape as Zoho CRM above - scoped to
+  // quote requests only, per client direction (not booking, not careers).
+  // See src/lib/zohoBooks.ts for setup.
+  if (isZohoBooksConfigured()) {
+    createQuoteEstimate({
+      name: body.name,
+      email: body.email,
+      phone: body.phone,
+      serviceName,
+      propertyType: body.propertyType,
+      urgency: body.urgency,
+      location: body.location,
+      details: body.details,
+      reference,
+    }).catch((error) => {
+      console.error('Zoho Books estimate create (best-effort, quote) failed', error)
     })
   }
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { isZohoCrmConfigured } from '@/lib/zohoCrm'
+import { isZohoBooksConfigured } from '@/lib/zohoBooks'
 import { isSlackNotifyConfigured } from '@/lib/slackNotify'
 import { isResendConfigured, isCareerNotifyEmailConfigured } from '@/lib/resendEmail'
 import { isCalendarConfigured } from '@/lib/googleCalendar'
@@ -20,6 +21,7 @@ export const runtime = 'nodejs'
 export async function GET() {
   return NextResponse.json({
     zohoCrmLeads: isZohoCrmConfigured(),
+    zohoBooksQuoteEstimates: isZohoBooksConfigured(),
     slackNotify: isSlackNotifyConfigured(),
     resendEmail: isResendConfigured(),
     resendInternalNotify: isCareerNotifyEmailConfigured(),

@@ -83,7 +83,7 @@ If asked about anything outside this knowledge base (pricing specifics, project 
 
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request)
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ip)) {
     return NextResponse.json({ ok: false, reason: 'rate_limited' }, { status: 429 })
   }
 

@@ -20,7 +20,7 @@ const isRateLimited = createRateLimiter({ windowMs: 60 * 1000, max: 30 })
 
 export async function GET(request: NextRequest) {
   const ip = getClientIp(request)
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ip)) {
     return NextResponse.json({ ok: false, reason: 'rate_limited' }, { status: 429 })
   }
 

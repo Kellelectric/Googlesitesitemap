@@ -78,7 +78,7 @@ const isRateLimited = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 5 })
 // not_configured) until GOOGLE_CALENDAR_* env vars are set.
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request)
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ip)) {
     return NextResponse.json({ ok: false, reason: 'rate_limited' }, { status: 429 })
   }
 

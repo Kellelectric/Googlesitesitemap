@@ -100,6 +100,7 @@ export function KellAssist({ onClose }: { onClose: () => void }) {
   const [leadFormContext, setLeadFormContext] = useState<LeadContext | null>(null)
   const [leadCaptured, setLeadCaptured] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const conversationIdRef = useRef<string | undefined>(undefined)
 
   useEffect(() => {
     fetch('/api/chat')
@@ -231,10 +232,11 @@ export function KellAssist({ onClose }: { onClose: () => void }) {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: history }),
+        body: JSON.stringify({ messages: history, conversationId: conversationIdRef.current }),
       })
       const data = await res.json()
       if (res.ok && data.ok) {
+        if (data.conversationId) conversationIdRef.current = data.conversationId
         pushBot(data.reply)
       } else {
         pushBot(uncertainResponseMessage)

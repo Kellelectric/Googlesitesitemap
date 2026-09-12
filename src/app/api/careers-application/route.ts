@@ -7,6 +7,7 @@ import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting
 import { createCareerLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
 import { sendCareerSlackNotification, isSlackNotifyConfigured } from '@/lib/slackNotify'
 import { sendWhatsAppNotification, isWhatsAppConfigured } from '@/lib/whatsapp'
+import { recordLead, isSupabaseConfigured } from '@/lib/leadsDb'
 import {
   sendApplicantConfirmationEmail,
   sendContinueApplicationEmail,
@@ -355,6 +356,20 @@ export async function POST(request: NextRequest) {
       summary: `New career application: ${body.fullName} - ${track.name}. ${body.phone}. Ref ${reference}`,
     }).catch((error) => {
       console.error('WhatsApp notification (best-effort) failed', error)
+    })
+  }
+
+  if (isSupabaseConfigured()) {
+    recordLead({
+      sourceChannel: 'website_form',
+      intent: 'careers',
+      name: body.fullName,
+      phone: body.phone,
+      email: body.email,
+      serviceInterest: track.name,
+      description: body.message,
+    }).catch((error) => {
+      console.error('Supabase recordLead (best-effort, careers) failed', error)
     })
   }
 

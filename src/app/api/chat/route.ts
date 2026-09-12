@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { buildKnowledgeBase, uncertainResponseMessage } from '@/content/chatbot'
 import { company } from '@/content/company'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
+import { getChatProvider } from '@/lib/ai/provider'
+import { logConversationTurn } from '@/lib/conversationsDb'
 
 export const runtime = 'nodejs'
 
@@ -14,7 +16,9 @@ const isRateLimited = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 20 })
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string }
 
-function isValidMessages(body: unknown): body is { messages: ChatMessage[] } {
+function isValidMessages(
+  body: unknown,
+): body is { messages: ChatMessage[]; conversationId?: string } {
   if (!body || typeof body !== 'object') return false
   const b = body as Record<string, unknown>
   return (
@@ -29,7 +33,8 @@ function isValidMessages(body: unknown): body is { messages: ChatMessage[] } {
         typeof m.content === 'string' &&
         m.content.length > 0 &&
         m.content.length <= 2000,
-    )
+    ) &&
+    (b.conversationId === undefined || typeof b.conversationId === 'string')
   )
 }
 
@@ -98,49 +103,40 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'invalid_payload' }, { status: 422 })
   }
 
-  const apiKey = process.env.GROQ_API_KEY
-  if (!apiKey) {
+  const provider = getChatProvider()
+  if (!provider.isConfigured()) {
     // Graceful degradation: the chatbot's guided quick-reply flows (service
     // routing, emergency safety message, solar question flow, lead capture)
-    // all work without this key. Only free-text conversation needs it.
+    // all work without a configured provider. Only free-text conversation
+    // needs it.
     return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
   }
 
-  try {
-    // Groq's API is OpenAI-compatible: a `chat/completions` endpoint with a
-    // `system` message as the first item in `messages` rather than Anthropic's
-    // separate top-level `system` field.
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        // Groq deprecated the Llama 3.3 70B model on 2026-08-16; this is
-        // their recommended migration target - still open-weight, still
-        // hosted on Groq, just not Llama-branded. See
-        // https://console.groq.com/docs/deprecations for current status.
-        model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
-        max_tokens: 400,
-        messages: [{ role: 'system', content: await buildSystemPrompt() }, ...body.messages],
-      }),
-      signal: AbortSignal.timeout(15000),
-    })
+  const result = await provider.complete(await buildSystemPrompt(), body.messages)
 
-    if (!response.ok) {
-      console.error('Groq API error', response.status, await response.text())
-      return NextResponse.json({ ok: false, reason: 'upstream_error' }, { status: 502 })
-    }
-
-    const data = await response.json()
-    const reply: string = data?.choices?.[0]?.message?.content ?? uncertainResponseMessage
-
-    return NextResponse.json({ ok: true, reply })
-  } catch (error) {
-    console.error('Chat request errored', error)
-    return NextResponse.json({ ok: false, reason: 'request_errored' }, { status: 502 })
+  if (!result.ok) {
+    return NextResponse.json({ ok: false, reason: result.reason }, { status: 502 })
   }
+
+  // Best-effort, additive durable record of the turn - never blocks or
+  // delays the reply itself (awaited only so the resulting conversationId
+  // can be handed back for the widget to resend on the next turn; on
+  // failure or when Supabase isn't configured this resolves to null and the
+  // reply is returned exactly as before). See src/lib/conversationsDb.ts.
+  const logged = await logConversationTurn({
+    conversationId: body.conversationId,
+    userMessage: body.messages[body.messages.length - 1]?.content ?? '',
+    assistantReply: result.reply,
+  }).catch((error) => {
+    console.error('Supabase logConversationTurn (best-effort) failed', error)
+    return null
+  })
+
+  return NextResponse.json({
+    ok: true,
+    reply: result.reply,
+    conversationId: logged?.conversationId ?? body.conversationId,
+  })
 }
 
 // Exposed so the client can show the right phone/WhatsApp fallback without

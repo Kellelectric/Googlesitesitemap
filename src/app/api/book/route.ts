@@ -4,6 +4,7 @@ import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { verifyPaystackTransaction } from '@/lib/paystack'
 import { createBookingLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
 import { sendWhatsAppNotification, isWhatsAppConfigured } from '@/lib/whatsapp'
+import { recordLead, isSupabaseConfigured } from '@/lib/leadsDb'
 import { createCalendarEvent, getBusyPeriods, isCalendarConfigured } from '@/lib/googleCalendar'
 import { computeAvailableSlots, isDateBookable, localSlotToDate, SLOT_MINUTES } from '@/lib/bookingSlots'
 import {
@@ -213,6 +214,23 @@ export async function POST(request: NextRequest) {
         summary: `New appointment booking: ${body.name} - ${body.date} ${body.time}. ${body.phone}. Ref ${reference}`,
       }).catch((error) => {
         console.error('WhatsApp notification (best-effort, booking) failed', error)
+      })
+    }
+
+    // Same independence/fire-and-forget shape - see src/lib/leadsDb.ts.
+    if (isSupabaseConfigured()) {
+      recordLead({
+        sourceChannel: 'website_form',
+        intent: 'inspection_request',
+        name: body.name,
+        phone: body.phone,
+        email: body.email,
+        location: body.address,
+        serviceInterest: body.serviceCategory,
+        description: [priceDescription, body.notes].filter(Boolean).join(' - ') || undefined,
+        preferredDate: body.date,
+      }).catch((error) => {
+        console.error('Supabase recordLead (best-effort, booking) failed', error)
       })
     }
 

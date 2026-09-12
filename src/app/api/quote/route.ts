@@ -3,6 +3,7 @@ import { createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { createQuoteLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
 import { sendWhatsAppNotification, isWhatsAppConfigured } from '@/lib/whatsapp'
+import { recordLead, isSupabaseConfigured } from '@/lib/leadsDb'
 import { getServiceBySlug } from '@/content/services'
 
 export const runtime = 'nodejs'
@@ -138,6 +139,26 @@ export async function POST(request: NextRequest) {
       summary: `New quote request: ${body.name} - ${serviceName}, ${body.location}. ${body.phone}. Ref ${reference}`,
     }).catch((error) => {
       console.error('WhatsApp notification (best-effort, quote) failed', error)
+    })
+  }
+
+  // Same independence/fire-and-forget shape - see src/lib/leadsDb.ts and
+  // docs/ai-receptionist-platform.md for setup. Durable record used by the
+  // admin dashboard's lead management view.
+  if (isSupabaseConfigured()) {
+    recordLead({
+      sourceChannel: 'website_form',
+      intent: 'quote_request',
+      name: body.name,
+      phone: body.phone,
+      email: body.email,
+      location: body.location,
+      propertyType: body.propertyType,
+      serviceInterest: serviceName,
+      description: body.details,
+      urgency: body.urgency === 'urgent' ? 'urgent' : 'normal',
+    }).catch((error) => {
+      console.error('Supabase recordLead (best-effort, quote) failed', error)
     })
   }
 

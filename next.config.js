@@ -1,3 +1,5 @@
+const { withSentryConfig } = require('@sentry/nextjs/config')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -104,4 +106,19 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+// Wraps every build (source map upload, tunneling, etc.) - safe to leave
+// unconditional: withSentryConfig itself no-ops most of its behavior
+// without SENTRY_AUTH_TOKEN/SENTRY_ORG/SENTRY_PROJECT set, same pattern as
+// every other optional integration in this codebase. silent avoids noisy
+// build logs (missing-auth-token warnings) until those are actually set.
+module.exports = withSentryConfig(nextConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: true,
+  // Routes browser Sentry requests through this site's own domain
+  // (/monitoring) rather than directly to ingest.sentry.io - avoids ad
+  // blockers dropping client-side error reports, at the cost of this one
+  // extra rewritten route. Disable if it ever conflicts with a real
+  // /monitoring route.
+  tunnelRoute: '/monitoring',
+})

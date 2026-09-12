@@ -83,9 +83,14 @@ function findRelevantSummaries(topic: string): string {
   return `We cover ${services.length} electrical service lines across residential, commercial, and industrial sites in Abuja and ${company.serviceRegion}.`
 }
 
-export function KellAssist() {
-  const [open, setOpen] = useState(false)
-  const [hasOpenedOnce, setHasOpenedOnce] = useState(false)
+// The floating launcher button and open/mount state live in
+// KellAssistLoader.tsx, which only dynamically imports this panel once the
+// visitor actually clicks to open it - see that file's own comment for why
+// (this component plus the services/industries content it imports is the
+// bulk of the chat widget's JS weight, and Lighthouse's "unused JavaScript"
+// audit still counts a dynamic-import chunk as loaded/unused if it fetches
+// right after hydration rather than on a real user interaction).
+export function KellAssist({ onClose }: { onClose: () => void }) {
   const [apiConfigured, setApiConfigured] = useState<boolean | null>(null)
   const [messages, setMessages] = useState<Message[]>([{ id: nextId(), role: 'bot', text: WELCOME_MESSAGE }])
   const [quickActions, setQuickActions] = useState<QuickAction[]>([])
@@ -112,14 +117,6 @@ export function KellAssist() {
   }
   function pushUser(text: string) {
     setMessages((prev) => [...prev, { id: nextId(), role: 'user', text }])
-  }
-
-  function handleOpen() {
-    setOpen(true)
-    if (!hasOpenedOnce) {
-      trackEvent('chat_opened')
-      setHasOpenedOnce(true)
-    }
   }
 
   function showEmergencyFlow() {
@@ -303,21 +300,6 @@ export function KellAssist() {
   }
 
   return (
-    <>
-      {!open && (
-        <button
-          type="button"
-          onClick={handleOpen}
-          aria-label="Open Kell Assist chat"
-          className="fixed bottom-20 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-petrol text-paper transition-transform hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow md:bottom-6 md:right-6"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6 fill-current">
-            <path d="M4 4h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H9l-4.3 3.6A.5.5 0 0 1 4 20.2V17H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" />
-          </svg>
-        </button>
-      )}
-
-      {open && (
         <div className="fixed inset-0 z-50 flex flex-col bg-paper sm:inset-auto sm:bottom-6 sm:right-6 sm:h-[640px] sm:w-[380px] sm:border sm:border-ink/10">
           <header className="flex shrink-0 items-center justify-between bg-petrol px-5 py-4 text-paper">
             <div>
@@ -326,7 +308,7 @@ export function KellAssist() {
             </div>
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               aria-label="Close chat"
               className="flex h-8 w-8 items-center justify-center text-paper/70 hover:text-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow"
             >
@@ -432,8 +414,6 @@ export function KellAssist() {
             </button>
           </form>
         </div>
-      )}
-    </>
   )
 }
 

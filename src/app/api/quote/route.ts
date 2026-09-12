@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
 import { createQuoteLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
+import { sendWhatsAppNotification, isWhatsAppConfigured } from '@/lib/whatsapp'
 import { getServiceBySlug } from '@/content/services'
 
 export const runtime = 'nodejs'
@@ -104,6 +105,8 @@ export async function POST(request: NextRequest) {
   }
 
   const reference = generateEnquiryReference()
+  const service = getServiceBySlug(body.serviceSlug)
+  const serviceName = service?.name ?? body.serviceSlug
 
   // Fire-and-forget, independent of QUOTE_WEBHOOK_URL below (same pattern
   // as careers-application/route.ts) - a CRM record is useful regardless
@@ -112,13 +115,12 @@ export async function POST(request: NextRequest) {
   // webhookUrl/not_configured check on purpose, so an unconfigured
   // webhook doesn't also silently skip this independent integration.
   if (isZohoCrmConfigured()) {
-    const service = getServiceBySlug(body.serviceSlug)
     createQuoteLead({
       name: body.name,
       email: body.email,
       phone: body.phone,
       serviceSlug: body.serviceSlug,
-      serviceName: service?.name ?? body.serviceSlug,
+      serviceName,
       propertyType: body.propertyType,
       urgency: body.urgency,
       location: body.location,
@@ -126,6 +128,16 @@ export async function POST(request: NextRequest) {
       reference,
     }).catch((error) => {
       console.error('Zoho CRM lead create (best-effort, quote) failed', error)
+    })
+  }
+
+  // Same independence/fire-and-forget shape as Zoho CRM above - see
+  // src/lib/whatsapp.ts for setup.
+  if (isWhatsAppConfigured()) {
+    sendWhatsAppNotification({
+      summary: `New quote request: ${body.name} - ${serviceName}, ${body.location}. ${body.phone}. Ref ${reference}`,
+    }).catch((error) => {
+      console.error('WhatsApp notification (best-effort, quote) failed', error)
     })
   }
 

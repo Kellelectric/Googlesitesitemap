@@ -10,6 +10,7 @@ import { getCareerTrackBySlug } from '@/content/careers'
 import { buildPrefillUrl, getCareerFormRoute } from '@/content/careerFormRouting'
 import { createCareerLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
 import { sendCareerSlackNotification, isSlackNotifyConfigured } from '@/lib/slackNotify'
+import { sendWhatsAppNotification, isWhatsAppConfigured } from '@/lib/whatsapp'
 import {
   sendApplicantConfirmationEmail,
   sendInternalNotificationEmail,
@@ -351,6 +352,16 @@ export async function POST(request: NextRequest) {
       cvLink: body.cvLink,
     }).catch((error) => {
       console.error('Slack notification (best-effort) failed', error)
+    })
+  }
+
+  // Same independence/fire-and-forget shape as Slack above - see
+  // src/lib/whatsapp.ts for setup.
+  if (isWhatsAppConfigured()) {
+    sendWhatsAppNotification({
+      summary: `New career application: ${body.fullName} - ${track.name}. ${body.phone}. Ref ${reference}`,
+    }).catch((error) => {
+      console.error('WhatsApp notification (best-effort) failed', error)
     })
   }
 

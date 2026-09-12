@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createHmac, randomUUID } from 'node:crypto'
 import { createRateLimiter, getClientIp } from '@/lib/rateLimit'
+import { createQuoteLead, isZohoCrmConfigured } from '@/lib/zohoCrm'
+import { getServiceBySlug } from '@/content/services'
 
 export const runtime = 'nodejs'
 
@@ -101,6 +103,32 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  const reference = generateEnquiryReference()
+
+  // Fire-and-forget, independent of QUOTE_WEBHOOK_URL below (same pattern
+  // as careers-application/route.ts) - a CRM record is useful regardless
+  // of whether that webhook is even configured, and its failure must
+  // never block or slow down the customer's response. Placed before the
+  // webhookUrl/not_configured check on purpose, so an unconfigured
+  // webhook doesn't also silently skip this independent integration.
+  if (isZohoCrmConfigured()) {
+    const service = getServiceBySlug(body.serviceSlug)
+    createQuoteLead({
+      name: body.name,
+      email: body.email,
+      phone: body.phone,
+      serviceSlug: body.serviceSlug,
+      serviceName: service?.name ?? body.serviceSlug,
+      propertyType: body.propertyType,
+      urgency: body.urgency,
+      location: body.location,
+      details: body.details,
+      reference,
+    }).catch((error) => {
+      console.error('Zoho CRM lead create (best-effort, quote) failed', error)
+    })
+  }
+
   const webhookUrl = process.env.QUOTE_WEBHOOK_URL
   if (!webhookUrl) {
     console.error(
@@ -109,7 +137,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, reason: 'not_configured' }, { status: 503 })
   }
 
-  const reference = generateEnquiryReference()
   const payload = JSON.stringify({
     reference,
     source: 'kellelectricals.com quote form',

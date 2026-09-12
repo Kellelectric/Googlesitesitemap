@@ -1,5 +1,6 @@
 import { company } from '@/content/company'
 import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Reveal'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 
 // The same 4 trust facts were copy-pasted as a plain bullet list (dot +
 // text, border-b divider) across the services hub, service detail,
@@ -8,12 +9,15 @@ import { Reveal, StaggerGroup, MotionDiv, staggerItem } from '@/components/ui/Re
 // as the same "instrument panel" hairline-divider readout StatsBar uses on
 // the homepage, so this recurring trust block reads as a deliberate,
 // consistent device sitewide rather than a bullet list stamped four times.
-const FACTS = [
-  'COREN and NEMSA certified',
-  `${company.teamExperienceYears}+ years of combined engineering experience`,
-  `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ reviews`,
-  `${company.trust.projectsCompleted}+ projects completed`,
-]
+async function getFacts(): Promise<string[]> {
+  const trust = await getTrustStats()
+  return [
+    'COREN and NEMSA certified',
+    `${company.teamExperienceYears}+ years of combined engineering experience`,
+    `${trust.googleRating}★ Google rating from ${trust.googleReviewCount}+ reviews`,
+    `${company.trust.projectsCompleted}+ projects completed`,
+  ]
+}
 
 type WhyChooseUsProps = {
   dark?: boolean
@@ -27,7 +31,8 @@ type WhyChooseUsProps = {
   layout?: 'full' | 'compact'
 }
 
-export function WhyChooseUs({ dark = true, heading, layout = 'full' }: WhyChooseUsProps) {
+export async function WhyChooseUs({ dark = true, heading, layout = 'full' }: WhyChooseUsProps) {
+  const FACTS = await getFacts()
   const bg = dark ? 'bg-petrol-700 text-paper' : 'bg-paper text-ink'
   const eyebrowColor = dark ? 'text-yellow' : 'text-petrol/70'
   const dividerColor = dark ? 'divide-paper/15' : 'divide-ink/10'

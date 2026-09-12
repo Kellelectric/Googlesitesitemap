@@ -9,6 +9,7 @@ import { FAQSection } from '@/components/sections/FAQSection'
 import { getAreaBySlug, areas } from '@/content/areas'
 import { services } from '@/content/services'
 import { company } from '@/content/company'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 import { faqCategories } from '@/content/faqs'
 import { getResidentialTier, residentialPricing } from '@/content/inspectionPricing'
 import { breadcrumbSchema, localServiceSchema } from '@/lib/schema'
@@ -46,6 +47,7 @@ export default async function AreaPage(props: Props) {
   const params = await props.params;
   const area = getAreaBySlug(params.area)
   if (!area) notFound()
+  const trust = await getTrustStats()
 
   return (
     <>
@@ -126,7 +128,7 @@ export default async function AreaPage(props: Props) {
             {[
               'COREN and NEMSA certified',
               `${company.teamExperienceYears}+ years of combined engineering experience`,
-              `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ reviews`,
+              `${trust.googleRating}★ Google rating from ${trust.googleReviewCount}+ reviews`,
               `Emergency response ${company.emergencyResponseTarget}`,
             ].map((item) => (
               <MotionDiv

@@ -3,6 +3,7 @@ import { isZohoCrmConfigured } from '@/lib/zohoCrm'
 import { isSlackNotifyConfigured } from '@/lib/slackNotify'
 import { isResendConfigured, isCareerNotifyEmailConfigured } from '@/lib/resendEmail'
 import { isCalendarConfigured } from '@/lib/googleCalendar'
+import { isGoogleBusinessProfileConfigured } from '@/lib/googleBusinessProfile'
 
 export const runtime = 'nodejs'
 
@@ -29,5 +30,10 @@ export async function GET() {
     groqChat: Boolean(process.env.GROQ_API_KEY),
     zohoSalesIq: Boolean(process.env.NEXT_PUBLIC_ZOHOSALESIQ_WIDGET_CODE),
     ga4: Boolean(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID),
+    sentry: Boolean(process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN),
+    durableRateLimit: Boolean(
+      process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN,
+    ),
+    googleBusinessProfileLiveRating: isGoogleBusinessProfileConfigured(),
   })
 }

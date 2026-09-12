@@ -16,6 +16,7 @@ import { CTASection } from '@/components/sections/CTASection'
 import { Reveal } from '@/components/ui/Reveal'
 import { team } from '@/content/team'
 import Image from 'next/image'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 
 export const metadata: Metadata = {
   // Targets "electrician in Abuja" / "solar company in Abuja" - both
@@ -31,10 +32,11 @@ export const metadata: Metadata = {
   alternates: { canonical: '/' },
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const trust = await getTrustStats()
   return (
     <>
-      <Hero />
+      <Hero googleRating={trust.googleRating} googleReviewCount={trust.googleReviewCount} />
       <StatsBar />
       <ServicesPreview />
       <SolarFeature />

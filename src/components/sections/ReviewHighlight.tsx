@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { ReviewSummary } from '@/components/ui/ReviewSummary'
 import { TestimonialCard } from '@/components/sections/TestimonialCard'
 import { testimonials } from '@/content/testimonials'
-import { company } from '@/content/company'
 import { Reveal } from '@/components/ui/Reveal'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 
 // A compact trust band for pages that otherwise carry zero review content -
 // /services/[slug], /projects/[slug], and /industries/[slug] (56 pages
@@ -26,12 +26,13 @@ function stableIndex(seedKey: string, length: number): number {
   return Math.abs(hash) % length
 }
 
-export function ReviewHighlight({ seedKey }: { seedKey: string }) {
+export async function ReviewHighlight({ seedKey }: { seedKey: string }) {
   const featured = testimonials.filter((t) => t.featured)
   if (featured.length === 0) return null
 
   const start = stableIndex(seedKey, featured.length)
   const picked = [featured[start], featured[(start + 1) % featured.length]]
+  const trust = await getTrustStats()
 
   return (
     <section className="border-t border-ink/10 bg-paper py-16">
@@ -40,8 +41,8 @@ export function ReviewHighlight({ seedKey }: { seedKey: string }) {
           <div className="lg:w-64 lg:shrink-0">
             <span className="eyebrow text-petrol/70">Trusted by our customers</span>
             <ReviewSummary
-              rating={company.trust.googleRating}
-              reviewCount={company.trust.googleReviewCount}
+              rating={trust.googleRating}
+              reviewCount={trust.googleReviewCount}
               className="mt-5 flex-col items-start gap-4"
             />
             <Link

@@ -6,6 +6,7 @@ import { CTASection } from '@/components/sections/CTASection'
 import { PartnerLogos } from '@/components/sections/PartnerLogos'
 import { CompanyTimeline } from '@/components/sections/CompanyTimeline'
 import { company } from '@/content/company'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 import { partners } from '@/content/partners'
 import { team } from '@/content/team'
 import { ceoMessage } from '@/content/ceoMessage'
@@ -100,15 +101,6 @@ const whatMakesUsDifferent = [
   'Our work speaks for itself: CBN Headquarters, Kaduna State Government House, Manreng Estate, Navy Holdings, plus residential and commercial clients across Wuse 2, Gwarinpa, Maitama, Asokoro, Guzape, and Katampe.',
 ]
 
-const whyChooseUs = [
-  `${company.teamExperienceYears}+ years of combined engineering experience across residential, commercial, and industrial sites`,
-  `COREN and NEMSA certified`,
-  `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ customer reviews`,
-  `Emergency response target of ${company.emergencyResponseTarget}`,
-  `${company.trust.projectsCompleted}+ projects completed`,
-  `Service coverage across all of Abuja, plus project work in ${company.serviceRegion}`,
-]
-
 const teamRoles = [
   {
     title: 'Engineering & design',
@@ -132,7 +124,16 @@ const teamRoles = [
   },
 ]
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const trust = await getTrustStats()
+  const whyChooseUs = [
+    `${company.teamExperienceYears}+ years of combined engineering experience across residential, commercial, and industrial sites`,
+    `COREN and NEMSA certified`,
+    `${trust.googleRating}★ Google rating from ${trust.googleReviewCount}+ customer reviews`,
+    `Emergency response target of ${company.emergencyResponseTarget}`,
+    `${company.trust.projectsCompleted}+ projects completed`,
+    `Service coverage across all of Abuja, plus project work in ${company.serviceRegion}`,
+  ]
   return (
     <>
       <script

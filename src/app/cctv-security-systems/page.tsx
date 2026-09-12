@@ -6,6 +6,7 @@ import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { FAQSection } from '@/components/sections/FAQSection'
 import { company } from '@/content/company'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 import { getServiceBySlug } from '@/content/services'
 import { faqCategories } from '@/content/faqs'
 import { industries } from '@/content/industries'
@@ -78,10 +79,11 @@ const technicalConsiderations = [
   },
 ]
 
-export default function CCTVSecuritySystemsPage() {
+export default async function CCTVSecuritySystemsPage() {
   const cctv = getServiceBySlug('cctv-surveillance')
   const gates = getServiceBySlug('automated-gates-access-control')
   const faqs = faqCategories.find((c) => c.category === 'CCTV & Security')?.items ?? []
+  const trust = await getTrustStats()
 
   return (
     <>
@@ -247,7 +249,7 @@ export default function CCTVSecuritySystemsPage() {
               'COREN and NEMSA certified',
               `${company.teamExperienceYears}+ years of combined engineering experience`,
               'Structured cabling and PoE power installed by electrical engineers, not just camera technicians',
-              `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ reviews`,
+              `${trust.googleRating}★ Google rating from ${trust.googleReviewCount}+ reviews`,
             ].map((item) => (
               <MotionDiv key={item} variants={staggerItem} className="flex gap-3 border-b border-paper/15 pb-3 text-sm text-paper/80">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-yellow" />

@@ -6,6 +6,7 @@ import { CircuitLines } from '@/components/ui/CircuitLines'
 import { CTASection } from '@/components/sections/CTASection'
 import { FAQSection } from '@/components/sections/FAQSection'
 import { company } from '@/content/company'
+import { getTrustStats } from '@/lib/googleBusinessProfile'
 import { getServiceBySlug } from '@/content/services'
 import { faqCategories } from '@/content/faqs'
 import { industries } from '@/content/industries'
@@ -72,11 +73,12 @@ const technicalConsiderations = [
   },
 ]
 
-export default function HomeAutomationPage() {
+export default async function HomeAutomationPage() {
   const homeAutomation = getServiceBySlug('home-automation')
   const cctv = getServiceBySlug('cctv-surveillance')
   const gates = getServiceBySlug('automated-gates-access-control')
   const faqs = faqCategories.find((c) => c.category === 'Home Automation')?.items ?? []
+  const trust = await getTrustStats()
 
   return (
     <>
@@ -244,7 +246,7 @@ export default function HomeAutomationPage() {
               'COREN and NEMSA certified',
               `${company.teamExperienceYears}+ years of combined engineering experience`,
               'Automation designed into the electrical layout, not bolted onto existing wiring',
-              `${company.trust.googleRating}★ Google rating from ${company.trust.googleReviewCount}+ reviews`,
+              `${trust.googleRating}★ Google rating from ${trust.googleReviewCount}+ reviews`,
             ].map((item) => (
               <MotionDiv key={item} variants={staggerItem} className="flex gap-3 border-b border-paper/15 pb-3 text-sm text-paper/80">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-yellow" />

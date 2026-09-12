@@ -7,7 +7,18 @@ import { CircuitLines } from '@/components/ui/CircuitLines'
 import { company } from '@/content/company'
 import { motion, staggerItem } from '@/components/ui/Reveal'
 
-export function Hero() {
+type HeroProps = {
+  // Passed down from app/page.tsx (a server component) since this is a
+  // client component and can't call the async getTrustStats() lib itself -
+  // falls back to the static company.trust values if omitted.
+  googleRating?: number
+  googleReviewCount?: number
+}
+
+export function Hero({
+  googleRating = company.trust.googleRating,
+  googleReviewCount = company.trust.googleReviewCount,
+}: HeroProps = {}) {
   const reduceMotion = useReducedMotion()
 
   return (
@@ -64,7 +75,7 @@ export function Hero() {
         >
           <span>{company.teamExperienceYears}+ years of combined engineering experience</span>
           <span>
-            {company.trust.googleRating}★ rating · {company.trust.googleReviewCount} Google reviews
+            {googleRating}★ rating · {googleReviewCount} Google reviews
           </span>
           <span>Serving all of Abuja</span>
           <span>24/7 emergency response</span>

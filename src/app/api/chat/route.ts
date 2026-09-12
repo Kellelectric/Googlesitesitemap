@@ -33,8 +33,8 @@ function isValidMessages(body: unknown): body is { messages: ChatMessage[] } {
   )
 }
 
-function buildSystemPrompt(): string {
-  const kb = buildKnowledgeBase()
+async function buildSystemPrompt(): Promise<string> {
+  const kb = await buildKnowledgeBase()
 
   return `You are Kell Assist, the website assistant for ${kb.company.name}, a COREN and NEMSA certified electrical engineering company based in ${kb.company.address}. Your subtitle is "Your Kell Electricals Service Assistant."
 
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
         // https://console.groq.com/docs/deprecations for current status.
         model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
         max_tokens: 400,
-        messages: [{ role: 'system', content: buildSystemPrompt() }, ...body.messages],
+        messages: [{ role: 'system', content: await buildSystemPrompt() }, ...body.messages],
       }),
       signal: AbortSignal.timeout(15000),
     })
